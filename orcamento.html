@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedir orçamento — VOA-SUL</title>
+<meta name="description" content="Solicite orçamento de drone FPV sob encomenda, drone recreativo, peças ou serviço de reparo com a VOA-SUL.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo-voasul.svg" alt="VoaSul" width="901" height="354">
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-principal"><span></span></button>
+    <nav class="nav" id="nav-principal" aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="produtos.html">Produtos</a>
+      <a href="homologacao.html">Homologação</a>
+      <a href="sobre.html">A empresa</a>
+      <a href="contato.html">Contato</a>
+      <a class="btn btn--primary" href="orcamento.html" aria-current="page">Pedir orçamento</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-head">
+    <div class="wrap">
+      <p class="breadcrumb"><a href="index.html">Início</a> · Orçamento</p>
+      <h1>Pedido de orçamento</h1>
+      <p>Conte o tipo de voo que você quer fazer e o seu nível de experiência. Respondemos com uma proposta de configuração, prazo e valor.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="grid grid-2" style="align-items:start;gap:2.5rem">
+
+        <div class="form-card">
+          <form id="form-orcamento" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="nome">Nome *</label>
+                <input type="text" id="nome" name="nome" autocomplete="name" required>
+                <p class="field-error"></p>
+              </div>
+              <div class="field">
+                <label for="telefone">Telefone / WhatsApp *</label>
+                <input type="tel" id="telefone" name="telefone" autocomplete="tel" placeholder="(51) 90000-0000" required>
+                <p class="field-error"></p>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="email">E-mail *</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+                <p class="field-error"></p>
+              </div>
+              <div class="field">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" autocomplete="address-level2">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="produto">Produto de interesse *</label>
+                <select id="produto" name="produto" required>
+                  <option value="">Selecione…</option>
+                  <option value="FPV 5 polegadas">Drone FPV 5 polegadas</option>
+                  <option value="Drone recreativo até 250 g">Drone recreativo (até 250 g)</option>
+                  <option value="Kits, frames e peças">Kits, frames e peças</option>
+                  <option value="Reparo, ajuste ou upgrade">Reparo, ajuste ou upgrade</option>
+                  <option value="Ainda não sei">Ainda não sei</option>
+                </select>
+                <p class="field-error"></p>
+              </div>
+              <div class="field">
+                <label for="prazo">Prazo desejado</label>
+                <select id="prazo" name="prazo">
+                  <option value="">Sem pressa</option>
+                  <option value="Até 15 dias">Até 15 dias</option>
+                  <option value="Até 30 dias">Até 30 dias</option>
+                  <option value="Data específica">Tenho uma data específica</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mensagem">Detalhes do pedido *</label>
+              <textarea id="mensagem" name="mensagem" required
+                placeholder="Ex.: quero um FPV 5 polegadas para freestyle, já voo há dois anos, tenho rádio e óculos. Faixa de investimento pretendida…"></textarea>
+              <span class="hint">Quanto mais detalhe sobre o uso pretendido e a sua experiência, mais precisa fica a proposta.</span>
+              <p class="field-error"></p>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block">Enviar pedido</button>
+
+            <p class="form-note" style="margin-top:1rem">Os dados informados são usados apenas para responder a este pedido de orçamento.</p>
+
+            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <div class="stack">
+          <div class="notice">
+            <p><strong>Site em versão preliminar.</strong> Ainda não há processamento no servidor: ao enviar, o pedido é montado e aberto no seu programa de e-mail. Se preferir, fale direto pelo WhatsApp ou pelo Instagram.</p>
+          </div>
+
+          <article class="card">
+            <h3>O que acontece depois</h3>
+            <ol class="steps" style="gap:.7rem;margin-top:.6rem">
+              <li><div><strong>Retorno em até 2 dias úteis</strong><span>Com dúvidas sobre o uso pretendido, se necessário.</span></div></li>
+              <li><div><strong>Proposta de configuração</strong><span>Componentes, prazo de montagem e valor fechado.</span></div></li>
+              <li><div><strong>Montagem e teste</strong><span>Só começa depois da sua aprovação.</span></div></li>
+            </ol>
+          </article>
+
+          <article class="card">
+            <h3>Prefere conversar?</h3>
+            <p class="muted small">Atendemos também pelos canais diretos, de segunda a sexta.</p>
+            <ul class="product__specs">
+              <li>E-mail <b><a href="mailto:contato@voasul.com.br">contato@voasul.com.br</a></b></li>
+              <li>Instagram <b><a href="https://www.instagram.com/voasuldrones" rel="noopener">@voasuldrones</a></b></li>
+              <li>Sede <b>Portão — RS</b></li>
+            </ul>
+            <a class="btn btn--outline btn--block" href="contato.html">Ver todos os contatos</a>
+          </article>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <img src="assets/img/logo-voasul-branco.svg" alt="VoaSul" width="901" height="354">
+        </div>
+        <p>Fábrica de drones FPV e recreativos. Projeto, montagem, homologação e assistência técnica no Rio Grande do Sul.</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="produtos.html">Produtos</a></li>
+          <li><a href="homologacao.html">Homologação e ANAC</a></li>
+          <li><a href="sobre.html">A empresa</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <ul>
+          <li><a href="orcamento.html">Pedir orçamento</a></li>
+          <li><a href="contato.html">Contato e endereço</a></li>
+          <li><a href="produtos.html#reparo">Assistência técnica</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li>Portão — RS, Brasil</li>
+          <li><a href="mailto:contato@voasul.com.br">contato@voasul.com.br</a></li>
+          <li><a href="https://www.instagram.com/voasuldrones" rel="noopener">@voasuldrones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-ano>2026</span> VOA-SUL. Todos os direitos reservados.</span>
+      <span>Conteúdo em versão preliminar — dados e preços sujeitos a alteração.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
