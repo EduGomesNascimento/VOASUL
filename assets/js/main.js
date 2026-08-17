@@ -121,7 +121,7 @@
     var assunto = "Orçamento VOA-SUL — " + ((dados.get("produto") || "pedido").toString());
 
     window.location.href =
-      "mailto:contato@voasul.com.br?subject=" +
+      "mailto:sulvoa@gmail.com?subject=" +
       encodeURIComponent(assunto) +
       "&body=" +
       encodeURIComponent(corpo);
@@ -130,7 +130,7 @@
       status.classList.add("is-visible");
       status.textContent =
         "Pedido montado. Seu programa de e-mail foi aberto com os dados preenchidos — " +
-        "basta enviar. Se nada abrir, copie as informações e mande para contato@voasul.com.br " +
+        "basta enviar. Se nada abrir, copie as informações e mande para sulvoa@gmail.com " +
         "ou chame no WhatsApp.";
       status.scrollIntoView({ block: "nearest" });
     }
