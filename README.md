@@ -57,3 +57,12 @@ qualquer hospedagem comum, apontando o domínio `voasul.com.br` para ela.
 - Toda a paleta está em variáveis CSS no topo de `assets/css/style.css`
   (`--navy`, `--sky` etc.). Mudar a cor da marca é mudar ali.
 - Textos em português do Brasil.
+
+### Animações
+
+As animações ficam no bloco `ANIMAÇÕES`, no fim de `assets/css/style.css`.
+Os blocos entram conforme a página é rolada: o `main.js` aplica a classe
+`revelar` via `IntersectionObserver` — não no HTML — para que a página
+continue legível se o script não carregar. Quem tem
+`prefers-reduced-motion: reduce` no sistema recebe a página sem
+movimento algum, com todo o conteúdo visível.

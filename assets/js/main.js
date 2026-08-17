@@ -28,6 +28,60 @@
     el.textContent = new Date().getFullYear();
   });
 
+  /* ----- cabeçalho compacto ao rolar ----- */
+  var header = document.querySelector(".site-header");
+  if (header) {
+    var marcarRolagem = function () {
+      header.classList.toggle("is-scrolled", window.scrollY > 20);
+    };
+    marcarRolagem();
+    window.addEventListener("scroll", marcarRolagem, { passive: true });
+  }
+
+  /* ----- entrada dos blocos conforme a página é rolada -----
+     Os elementos recebem a classe aqui, e não no HTML, para que a
+     página continue legível se este script não carregar. */
+  var ALVOS = [
+    ".section-head",
+    ".pledge",
+    ".card",
+    ".steps li",
+    ".band",
+    ".table-wrap",
+    ".faq",
+    ".form-card",
+    ".notice"
+  ].join(", ");
+
+  var blocos = document.querySelectorAll(ALVOS);
+
+  if ("IntersectionObserver" in window && blocos.length) {
+    var observador = new IntersectionObserver(
+      function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (!entrada.isIntersecting) return;
+          entrada.target.classList.add("is-visible");
+          observador.unobserve(entrada.target);
+        });
+      },
+      /* threshold 0: basta o bloco encostar na área visível. Evita que
+         um bloco muito alto nunca atinja a fração exigida e fique oculto. */
+      { rootMargin: "0px 0px -10% 0px", threshold: 0 }
+    );
+
+    Array.prototype.forEach.call(blocos, function (el) {
+      /* itens irmãos entram em cascata, um logo após o outro */
+      var irmaos = Array.prototype.filter.call(el.parentNode.children, function (filho) {
+        return filho.matches(ALVOS);
+      });
+      var posicao = irmaos.indexOf(el);
+      if (posicao > 0) el.style.setProperty("--atraso", Math.min(posicao, 4) * 0.09 + "s");
+
+      el.classList.add("revelar");
+      observador.observe(el);
+    });
+  }
+
   /* ----- pré-seleção de produto vindo da URL (?produto=...) ----- */
   var params = new URLSearchParams(window.location.search);
   var produtoParam = params.get("produto");
