@@ -1,8 +1,12 @@
+<meta charset="utf-8">
 <title>Encceja em 6 Horas</title>
 <meta name="description" content="Plano cronometrado, revisão focada e simulado para o Encceja Ensino Médio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<!-- As fontes entram sem bloquear a página: offline, ou com a rede ruim, o app
+     continua utilizável na hora com as fontes do sistema. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
 /* PALETA - painel de instrumentos: fundo osso frio, verde-pinho de comando,
    laranja de alta visibilidade como sinal de atencao. */
@@ -218,6 +222,73 @@ details.acc[open] > summary{border-bottom:1px solid var(--line-2); background:va
   text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
 .formula code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:.95rem; color:var(--ink)}
 
+/* ---- resultado da correção ---- */
+#res-correcao{scroll-margin-top:104px}
+.placar-red{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+.nota-caixa{
+  display:flex; align-items:baseline; gap:6px; padding:12px 18px; border-radius:10px;
+  background:var(--primary-soft); border:1px solid var(--primary); flex:0 0 auto;
+}
+.nota-caixa.baixa{background:var(--signal-soft); border-color:var(--signal)}
+.nota-caixa.media{background:var(--amber-soft); border-color:var(--amber)}
+.nota-num{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:3rem; line-height:.85;
+  font-variant-numeric:tabular-nums; color:var(--primary-ink)}
+.nota-caixa.baixa .nota-num{color:var(--signal)}
+.nota-caixa.media .nota-num{color:var(--amber)}
+.nota-de{font-size:.9rem; color:var(--ink-3)}
+.nota-txt{flex:1 1 220px; min-width:0}
+.nota-txt p{font-size:.95rem; color:var(--ink-2); margin-top:3px}
+
+.comp{display:grid; grid-template-columns:1fr auto; gap:4px 12px; padding:12px 0; border-top:1px solid var(--line-2)}
+.comp:first-child{border-top:0}
+.comp-nome{font-weight:600; font-size:.97rem}
+.comp-nota{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:1.1rem; font-variant-numeric:tabular-nums; color:var(--ink-3)}
+.comp-nota.n2{color:var(--ok)} .comp-nota.n1{color:var(--amber)} .comp-nota.n0{color:var(--signal)}
+.comp-barra{grid-column:1/-1; height:5px; border-radius:3px; background:var(--line-2); overflow:hidden}
+.comp-barra i{display:block; height:100%; background:var(--ok)}
+.comp-barra.n1 i{background:var(--amber)} .comp-barra.n0 i{background:var(--signal)}
+.comp-obs{grid-column:1/-1; font-size:.9rem; color:var(--ink-2); display:flex; flex-direction:column; gap:4px}
+.comp-obs span{display:flex; gap:7px; align-items:baseline}
+.comp-obs span::before{content:"›"; color:var(--ink-3); flex:0 0 auto}
+.comp-obs span.ok::before{content:"✓"; color:var(--ok)}
+.comp-obs span.ruim::before{content:"×"; color:var(--signal)}
+
+.aponta{border:1px solid var(--line); border-radius:8px; padding:11px 13px; background:var(--surface-2)}
+.aponta + .aponta{margin-top:8px}
+.aponta-tit{font-size:.93rem; color:var(--ink); font-weight:600}
+.aponta-tit .marca{font-family:"Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.06em;
+  font-size:.76rem; padding:1px 6px; border-radius:4px; margin-right:7px; font-weight:700}
+.aponta-tit .marca.erro{background:var(--signal-soft); color:var(--signal)}
+.aponta-tit .marca.aviso{background:var(--amber-soft); color:var(--amber)}
+.aponta-trecho{font-family:"Source Serif 4",Georgia,serif; font-size:.94rem; color:var(--ink-2);
+  margin-top:6px; padding-left:10px; border-left:2px solid var(--line)}
+
+.legenda{display:flex; gap:14px; font-size:.85rem; color:var(--ink-3)}
+.legenda span{display:flex; align-items:center; gap:6px}
+.pt{width:11px; height:11px; border-radius:3px; display:inline-block}
+.pt.erro{background:var(--signal-soft); border:1px solid var(--signal)}
+.pt.aviso{background:var(--amber-soft); border:1px solid var(--amber)}
+.anotado{font-family:"Source Serif 4",Georgia,serif; font-size:1rem; line-height:1.75; color:var(--ink-2); white-space:pre-wrap}
+.anotado mark{background:var(--amber-soft); color:var(--ink); border-radius:3px; padding:1px 2px;
+  box-shadow:inset 0 -2px 0 var(--amber)}
+.anotado mark.erro{background:var(--signal-soft); box-shadow:inset 0 -2px 0 var(--signal)}
+
+/* ---- treino relâmpago ---- */
+
+.drill{border:1px solid var(--line); border-radius:8px; background:var(--surface-2); padding:16px; display:flex; flex-direction:column; gap:12px}
+.drill-top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.drill-q{font-family:"Source Serif 4",Georgia,serif; font-size:1.24rem; line-height:1.4; color:var(--ink); min-height:2.6em}
+.drill-form{display:flex; gap:8px; flex-wrap:wrap}
+.drill-form input{
+  flex:1 1 100%; min-width:0; padding:11px 13px; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface); color:var(--ink); font:inherit; font-size:1.05rem;
+  font-variant-numeric:tabular-nums;
+}
+.drill-fb{font-size:.94rem; min-height:1.4em; color:var(--ink-2)}
+.drill-fb.certo{color:var(--ok); font-weight:600}
+.drill-fb.errado{color:var(--signal)}
+.drill-fb b{color:var(--ink)}
+
 /* ---- simulado ---- */
 .q{border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:16px}
 .q + .q{margin-top:12px}
@@ -336,8 +407,8 @@ footer{
     <div class="card">
       <h3>Onde as 6 horas rendem mais</h3>
       <ul class="lista">
-        <li><b>Redação (1h45).</b> É a única parte eliminatória que não perdoa: fugiu do tema ou escreveu no gênero errado, zerou. Também é a parte que mais sobe rápido — dá pra sair do zero e chegar em 7 aprendendo uma estrutura fixa. Melhor investimento da lista.</li>
-        <li><b>Matemática (1h45).</b> A prova concentra porcentagem, regra de três, média, gráficos, área/volume e juros. Seis assuntos cobrem a maior parte das 30 questões, e são todos de conta curta.</li>
+        <li><b>Redação (1h45).</b> É a única parte eliminatória que não perdoa: fugiu do tema ou escreveu no gênero errado, zerou. Também é a parte que mais sobe rápido — dá pra sair do zero e chegar em 7 aprendendo uma estrutura fixa. E é a única em que tu tem um corretor aqui dentro, que dá nota e aponta o trecho. Melhor investimento da lista.</li>
+        <li><b>Matemática (1h45).</b> A prova concentra porcentagem, frações, regra de três, média, gráficos, área/volume e juros. Sete assuntos cobrem a maior parte das 30 questões, e são todos de conta curta. Tem nove blocos com exemplo resolvido, um treino relâmpago de 24 contas e uma prova inteira de 30 questões no simulado.</li>
         <li><b>Humanas, Natureza e Linguagens (1h15 no total).</b> Quase tudo se resolve interpretando o texto de apoio. Aqui a técnica de leitura vale mais que decorar conteúdo.</li>
         <li><b>Simulado e dia da prova (1h15).</b> Fazer questão de verdade e errar hoje é o que impede o erro no domingo.</li>
       </ul>
@@ -377,7 +448,7 @@ footer{
     <div class="metricas">
       <div class="metrica"><span class="num" id="m-blocos">0/12</span><small>Blocos do plano</small></div>
       <div class="metrica"><span class="num" id="m-min">0</span><small>Minutos estudados</small></div>
-      <div class="metrica"><span class="num" id="m-quest">0/34</span><small>Questões respondidas</small></div>
+      <div class="metrica"><span class="num" id="m-quest">0/48</span><small>Questões respondidas</small></div>
       <div class="metrica"><span class="num" id="m-acerto">–</span><small>Aproveitamento</small></div>
     </div>
     <p style="font-size:.85rem;color:var(--ink-3)">Fica tudo salvo neste navegador. Podes fechar e voltar depois que não perde nada. <button class="chip" id="btn-limpar" style="margin-left:6px">Apagar progresso</button></p>
@@ -401,9 +472,9 @@ footer{
   <div class="card">
     <h3>Se tu só tiver 2 horas no total</h3>
     <ul class="lista">
-      <li><b>50 min</b> — Redação: estrutura dos 4 parágrafos + repertórios coringa (aba Redação).</li>
-      <li><b>45 min</b> — Matemática: porcentagem, regra de três, média e leitura de gráfico (aba Matemática).</li>
-      <li><b>25 min</b> — Simulado: as questões marcadas como Matemática, com as explicações.</li>
+      <li><b>50 min</b> — Redação: estrutura dos 4 parágrafos, a redação-modelo anotada e os repertórios coringa.</li>
+      <li><b>45 min</b> — Matemática: blocos 1 a 4 (porcentagem, frações, regra de três, média e gráfico) e o Treino relâmpago.</li>
+      <li><b>25 min</b> — Simulado: 10 questões no filtro Matemática, lendo a explicação de cada uma.</li>
     </ul>
     <div class="nota">Isso sozinho já muda o resultado de quem estava indo pra prova sem abrir nada.</div>
   </div>
@@ -414,7 +485,7 @@ footer{
   <div class="head">
     <span class="eyebrow">Prioridade 1 · manhã de domingo</span>
     <h2>Matemática sem enrolação</h2>
-    <p class="prosa">A prova de Matemática do Encceja é a mesma prova todo ano, com números diferentes. Ela pergunta sobre dinheiro, receita, conta de luz, mapa, terreno, gráfico de jornal e caixa d'água. Os sete blocos abaixo cobrem a esmagadora maioria das 30 questões. Lê o exemplo resolvido de cada um em voz alta e refaz a conta no papel — ler sem escrever não pega.</p>
+    <p class="prosa">A prova de Matemática do Encceja é a mesma prova todo ano, com números diferentes. Ela pergunta sobre dinheiro, receita, conta de luz, mapa, terreno, gráfico de jornal e caixa d'água. Os nove blocos abaixo cobrem a esmagadora maioria das 30 questões. Lê o exemplo resolvido de cada um em voz alta e refaz a conta no papel — ler sem escrever não pega.</p>
   </div>
 
   <div class="nota"><b>A regra de ouro:</b> nunca comece pela fórmula. Comece escrevendo o que o enunciado deu, com unidade ao lado de cada número. Metade dos erros em prova é somar reais com por cento, ou metro com centímetro.</div>
@@ -440,7 +511,35 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">2</span> Regra de três, proporção e escala</summary>
+    <summary><span class="tag mat">2</span> Frações, decimais e contas de cabeça</summary>
+    <div class="acc-body">
+      <h4>Fração de uma quantidade</h4>
+      <p class="prosa">Divide pelo número de baixo e multiplica pelo de cima — nessa ordem, porque a divisão deixa os números menores.<br>
+      <b>3/4 de 240</b>: 240 ÷ 4 = 60, depois 60 × 3 = <b>180</b>.<br>
+      <b>2/5 de 350</b>: 350 ÷ 5 = 70, depois 70 × 2 = <b>140</b>.</p>
+      <h4>As frações que viram porcentagem direto</h4>
+      <div class="formulas">
+        <div class="formula"><b>1/2</b><code>50%  =  0,5</code></div>
+        <div class="formula"><b>1/4</b><code>25%  =  0,25</code></div>
+        <div class="formula"><b>3/4</b><code>75%  =  0,75</code></div>
+        <div class="formula"><b>1/5</b><code>20%  =  0,2</code></div>
+        <div class="formula"><b>1/10</b><code>10%  =  0,1</code></div>
+        <div class="formula"><b>1/3</b><code>≈ 33%  ≈ 0,33</code></div>
+      </div>
+      <h4>Somar e subtrair decimais</h4>
+      <p class="prosa">Alinha a vírgula embaixo da vírgula e completa com zero o que faltar. 50,00 − 38,70 fica mais seguro escrito um sobre o outro do que feito de cabeça — e é exatamente aí que se perde a questão de troco.</p>
+      <h4>Multiplicar e dividir por 10, 100, 1.000</h4>
+      <p class="prosa">Multiplicar anda com a vírgula para a <b>direita</b>; dividir anda para a <b>esquerda</b>. Uma casa por zero.<br>
+      3,45 × 100 = <b>345</b> &nbsp;·&nbsp; 3,45 ÷ 10 = <b>0,345</b>.<br>
+      É essa regra que resolve toda conversão de unidade sem decorar tabela.</p>
+      <h4>Raízes e quadrados que aparecem</h4>
+      <p class="prosa">Vale ter na cabeça: 11² = 121, 12² = 144, 13² = 169, 14² = 196, 15² = 225. Se a questão der a área de um quadrado, o lado é a raiz — 144 m² de área significa <b>12 m</b> de lado.</p>
+      <div class="nota amb"><b>Sem calculadora, arredonda para conferir.</b> Antes de escolher a alternativa, refaz a conta com números redondos: 38,70 vira 40, 12,90 vira 13. Se o resultado aproximado estiver longe do que tu marcou, tem erro de conta no meio.</div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">3</span> Regra de três, proporção e escala</summary>
     <div class="acc-body">
       <h4>Como montar sem errar</h4>
       <p class="prosa">Escreve as duas grandezas em coluna, com a unidade no cabeçalho, e o valor desconhecido como <b>x</b>. Depois pergunta: <b>se uma cresce, a outra cresce?</b> Se sim, é direta — multiplica em cruz. Se uma cresce e a outra diminui (mais operários, menos tempo), é inversa — multiplica em linha.</p>
@@ -456,7 +555,7 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">3</span> Média, moda, mediana e gráficos</summary>
+    <summary><span class="tag mat">4</span> Média, moda, mediana e gráficos</summary>
     <div class="acc-body">
       <div class="formulas">
         <div class="formula"><b>Média aritmética</b><code>soma ÷ quantidade</code></div>
@@ -476,7 +575,7 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">4</span> Unidades — onde se perde ponto de graça</summary>
+    <summary><span class="tag mat">5</span> Unidades — onde se perde ponto de graça</summary>
     <div class="acc-body">
       <div class="formulas">
         <div class="formula"><b>Comprimento</b><code>1 km = 1.000 m = 100.000 cm</code></div>
@@ -492,7 +591,7 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">5</span> Geometria: área, volume e Pitágoras</summary>
+    <summary><span class="tag mat">6</span> Geometria: área, volume e Pitágoras</summary>
     <div class="acc-body">
       <div class="formulas">
         <div class="formula"><b>Retângulo</b><code>A = base × altura</code></div>
@@ -517,7 +616,25 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">6</span> Equação, função do 1º grau e juros</summary>
+    <summary><span class="tag mat">7</span> Velocidade, densidade e vazão</summary>
+    <div class="acc-body">
+      <p class="prosa">São três fórmulas com a mesma cara: uma grandeza dividida por outra. Se tu entender uma, entendeu as três.</p>
+      <div class="formulas">
+        <div class="formula"><b>Velocidade média</b><code>v = distância ÷ tempo</code></div>
+        <div class="formula"><b>Densidade</b><code>d = massa ÷ volume</code></div>
+        <div class="formula"><b>Vazão</b><code>Q = volume ÷ tempo</code></div>
+        <div class="formula"><b>Consumo</b><code>km ÷ litros</code></div>
+      </div>
+      <h4>Exemplos resolvidos</h4>
+      <p class="prosa"><b>Velocidade:</b> 240 km em 3 h → 240 ÷ 3 = <b>80 km/h</b>. Para achar o tempo, inverte: 400 km a 80 km/h → 400 ÷ 80 = 5 h.<br>
+      <b>Densidade:</b> 500 g em 200 cm³ → 500 ÷ 200 = <b>2,5 g/cm³</b>. Acima de 1 g/cm³ afunda na água; abaixo, flutua.<br>
+      <b>Vazão:</b> torneira de 20 L/min enchendo 1.200 L → 1.200 ÷ 20 = <b>60 minutos</b>.</p>
+      <div class="nota"><b>Confere a unidade antes de dividir.</b> Se a velocidade está em km/h, o tempo tem que estar em horas — 30 minutos vira 0,5 h, e não 30. Essa conversão sozinha responde por boa parte dos erros nesse bloco.</div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">8</span> Equação, função do 1º grau e juros</summary>
     <div class="acc-body">
       <h4>Equação do 1º grau</h4>
       <p class="prosa">Letra de um lado, número do outro; o que atravessa o igual troca de sinal.<br>
@@ -538,7 +655,7 @@ footer{
   </details>
 
   <details class="acc">
-    <summary><span class="tag mat">7</span> Probabilidade e contagem</summary>
+    <summary><span class="tag mat">9</span> Probabilidade e contagem</summary>
     <div class="acc-body">
       <div class="formulas">
         <div class="formula"><b>Probabilidade</b><code>casos favoráveis ÷ casos possíveis</code></div>
@@ -550,6 +667,24 @@ footer{
       <p class="prosa">Se pedir a chance de <b>dois eventos seguidos</b>, multiplica: chance de tirar cara duas vezes na moeda = ½ × ½ = <b>25%</b>.</p>
     </div>
   </details>
+
+  <div class="card" id="card-treino">
+    <h3>Treino relâmpago</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">24 contas curtas, uma de cada vez, no ritmo da prova. Faz de cabeça ou no papel e digita a resposta — vírgula ou ponto, tanto faz. Serve para transformar o que tu acabou de ler em reflexo.</p>
+    <div class="drill">
+      <div class="drill-top">
+        <span class="eyebrow" id="t-pos">Item 1 de 24</span>
+        <span class="tag ok" id="t-placar">0 certas</span>
+      </div>
+      <p class="drill-q" id="t-pergunta">—</p>
+      <div class="drill-form">
+        <input id="t-resp" type="text" inputmode="decimal" autocomplete="off" placeholder="tua resposta">
+        <button class="act" id="t-conferir">Conferir</button>
+        <button class="act ghost" id="t-pular">Pular</button>
+      </div>
+      <div class="drill-fb" id="t-feedback"></div>
+    </div>
+  </div>
 
   <div class="card">
     <h3>Chute inteligente em Matemática</h3>
@@ -597,6 +732,51 @@ footer{
         <li><b>Escrever fora da folha oficial</b> ou a lápis.</li>
       </ul>
       <div class="nota"><b>Regra prática de tamanho:</b> mira em <b>25 a 30 linhas</b>. Nunca entregue com menos de 20. Texto curto derruba nota em várias competências ao mesmo tempo, mesmo quando não zera.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Como cada competência é pontuada</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Cada uma vale 0, 1 ou 2. Lê a coluna do meio: é ali que mora a nota de quem passa sem sofrer.</p>
+    <div class="tabela-wrap">
+      <table>
+        <tr><th>Competência</th><th>Zero</th><th>Um</th><th>Dois</th></tr>
+        <tr><td><b>1. Português formal</b></td><td>Texto cheio de marcas de fala, sem pontuação, difícil de ler</td><td>Alguns desvios de ortografia e concordância, mas o texto se lê bem</td><td>Poucos desvios, frases completas e bem pontuadas</td></tr>
+        <tr><td><b>2. Tema e tipo textual</b></td><td>Fugiu do tema ou escreveu outro gênero</td><td>Ficou no tema, mas tangenciou ou misturou relato com dissertação</td><td>Discutiu o tema pedido, do início ao fim, em texto dissertativo-argumentativo</td></tr>
+        <tr><td><b>3. Argumentos</b></td><td>Só repetiu a frase do tema, sem defender nada</td><td>Tem argumento, mas raso ou sem sustentação</td><td>Dois argumentos claros, explicados e apoiados em repertório</td></tr>
+        <tr><td><b>4. Coesão</b></td><td>Frases soltas, sem ligação entre si</td><td>Alguns conectivos, com repetição do mesmo</td><td>Conectivos variados ligando parágrafos e frases</td></tr>
+        <tr><td><b>5. Proposta de intervenção</b></td><td>Não propôs nada, ou propôs algo fora do tema</td><td>Propôs de forma vaga: &ldquo;é preciso conscientizar as pessoas&rdquo;</td><td>Disse quem faz, o que faz, por qual meio e para quê</td></tr>
+      </table>
+    </div>
+    <div class="nota pri"><b>A conta que interessa:</b> 1 ponto em cada competência já dá 5 — a nota de aprovação. Cada competência que subir para 2 é bônus. Ou seja: o inimigo não é a nota baixa, é o <b>zero</b> em alguma competência.</div>
+  </div>
+
+  <div class="card">
+    <h3>Uma redação nota 10, anotada</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Tema: <b>Caminhos para enfrentar os efeitos das mudanças climáticas nas cidades brasileiras</b>. Repara no esqueleto por trás de cada parágrafo — é o mesmo do modelo acima, só que preenchido.</p>
+
+    <div class="modelo">
+      <h4>Introdução</h4>
+      <p>A Constituição Federal de 1988 estabelece que todos têm direito a um meio ambiente ecologicamente equilibrado. No entanto, os efeitos das mudanças climáticas — enchentes, deslizamentos e ondas de calor — atingem as cidades brasileiras e revelam a distância entre esse princípio e a realidade urbana do país. Esse quadro se sustenta por dois motivos principais: a ocupação desordenada do solo urbano e a ausência de planos municipais de prevenção a desastres.</p>
+      <p style="font-size:.86rem;font-family:inherit;color:var(--ink-3)"><b>O que foi feito:</b> repertório na primeira frase (Constituição), contraste com a realidade em seguida (&ldquo;No entanto&rdquo;), e a tese fechando o parágrafo já com as duas causas que os desenvolvimentos vão explicar.</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Desenvolvimento 1</h4>
+      <p><em>Em primeiro lugar</em>, é preciso considerar que o crescimento das cidades brasileiras ocorreu sem planejamento. A partir da segunda metade do século XX, o êxodo rural levou milhões de pessoas às periferias, que se instalaram em encostas e margens de rios por falta de alternativa. Segundo o IBGE, parcela expressiva da população urbana ainda vive em áreas de risco. <em>Dessa forma</em>, um volume de chuva que seria apenas um transtorno converte-se em tragédia, e as vítimas são sempre as mesmas: as famílias mais pobres.</p>
+      <p style="font-size:.86rem;font-family:inherit;color:var(--ink-3)"><b>O que foi feito:</b> um argumento só (ocupação desordenada), explicado historicamente, com repertório de instituição (IBGE) e fechamento mostrando a consequência na vida das pessoas.</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Desenvolvimento 2</h4>
+      <p><em>Além disso</em>, a maior parte dos municípios brasileiros não dispõe de plano de contingência nem de sistema de alerta para eventos climáticos extremos. Investe-se na reconstrução depois do desastre, e não na prevenção antes dele, o que multiplica o custo humano e financeiro de cada evento. <em>Como consequência</em>, cada nova enchente encontra a cidade tão despreparada quanto a anterior, e a população perde a confiança na capacidade do poder público de protegê-la.</p>
+      <p style="font-size:.86rem;font-family:inherit;color:var(--ink-3)"><b>O que foi feito:</b> o segundo argumento ataca outro ângulo — antes foi social, agora é de gestão pública. Nada se repete do parágrafo anterior.</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Conclusão com proposta</h4>
+      <p><em>Portanto</em>, medidas são urgentes para que as cidades brasileiras enfrentem as mudanças climáticas. <b>O poder público municipal, em parceria com as universidades,</b> deve <b>elaborar planos de prevenção a desastres e sistemas de alerta antecipado</b>, <em>por meio do</em> <b>mapeamento das áreas de risco e do envio de avisos por telefone e rádio à população</b>, <em>a fim de que</em> <b>a chuva volte a ser apenas chuva, e não sentença para quem mora nas margens</b>.</p>
+      <p style="font-size:.86rem;font-family:inherit;color:var(--ink-3)"><b>O que foi feito:</b> os quatro elementos, na ordem — agente, ação, meio e finalidade. Está tudo em uma frase só, e é isso que garante os 2 pontos da competência 5.</p>
     </div>
   </div>
 
@@ -664,6 +844,43 @@ footer{
   </div>
 
   <div class="card">
+    <h3>Os erros que mais derrubam a competência 1</h3>
+    <div class="grid two">
+      <div>
+        <h4 style="font-size:.95rem;color:var(--primary-ink);margin-bottom:8px">Palavras que se confundem</h4>
+        <div class="tabela-wrap">
+          <table>
+            <tr><th>Certo</th><th>Quando usar</th></tr>
+            <tr><td><b>mas</b></td><td>oposição: &ldquo;chove, mas sai&rdquo;</td></tr>
+            <tr><td><b>mais</b></td><td>quantidade: &ldquo;quer mais um&rdquo;</td></tr>
+            <tr><td><b>mau</b></td><td>o contrário de bom</td></tr>
+            <tr><td><b>mal</b></td><td>o contrário de bem</td></tr>
+            <tr><td><b>há</b></td><td>tempo passado: &ldquo;há dez anos&rdquo;</td></tr>
+            <tr><td><b>a</b></td><td>tempo futuro: &ldquo;daqui a dez anos&rdquo;</td></tr>
+            <tr><td><b>onde</b></td><td>só para lugar; se não for, use &ldquo;em que&rdquo;</td></tr>
+            <tr><td><b>por que</b></td><td>pergunta no meio da frase</td></tr>
+            <tr><td><b>por quê</b></td><td>pergunta no fim da frase</td></tr>
+            <tr><td><b>porque</b></td><td>resposta, explicação</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:.95rem;color:var(--primary-ink);margin-bottom:8px">Construções que o corretor marca</h4>
+        <ul class="lista">
+          <li><b>&ldquo;Houveram&rdquo; não existe</b> no sentido de existir: &ldquo;<em>houve</em> muitos casos&rdquo;.</li>
+          <li><b>&ldquo;Fazem dez anos&rdquo; não</b>: o certo é &ldquo;<em>faz</em> dez anos&rdquo; quando indica tempo.</li>
+          <li><b>&ldquo;Há dez anos atrás&rdquo;</b> repete a ideia. Escolhe um: &ldquo;há dez anos&rdquo; ou &ldquo;dez anos atrás&rdquo;.</li>
+          <li><b>&ldquo;Para mim fazer&rdquo; não</b>: quem faz é eu. &ldquo;Para <em>eu</em> fazer&rdquo;.</li>
+          <li><b>&ldquo;Menas&rdquo; não existe.</b> É sempre &ldquo;menos&rdquo;.</li>
+          <li><b>&ldquo;Tem muitas pessoas&rdquo;</b> é fala. Em texto formal: &ldquo;<em>há</em> muitas pessoas&rdquo;.</li>
+          <li><b>&ldquo;A nível de&rdquo;</b> não existe em norma culta. Reescreve a frase.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="nota amb"><b>Pontuação, a regra que resolve 90% dos casos:</b> se a frase passou de três linhas sem nenhuma vírgula ou ponto, ela está errada de algum jeito. Corta em duas. Frase curta quase nunca erra a concordância; frase longa quase sempre.</div>
+  </div>
+
+  <div class="card">
     <h3>Temas prováveis para 2026</h3>
     <p style="font-size:.93rem;color:var(--ink-2)">O Encceja escolhe temas do cotidiano brasileiro, com solução visível. Em 2025 caiu o vício em apostas na internet. Pensa numa causa e numa consequência para cada um destes — cinco minutos por tema já te deixa pronto:</p>
     <ul class="lista">
@@ -678,22 +895,54 @@ footer{
     </ul>
   </div>
 
-  <div class="card">
-    <h3>Treino cronometrado</h3>
-    <p style="font-size:.93rem;color:var(--ink-2)">Escreve uma redação inteira aqui, de uma sentada, em 45 minutos — é o tempo que tu vai ter no domingo depois de resolver as objetivas. Escolhe um tema da lista acima e vai. Sai ruim na primeira; é exatamente pra isso que serve.</p>
-    <input id="tema-red" placeholder="Escreve aqui o tema que tu escolheu" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:inherit">
-    <textarea id="txt-red" placeholder="Começa pela introdução: repertório, o problema, e a tese com as duas causas."></textarea>
+  <div class="card" id="card-corretor">
+    <h3>Corretor</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Escreve a redação aqui e aperta corrigir. O corretor devolve uma nota de 0 a 10 dividida nas cinco competências e aponta, trecho por trecho, o que precisa mudar. Escreve de uma sentada, em 45 minutos — é o tempo que tu vai ter no domingo depois das objetivas.</p>
+    <div class="nota amb"><b>O que ele consegue ver e o que não consegue.</b> Ele confere estrutura, tamanho, conectivos, repertório, proposta de intervenção, marcas de oralidade e uma lista de erros gramaticais frequentes — que é onde a maioria das notas se perde. Ele <b>não</b> julga se o teu argumento é bom nem se o dado que tu citou é verdadeiro. A nota é uma estimativa para tu saber onde mexer, não a nota do Inep.</div>
+
+    <input id="tema-red" placeholder="Tema da redação — escreve exatamente como está na proposta" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:inherit">
+    <textarea id="txt-red" placeholder="Começa pela introdução: repertório, o problema, e a tese com as duas causas.&#10;&#10;Deixa uma linha em branco entre um parágrafo e outro."></textarea>
     <div class="contador">
       <span><span class="num" id="c-linhas">0</span> linhas aprox.</span>
       <span><span class="num" id="c-palavras">0</span> palavras</span>
       <span><span class="num" id="c-par">0</span> parágrafos</span>
       <span id="c-aviso" style="color:var(--ink-3)"></span>
     </div>
-    <p style="font-size:.82rem;color:var(--ink-3)">A contagem de linhas é uma estimativa da folha oficial (cerca de 60 caracteres por linha). Salva sozinho enquanto tu escreve.</p>
+    <div class="chips">
+      <button class="act" id="btn-corrigir">Corrigir minha redação</button>
+      <button class="act ghost" id="btn-copiar">Copiar para correção detalhada</button>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink-3)">A contagem de linhas estima a folha oficial (cerca de 60 caracteres por linha) e o texto salva sozinho enquanto tu escreve. O botão de copiar monta um pedido de correção pronto, com tema e texto, para tu colar em qualquer lugar onde alguém — ou o Claude — possa ler com calma.</p>
+  </div>
+
+  <div class="card" id="res-correcao" hidden>
+    <div class="placar-red">
+      <div class="nota-caixa">
+        <span class="nota-num" id="r-nota">0</span>
+        <span class="nota-de">de 10</span>
+      </div>
+      <div class="nota-txt">
+        <span class="eyebrow" id="r-faixa">—</span>
+        <p id="r-veredito"></p>
+      </div>
+    </div>
+    <div id="r-comps"></div>
+    <div id="r-apontamentos"></div>
+    <details class="acc" id="r-box-anotado">
+      <summary>Ver o texto com as marcações</summary>
+      <div class="acc-body">
+        <div class="legenda">
+          <span><i class="pt erro"></i> corrigir</span>
+          <span><i class="pt aviso"></i> conferir</span>
+        </div>
+        <div id="r-anotado" class="anotado"></div>
+      </div>
+    </details>
   </div>
 
   <div class="card">
-    <h3>Autoavaliação — passa item por item no que tu escreveu</h3>
+    <h3>Conferência final, no olho</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">O corretor acima pega o que é mecânico. Estes dez itens são os que só tu consegue julgar — passa por eles depois de ler o resultado.</p>
     <div class="checklist" id="check-red">
       <label><input type="checkbox" data-ck="r1"> Tem <b>quatro parágrafos</b> e todos começam com recuo</label>
       <label><input type="checkbox" data-ck="r2"> A <b>tese</b> aparece já na última frase da introdução</label>
@@ -842,9 +1091,9 @@ footer{
 <!-- ================= SIMULADO ================= -->
 <section class="panel" id="p-simulado">
   <div class="head">
-    <span class="eyebrow">34 questões no estilo da prova</span>
+    <span class="eyebrow">48 questões no estilo da prova</span>
     <h2>Simulado</h2>
-    <p class="prosa">Responde e a correção aparece na hora, com a explicação. Erra à vontade — errar aqui é o objetivo. Faz de caneta e papel do lado: no domingo tu não vai ter calculadora.</p>
+    <p class="prosa">Responde e a correção aparece na hora, com a explicação. Erra à vontade — errar aqui é o objetivo. Faz de caneta e papel do lado: no domingo tu não vai ter calculadora. São 30 questões de Matemática, o tamanho de uma prova inteira, mais 18 das outras três áreas. O plano de 6h pede 25 delas; o resto fica de reserva para a véspera.</p>
   </div>
 
   <div class="card">
@@ -936,7 +1185,7 @@ footer{
    ESTADO
 ------------------------------------------------------------------ */
 var CHAVE = "encceja6h.v1";
-var S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, tema:"auto"};
+var S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, treino:{i:0,certas:0}, tema:"auto"};
 try{
   var salvo = localStorage.getItem(CHAVE);
   if(salvo){ var o = JSON.parse(salvo); for(var k in o){ if(o[k]!==undefined) S[k]=o[k]; } }
@@ -1004,25 +1253,25 @@ var PLANO = [
    desc:"Aba Redação. As cinco competências, o que zera, e principalmente o modelo dos quatro parágrafos. Copia o esqueleto à mão num papel — copiar fixa muito mais que ler."},
   {id:"d1b3", dia:1, dur:"10 min", tit:"Pausa de verdade",
    desc:"Levanta, caminha, bebe água. Sem tela. Pausa cortada é bloco seguinte perdido."},
-  {id:"d1b4", dia:1, dur:"55 min", tit:"Matemática: porcentagem, regra de três, média e gráfico",
-   desc:"Aba Matemática, blocos 1 a 3. Refaz cada exemplo resolvido no papel antes de olhar a resposta."},
+  {id:"d1b4", dia:1, dur:"55 min", tit:"Matemática: porcentagem, frações, regra de três e gráfico",
+   desc:"Aba Matemática, blocos 1 a 4. Refaz cada exemplo resolvido no papel antes de olhar a resposta, e termina no Treino relâmpago no fim da aba."},
   {id:"d1b5", dia:1, dur:"30 min", tit:"Simulado: só Matemática",
-   desc:"Aba Simulado, filtro Matemática. Responde as 16 sem pressa e lê a explicação de cada uma, inclusive das que acertou."},
+   desc:"Aba Simulado, filtro Matemática. Responde 15 questões sem pressa e lê a explicação de cada uma, inclusive das que acertou. As outras 15 ficam para a véspera."},
   {id:"d1b6", dia:1, dur:"15 min", tit:"Anotar os erros",
    desc:"Escreve numa folha só os assuntos que tu errou. Essa folha é o teu material de revisão de domingo de manhã."},
 
   {id:"d2b1", dia:2, dur:"45 min", tit:"Matemática: unidades, geometria, função e juros",
-   desc:"Aba Matemática, blocos 4 a 7. Presta atenção especial em m³ para litro e nas fórmulas de área — são as que mais aparecem."},
+   desc:"Aba Matemática, blocos 5 a 9. Presta atenção especial em m³ para litro e nas fórmulas de área — são as que mais aparecem."},
   {id:"d2b2", dia:2, dur:"45 min", tit:"Escrever uma redação inteira, cronometrada",
-   desc:"Aba Redação, treino no fim da página. Escolhe um tema da lista, marca 45 minutos no cronômetro e escreve sem parar até acabar. Não interrompe para pesquisar."},
+   desc:"Aba Redação, corretor no fim da página. Escolhe um tema da lista, marca 45 minutos no cronômetro e escreve sem parar até acabar. Não interrompe para pesquisar nem para corrigir — isso é o bloco seguinte."},
   {id:"d2b3", dia:2, dur:"10 min", tit:"Pausa",
    desc:"Fecha o app. Volta em dez minutos."},
   {id:"d2b4", dia:2, dur:"20 min", tit:"Corrigir a própria redação",
-   desc:"Passa o checklist de autoavaliação item por item. Cada item desmarcado é um ponto que tu ainda pode ganhar no domingo — arruma o parágrafo ali mesmo."},
+   desc:"Aperta Corrigir na aba Redação, lê a nota das cinco competências e arruma cada trecho apontado ali mesmo. Depois roda a correção de novo e vê a nota subir. Termina passando a conferência final no olho."},
   {id:"d2b5", dia:2, dur:"40 min", tit:"Varredura de Humanas, Natureza e Linguagens",
    desc:"Aba Revisão. Começa pela técnica de leitura, que serve para as três. Depois passa os três blocos lendo rápido, sem tentar decorar nada."},
   {id:"d2b6", dia:2, dur:"20 min", tit:"Simulado final e logística",
-   desc:"Aba Simulado, as 18 questões das outras áreas. Termina lendo a aba Dia da prova e separando documento e canetas."}
+   desc:"Aba Simulado, 10 questões das outras três áreas. Termina lendo a aba Dia da prova e separando documento e canetas."}
 ];
 
 function montarPlano(){
@@ -1089,7 +1338,104 @@ $("#btn-play").addEventListener("click", function(){
 $("#btn-reset").addEventListener("click", function(){ restante = alvoSeg; acumulado = 0; pararRelogio(); });
 
 /* ------------------------------------------------------------------
-   BANCO DE QUESTÕES — 34, no estilo do Encceja
+   TREINO RELÂMPAGO — 24 contas curtas
+------------------------------------------------------------------ */
+var TREINO = [
+ {p:"Quanto é 10% de 240?", r:24, d:"10% é dividir por 10."},
+ {p:"Quanto é 25% de 800?", r:200, d:"25% é metade da metade: 800 → 400 → 200."},
+ {p:"Quanto é 15% de 200?", r:30, d:"10% dá 20, mais metade disso (10) = 30."},
+ {p:"Um valor de R$ 150,00 sofre aumento de 20%. Quanto passa a custar?", r:180, d:"150 × 1,20 = 180."},
+ {p:"Um valor de R$ 400,00 recebe 30% de desconto. Quanto sai?", r:280, d:"Sobra 70%: 400 × 0,70 = 280."},
+ {p:"Quanto é 3/4 de 120?", r:90, d:"120 ÷ 4 = 30, e 30 × 3 = 90."},
+ {p:"Qual é a média aritmética de 4, 8 e 6?", r:6, d:"(4+8+6) ÷ 3 = 18 ÷ 3 = 6."},
+ {p:"Quanto é 0,5 × 80?", r:40, d:"0,5 é a metade: 80 ÷ 2 = 40."},
+ {p:"Quanto é 2,5 × 4?", r:10, d:"2,5 × 4 = 10. Pensa em quatro moedas de dois e meio."},
+ {p:"Quantos litros há em 1,5 m³?", r:1500, d:"1 m³ = 1.000 L, então 1,5 m³ = 1.500 L."},
+ {p:"Quantos metros há em 3,2 km?", r:3200, d:"1 km = 1.000 m: a vírgula anda três casas para a direita."},
+ {p:"Quantos quilos são 750 g?", r:0.75, d:"Divide por 1.000: 0,75 kg."},
+ {p:"Qual a área de um retângulo de 9 m por 7 m? (em m²)", r:63, d:"Área = base × altura = 9 × 7 = 63."},
+ {p:"Qual o perímetro de um quadrado de lado 8 cm? (em cm)", r:32, d:"Perímetro é a soma dos quatro lados: 8 × 4 = 32."},
+ {p:"Qual a área de um triângulo de base 10 cm e altura 6 cm? (em cm²)", r:30, d:"(10 × 6) ÷ 2 = 60 ÷ 2 = 30. Não esquece de dividir por 2."},
+ {p:"Qual o volume de uma caixa de 2 m × 3 m × 4 m? (em m³)", r:24, d:"2 × 3 × 4 = 24."},
+ {p:"Quanto é a raiz quadrada de 81?", r:9, d:"9 × 9 = 81."},
+ {p:"Quanto é a raiz quadrada de 169?", r:13, d:"13 × 13 = 169."},
+ {p:"Quanto é 5 elevado ao quadrado?", r:25, d:"5 × 5 = 25."},
+ {p:"Um carro percorre 150 km em 2 horas. Qual a velocidade média, em km/h?", r:75, d:"150 ÷ 2 = 75 km/h."},
+ {p:"Juros simples sobre R$ 2.000,00 a 1% ao mês, por 3 meses. Quanto de juros? (só os juros)", r:60, d:"2000 × 0,01 × 3 = 60."},
+ {p:"Qual a probabilidade de sair número par em um dado comum? (em %)", r:50, d:"3 pares em 6 faces: 3/6 = 50%."},
+ {p:"Resolve: 2x + 6 = 20. Quanto vale x?", r:7, d:"2x = 14, logo x = 7."},
+ {p:"Se 6 pães custam R$ 9,00, quanto custam 10 pães? (em reais)", r:15, d:"Cada pão sai R$ 1,50; 1,50 × 10 = 15."}
+];
+
+var tIdx = 0, tCertas = 0, tRespondido = false;
+if(S.treino){ tIdx = S.treino.i || 0; tCertas = S.treino.certas || 0; }
+if(tIdx >= TREINO.length){ tIdx = 0; tCertas = 0; }
+
+function numDe(txt){
+  var t = String(txt).trim().toLowerCase()
+    .replace(/r\$/g,"").replace(/%/g,"")
+    .replace(/\b(reais|real|litros|litro|metros|metro|km\/h|km|cm|kg|mm|min|minutos|horas|hora|m2|m3|m²|m³|g)\b/g,"")
+    .replace(/\s/g,"").replace(/\.(?=\d{3}\b)/g,"").replace(",",".");
+  var n = parseFloat(t);
+  return isNaN(n) ? null : n;
+}
+
+function mostrarTreino(){
+  var q = TREINO[tIdx];
+  $("#t-pos").textContent = "Item " + (tIdx+1) + " de " + TREINO.length;
+  $("#t-placar").textContent = tCertas + (tCertas === 1 ? " certa" : " certas");
+  $("#t-pergunta").textContent = q.p;
+  $("#t-resp").value = "";
+  $("#t-feedback").textContent = "";
+  $("#t-feedback").className = "drill-fb";
+  $("#t-conferir").textContent = "Conferir";
+  tRespondido = false;
+}
+
+function avancarTreino(){
+  tIdx++;
+  if(tIdx >= TREINO.length){
+    $("#t-pos").textContent = "Fim do treino";
+    $("#t-pergunta").textContent = "Terminou: " + tCertas + " de " + TREINO.length + " certas. " +
+      (tCertas >= 20 ? "Esse ritmo passa na prova com folga."
+       : tCertas >= 14 ? "Está na faixa de aprovação. Refaz uma vez amanhã para ganhar velocidade."
+       : "Volta nos blocos 1, 2 e 4 e refaz o treino — são justamente essas contas que mais caem.");
+    $("#t-feedback").textContent = "";
+    $("#t-conferir").textContent = "Recomeçar";
+    tIdx = TREINO.length; tRespondido = true;
+    S.treino = {i:0, certas:0}; salvar();
+    return;
+  }
+  S.treino = {i:tIdx, certas:tCertas}; salvar();
+  mostrarTreino();
+}
+
+function conferirTreino(){
+  if(tIdx >= TREINO.length){ tIdx = 0; tCertas = 0; S.treino = {i:0, certas:0}; salvar(); mostrarTreino(); return; }
+  if(tRespondido){ avancarTreino(); return; }
+  var q = TREINO[tIdx];
+  var n = numDe($("#t-resp").value);
+  var fb = $("#t-feedback");
+  if(n === null){ fb.className = "drill-fb errado"; fb.textContent = "Digita um número para conferir."; return; }
+  tRespondido = true;
+  if(Math.abs(n - q.r) < 0.0001){
+    tCertas++;
+    fb.className = "drill-fb certo";
+    fb.textContent = "Certo. " + q.d;
+  }else{
+    fb.className = "drill-fb errado";
+    fb.innerHTML = "Era <b>" + String(q.r).replace(".", ",") + "</b>. " + q.d;
+  }
+  $("#t-conferir").textContent = "Próxima";
+  $("#t-placar").textContent = tCertas + (tCertas === 1 ? " certa" : " certas");
+}
+
+$("#t-conferir").addEventListener("click", conferirTreino);
+$("#t-pular").addEventListener("click", function(){ tRespondido = true; avancarTreino(); });
+$("#t-resp").addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); conferirTreino(); } });
+
+/* ------------------------------------------------------------------
+   BANCO DE QUESTÕES — 48, no estilo do Encceja
 ------------------------------------------------------------------ */
 var Q = [
 {ar:"Matemática", t:"Uma loja vende um drone recreativo por R$ 2.400,00. Em uma promoção, a loja oferece 15% de desconto para pagamento à vista.\n\nQuanto um cliente pagará à vista por esse drone?",
@@ -1155,6 +1501,62 @@ var Q = [
 {ar:"Matemática", t:"Resolva a equação abaixo.\n\n3x − 7 = 2x + 5",
  a:["x = −2","x = 2","x = 5","x = 12","x = 24"], c:3,
  e:"Passa-se o que tem x para um lado e os números para o outro, trocando o sinal ao atravessar o igual: 3x − 2x = 5 + 7, ou seja, x = 12. Para conferir, basta substituir: 3(12) − 7 = 29 e 2(12) + 5 = 29."},
+
+{ar:"Matemática", t:"Em uma turma de 240 alunos, 3/4 se inscreveram em uma atividade extracurricular.\n\nQuantos alunos se inscreveram?",
+ a:["60 alunos","80 alunos","160 alunos","180 alunos","200 alunos"], c:3,
+ e:"Fração de uma quantidade é divisão seguida de multiplicação: divide pelo debaixo e multiplica pelo de cima. 240 ÷ 4 = 60, e 60 × 3 = 180. O 60 sozinho é 1/4 da turma — justamente a alternativa oferecida para quem parou no meio da conta."},
+
+{ar:"Matemática", t:"Uma pessoa comprou 3 unidades de um produto que custa R$ 12,90 cada e pagou com uma nota de R$ 50,00.\n\nQual foi o troco recebido?",
+ a:["R$ 10,30","R$ 11,30","R$ 12,30","R$ 13,10","R$ 37,10"], c:1,
+ e:"Primeiro o total da compra: 3 × 12,90 = R$ 38,70. Depois o troco: 50,00 − 38,70 = R$ 11,30. Ao subtrair com decimais, alinhe a vírgula embaixo da vírgula — é onde mais se erra nesse tipo de questão."},
+
+{ar:"Matemática", t:"Um veículo percorreu 240 km em 3 horas de viagem.\n\nQual foi sua velocidade média nesse trajeto?",
+ a:["60 km/h","70 km/h","80 km/h","90 km/h","120 km/h"], c:2,
+ e:"Velocidade média é a distância dividida pelo tempo: 240 ÷ 3 = 80 km/h. A mesma fórmula responde às outras duas perguntas possíveis: distância = velocidade × tempo, e tempo = distância ÷ velocidade."},
+
+{ar:"Matemática", t:"Um corpo tem massa de 500 g e ocupa um volume de 200 cm³.\n\nQual é a densidade desse corpo?",
+ a:["0,4 g/cm³","2,0 g/cm³","2,5 g/cm³","4,0 g/cm³","10,0 g/cm³"], c:2,
+ e:"Densidade é massa dividida por volume: 500 ÷ 200 = 2,5 g/cm³. Se a densidade der maior que 1 g/cm³, o corpo afunda na água; menor que isso, flutua — a prova costuma emendar essa conclusão na questão seguinte."},
+
+{ar:"Matemática", t:"Um terreno retangular mede 30 m por 20 m e será cercado com 3 fios de arame farpado em toda a sua volta.\n\nQuantos metros de arame serão necessários?",
+ a:["100 m","150 m","300 m","600 m","1.800 m"], c:2,
+ e:"Cercar é perímetro, não área. O perímetro do retângulo é 2 × (30 + 20) = 100 m. Como são 3 fios dando a volta completa: 100 × 3 = 300 m. Quem calculou a área (600 m²) caiu na confusão mais comum entre área e perímetro."},
+
+{ar:"Matemática", t:"Cinco máquinas iguais produzem 400 peças em 8 horas de funcionamento.\n\nMantido o mesmo ritmo, quantas peças 8 máquinas produzirão em 10 horas?",
+ a:["500 peças","640 peças","720 peças","800 peças","1.000 peças"], c:3,
+ e:"O caminho mais seguro na regra de três composta é achar a produção de uma máquina em uma hora: 400 ÷ (5 × 8) = 400 ÷ 40 = 10 peças. Agora é só multiplicar pelo novo cenário: 8 máquinas × 10 horas = 80 máquina-hora, e 80 × 10 = 800 peças."},
+
+{ar:"Matemática", t:"Um produto que custava R$ 250,00 passou a ser vendido por R$ 200,00.\n\nQual foi o percentual de desconto aplicado?",
+ a:["10%","20%","25%","30%","50%"], c:1,
+ e:"A variação é calculada sempre sobre o valor original: (250 − 200) ÷ 250 = 50 ÷ 250 = 0,2 = 20%. Dividir os 50 pelo valor novo (200) daria 25% — é a alternativa preparada para quem usa o denominador errado. O de baixo é sempre o valor de onde se partiu."},
+
+{ar:"Matemática", t:"Uma placa de sinalização tem a forma de um triângulo com 12 cm de base e 7 cm de altura.\n\nQual é a área dessa placa?",
+ a:["19 cm²","38 cm²","42 cm²","84 cm²","168 cm²"], c:2,
+ e:"A área do triângulo é base × altura ÷ 2: 12 × 7 = 84, e 84 ÷ 2 = 42 cm². Esquecer de dividir por 2 é o erro que produz exatamente a alternativa 84 — por isso ela está ali."},
+
+{ar:"Matemática", t:"Uma pessoa aplicou R$ 1.000,00 a juros compostos, com taxa de 10% ao mês, durante 2 meses.\n\nQual será o montante ao final do período?",
+ a:["R$ 1.100,00","R$ 1.200,00","R$ 1.210,00","R$ 1.220,00","R$ 1.300,00"], c:2,
+ e:"Nos juros compostos o rendimento do primeiro mês passa a render também: 1000 × 1,10 = 1.100 no primeiro mês; 1.100 × 1,10 = 1.210 no segundo. A juros simples daria R$ 1.200,00 — os R$ 10,00 de diferença são exatamente os juros sobre os juros, e é essa comparação que a prova quer que tu enxergue."},
+
+{ar:"Matemática", t:"Uma receita indica 300 g de arroz para servir 4 pessoas.\n\nMantida a mesma proporção, quantos gramas de arroz são necessários para servir 10 pessoas?",
+ a:["600 g","700 g","750 g","800 g","1.200 g"], c:2,
+ e:"Regra de três direta: 300 está para 4 assim como x está para 10. Multiplicando em cruz: 4x = 3.000, logo x = 750 g. Também dá para achar a porção individual primeiro: 300 ÷ 4 = 75 g por pessoa; 75 × 10 = 750 g."},
+
+{ar:"Matemática", t:"Um aluno tirou 5,0, 7,0 e 6,0 nas três primeiras avaliações. Serão quatro avaliações de mesmo peso, e ele precisa de média final 6,5 para ser aprovado.\n\nQual é a nota mínima que ele precisa tirar na quarta avaliação?",
+ a:["6,5","7,0","7,5","8,0","8,5"], c:3,
+ e:"Para média 6,5 em 4 notas, a soma precisa ser 6,5 × 4 = 26. Ele já tem 5 + 7 + 6 = 18. Falta 26 − 18 = 8,0. O caminho é sempre esse: transforma a média desejada em soma total, e desconta o que já foi feito."},
+
+{ar:"Matemática", t:"Um gráfico de setores mostra a distribuição de 800 entrevistados por meio de transporte utilizado. O setor correspondente ao transporte público representa 25% do total.\n\nQuantos entrevistados usam transporte público?",
+ a:["100","150","200","250","400"], c:2,
+ e:"25% é a quarta parte do total: 800 ÷ 4 = 200. De cabeça, 25% é sempre metade da metade — dobra a agilidade em questão de gráfico de setores, onde as fatias mais comuns são 50%, 25% e 10%."},
+
+{ar:"Matemática", t:"Uma torneira despeja água a uma vazão constante de 20 litros por minuto em uma caixa d'água vazia com capacidade de 1.200 litros.\n\nEm quanto tempo a caixa ficará cheia?",
+ a:["20 minutos","40 minutos","1 hora","1 hora e 20 minutos","2 horas"], c:2,
+ e:"Divide-se o volume total pela vazão: 1.200 ÷ 20 = 60 minutos, ou seja, 1 hora. Atenção ao formato pedido nas alternativas — a conta dá 60, mas a resposta aparece convertida em hora, e é comum marcar errado por causa disso."},
+
+{ar:"Matemática", t:"Um terreno quadrado tem área de 144 m².\n\nQual é a medida do lado desse terreno?",
+ a:["10 m","12 m","14 m","24 m","36 m"], c:1,
+ e:"No quadrado, a área é lado × lado. Então o lado é a raiz quadrada da área: √144 = 12 m, porque 12 × 12 = 144. Vale ter na cabeça os quadrados até 15: 100, 121, 144, 169, 196 e 225 resolvem quase todas essas questões."},
 
 {ar:"Linguagens", t:"Leia o texto de uma campanha publicitária.\n\n\"Beba mais água. Cuide do seu corpo. Comece hoje mesmo.\"\n\nA função da linguagem predominante nesse texto é a",
  a:["referencial, porque informa dados objetivos sobre a saúde.","emotiva, porque expressa os sentimentos de quem escreve.","conativa, porque procura convencer o leitor a agir.","metalinguística, porque explica o funcionamento da língua.","fática, porque testa se o canal de comunicação funciona."], c:2,
@@ -1356,6 +1758,404 @@ $$("#check-red input").forEach(function(i){
 });
 
 /* ------------------------------------------------------------------
+   CORRETOR DE REDAÇÃO
+   Analisador determinístico calcado nas 5 competências do Encceja.
+   Vê forma, estrutura e uma lista de desvios frequentes; não julga
+   a qualidade da ideia nem a veracidade do dado citado.
+------------------------------------------------------------------ */
+var LIM_INI = "(?:^|[^0-9a-z\\u00c0-\\u024f])";
+var LIM_FIM = "(?![0-9a-z\\u00c0-\\u024f])";
+var CLASSES = {a:"aáàâã", e:"eéêè", i:"iíî", o:"oóôõ", u:"uúü", c:"cç"};
+
+function semAcento(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+function escHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function paraRegex(frase){
+  return semAcento(frase).toLowerCase().split("").map(function(ch){
+    if(ch === " ") return "\\s+";
+    if(CLASSES[ch]) return "[" + CLASSES[ch] + "]";
+    if(".?*+^$()[]{}|\\/-".indexOf(ch) >= 0) return "\\" + ch;
+    return ch;
+  }).join("");
+}
+function reDe(lista){
+  return new RegExp("(" + LIM_INI + ")(" + lista.map(paraRegex).join("|") + ")" + LIM_FIM, "gi");
+}
+/* devolve [{i, j, txt}] das ocorrências de `lista` dentro de `escopo` */
+function buscar(lista, escopo, base){
+  var re = reDe(lista), m, saida = [];
+  while((m = re.exec(escopo)) !== null){
+    var ini = m.index + m[1].length;
+    saida.push({i: base + ini, j: base + ini + m[2].length, txt: m[2]});
+    if(re.lastIndex === m.index) re.lastIndex++;
+  }
+  return saida;
+}
+function temAlgum(lista, escopo){ return buscar(lista, escopo, 0).length > 0; }
+/* igual a buscar(), mas exigindo a grafia exata: usado na conferência de acentos */
+function buscarLiteral(lista, escopo){
+  var corpo = lista.map(function(w){ return w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }).join("|");
+  var re = new RegExp("(" + LIM_INI + ")(" + corpo + ")" + LIM_FIM, "gi"), m, saida = [];
+  while((m = re.exec(escopo)) !== null){
+    var ini = m.index + m[1].length;
+    saida.push({i: ini, j: ini + m[2].length, txt: m[2]});
+    if(re.lastIndex === m.index) re.lastIndex++;
+  }
+  return saida;
+}
+
+var L_ORAL = ["a gente","pra","pro","pras","pros","tá","né","cê","vc","tipo assim","um monte","meio que","daí","galera","bagunça","bacana","tô","pow","nossa","cara"];
+var L_PESSOA = ["eu acho","eu penso","eu acredito","na minha opinião","em minha opinião","no meu ponto de vista","a meu ver","ao meu ver","eu vejo","eu sou","eu vou","eu tenho","eu quero","nós achamos","acho que","acredito que","penso que","eu concordo","eu discordo","na minha visão"];
+var L_NARRATIVA = ["era uma vez","certo dia","um belo dia","então ele disse","então ela disse","me lembro de quando","naquele dia eu","quando eu era"];
+var L_CARTA = ["prezado","prezada","prezados","atenciosamente","cordialmente","querido leitor","abaixo-assinado","sem mais para o momento","desde já agradeço"];
+
+var L_CONECT_INI = ["em primeiro lugar","primeiramente","inicialmente","nesse sentido","nesse contexto","nesse cenário","dessa forma","desse modo","dessa maneira","além disso","ademais","outrossim","somado a isso","soma-se a isso","por outro lado","em segundo lugar","não obstante","portanto","diante do exposto","diante disso","logo","por fim","em suma","assim","entretanto","no entanto","contudo","todavia","destarte","posto isso","por conseguinte","conclui-se","é notório que","é evidente que","vale ressaltar","cabe destacar"];
+var L_CONECT_GERAL = L_CONECT_INI.concat(["porque","uma vez que","visto que","já que","pois","embora","apesar de","ainda que","a fim de","para que","por meio de","através de","como consequência","por isso","ou seja","isto é","por exemplo","conforme","segundo","de acordo com","enquanto","à medida que","também","mesmo que","tanto que","com efeito","em razão de","devido a","graças a","tendo em vista"]);
+
+var L_REPERTORIO = ["constituição","constituição federal","carta magna","artigo 5","artigo 6","artigo 205","artigo 225","direitos humanos","onu","unesco","unicef","oms","ibge","ipea","sus","eca","estatuto da criança","ldb","paulo freire","milton santos","bauman","darcy ribeiro","djamila","declaração universal","1988","1948","segundo dados","segundo o","segundo a","de acordo com","conforme dados","uma pesquisa","um estudo","dados do","dados da"];
+var L_CAUSA = ["porque","uma vez que","visto que","já que","pois","em razão de","devido a","decorre de","resulta de","como consequência","por isso","por conseguinte","o que gera","o que provoca","o que resulta","acarreta","gera","provoca"];
+
+var L_AGENTE = ["governo","governo federal","estado","poder público","poder público municipal","ministério","ministério da educação","ministério da saúde","prefeitura","prefeituras","escola","escolas","instituições de ensino","mídia","meios de comunicação","ong","ongs","família","famílias","sociedade civil","congresso nacional","município","municípios","secretaria","universidade","universidades","imprensa","empresas","poder legislativo","judiciário","mec","inep","defesa civil"];
+var L_ACAO = ["criar","criando","ampliar","ampliando","implementar","implementando","implantar","promover","promovendo","fiscalizar","fiscalizando","investir","investindo","desenvolver","desenvolvendo","garantir","garantindo","incentivar","incentivando","elaborar","elaborando","realizar","realizando","oferecer","oferecendo","construir","instituir","adotar","estabelecer","reforçar","capacitar","conscientizar","deve","devem","é preciso","é necessário","cabe ao","cabe à","compete ao"];
+var L_MEIO = ["por meio de","por meio da","por meio do","por meio dos","por meio das","através de","através da","através do","mediante","com o uso de","valendo-se de","utilizando","com o auxílio de","por intermédio de","com o apoio de"];
+var L_FIM = ["a fim de","com o objetivo de","com o intuito de","para que","de modo que","de maneira que","visando","com a finalidade de","para garantir","para reduzir","para combater","para promover","para assegurar","para evitar"];
+
+/* desvios gramaticais: [regex, nível, mensagem] — só padrões de baixa ambiguidade */
+var DESVIOS = [
+  [/(^|[^0-9a-z\u00c0-\u024f])(menas)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "“Menas” não existe. É sempre “menos”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(houveram|haviam\s+muitos|haviam\s+muitas)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "No sentido de existir, “haver” não vai para o plural: “houve”, “havia”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(fazem\s+(?:\d+|muitos|alguns|v[a\u00e1]rios|dez|vinte|trinta)\s+anos)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "Quando indica tempo, “fazer” fica no singular: “faz dez anos”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(h[a\u00e1]\s+\w+\s+atr[a\u00e1]s)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "“Há” já indica passado; “atrás” fica sobrando. Escolhe um dos dois."],
+  [/(^|[^0-9a-z\u00c0-\u024f])((?:para|pra)\s+mim\s+(?:fazer|ver|falar|ajudar|entender|comprar|resolver|construir|estudar|poder))(?![0-9a-z\u00c0-\u024f])/gi, "erro", "Depois de “para”, quem pratica a ação é “eu”: “para eu fazer”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(a\s+n[i\u00ed]vel\s+de)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "“A nível de” não existe na norma culta. Reescreve a frase."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(por\s+que)\s*\?/gi, "erro", "No fim da pergunta, escreve-se “por quê”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(tem\s+(?:muitas|muitos|v[a\u00e1]rios|v[a\u00e1]rias|pessoas|gente))(?![0-9a-z\u00c0-\u024f])/gi, "aviso", "Em texto formal, prefira “há” no lugar de “tem”: “há muitas pessoas”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(mais)(?=\s*,)/gi, "aviso", "Se aqui a ideia é de oposição, o certo é “mas”, sem o i."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(onde)(?![0-9a-z\u00c0-\u024f])/gi, "aviso", "“Onde” só vale para lugar. Se não for lugar, troca por “em que”."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(de\s+encontro\s+a[os]?)(?![0-9a-z\u00c0-\u024f])/gi, "aviso", "“De encontro a” significa contra. Se querias dizer a favor, é “ao encontro de”."],
+  [/()(\.\.\.)/g, "aviso", "Reticências deixam a ideia pela metade. Em dissertação, fecha a frase."],
+  [/()(!+)/g, "aviso", "Ponto de exclamação não combina com o tom impessoal da dissertação."],
+  [/(^|[^0-9a-z\u00c0-\u024f])(([a-z\u00c0-\u024f]{4,})\s+\3)(?![0-9a-z\u00c0-\u024f])/gi, "erro", "Palavra repetida em sequência."]
+];
+
+/* palavras que não existem sem acento — pega o desvio nº 1 da competência 1.
+   Só entram formas que, sem o acento, não são palavra nenhuma do português:
+   "seria" e "publica" ficam de fora porque existem como verbo. */
+var ACENTO_FALTA = {
+  "voce":"você", "tambem":"também", "alem":"além", "atraves":"através",
+  "ninguem":"ninguém", "necessario":"necessário", "necessaria":"necessária",
+  "possivel":"possível", "varios":"vários", "varias":"várias", "serio":"sério",
+  "dificil":"difícil", "dificeis":"difíceis", "facil":"fácil", "saude":"saúde",
+  "familia":"família", "familias":"famílias", "historia":"história",
+  "nao":"não", "entao":"então", "sao":"são", "tres":"três", "apos":"após",
+  "atencao":"atenção", "educacao":"educação", "populacao":"população",
+  "situacao":"situação", "questao":"questão", "solucao":"solução",
+  "condicao":"condição", "informacao":"informação", "comunicacao":"comunicação",
+  "importancia":"importância", "consequencia":"consequência", "consequencias":"consequências",
+  "experiencia":"experiência", "ciencia":"ciência", "referencia":"referência",
+  "violencia":"violência", "economico":"econômico", "economica":"econômica",
+  "politico":"político", "politica":"política", "responsavel":"responsável",
+  "responsaveis":"responsáveis", "prejuizo":"prejuízo", "individuo":"indivíduo",
+  "individuos":"indivíduos", "constituicao":"Constituição", "ja":"já", "ate":"até"
+};
+
+var NOMES_COMP = [
+  "1. Domínio da escrita formal",
+  "2. Tema e tipo textual",
+  "3. Seleção e organização dos argumentos",
+  "4. Coesão e conectivos",
+  "5. Proposta de intervenção"
+];
+
+var VAZIAS = ["para","como","sobre","pelo","pela","pelos","pelas","dos","das","com","nos","nas","que","uma","uns","umas","seus","suas","seu","sua","ser","são","estão","tem","têm","mais","menos","este","esta","isso","brasil","brasileiro","brasileira","brasileiros","brasileiras","atual","atualmente","sociedade"];
+
+function analisarRedacao(txt, tema){
+  var paras = [], re = /[^\n]+/g, m;
+  while((m = re.exec(txt)) !== null){ if(m[0].trim()) paras.push({t:m[0], i:m.index}); }
+
+  var marcas = [];                                   // {i, j, nivel}
+  var obs = [[],[],[],[],[]];                        // observações por competência
+  var itens = [];                                    // apontamentos com trecho
+  function nota(comp, nivel, msg, oc){
+    obs[comp].push({nivel:nivel, msg:msg});
+    if(oc && oc.length){
+      var vistos = {};
+      oc.slice(0, 4).forEach(function(o){
+        if(vistos[o.txt.toLowerCase()]) return;
+        vistos[o.txt.toLowerCase()] = 1;
+        marcas.push({i:o.i, j:o.j, nivel: nivel === "ruim" ? "erro" : "aviso"});
+        itens.push({nivel: nivel === "ruim" ? "erro" : "aviso", msg:msg,
+                    trecho: contexto(txt, o.i, o.j)});
+      });
+    }
+  }
+  function contexto(t, i, j){
+    var a = Math.max(0, i - 45), b = Math.min(t.length, j + 45);
+    return (a > 0 ? "…" : "") + t.slice(a, i) + "《" + t.slice(i, j) + "》" + t.slice(j, b) + (b < t.length ? "…" : "");
+  }
+
+  var palavras = txt.trim() ? txt.trim().split(/\s+/).length : 0;
+  var linhas = paras.reduce(function(soma, p){
+    return soma + Math.max(1, Math.ceil(p.t.trim().length / 60));
+  }, 0);
+  var intro = paras[0] ? paras[0].t : "";
+  var ultimo = paras.length > 1 ? paras[paras.length - 1] : null;
+  var meio = paras.slice(1, Math.max(1, paras.length - 1));
+
+  /* ---------- C1: escrita formal ---------- */
+  var c1 = 2;
+  var oral = buscar(L_ORAL, txt, 0);
+  var pess = buscar(L_PESSOA, txt, 0);
+  if(oral.length){ c1 -= Math.min(1, oral.length * 0.5); nota(0,"ruim","Marca de língua falada em texto que pede registro formal.", oral); }
+  else nota(0,"ok","Sem marcas de oralidade.");
+  if(pess.length){ c1 -= Math.min(1, pess.length * 0.5); nota(0,"ruim","Opinião em primeira pessoa. A dissertação argumenta em terceira pessoa.", pess); }
+  else nota(0,"ok","Mantido o distanciamento da terceira pessoa.");
+
+  var nDesvios = 0;
+  DESVIOS.forEach(function(d){
+    var rx = new RegExp(d[0].source, d[0].flags), mm, oc = [];
+    while((mm = rx.exec(txt)) !== null){
+      var ini = mm.index + (mm[1] ? mm[1].length : 0);
+      oc.push({i:ini, j:ini + mm[2].length, txt:mm[2]});
+      if(rx.lastIndex === mm.index) rx.lastIndex++;
+      if(oc.length >= 3) break;
+    }
+    if(oc.length){
+      if(d[1] === "erro"){ nDesvios += oc.length; }
+      nota(0, d[1] === "erro" ? "ruim" : "", d[2], oc);
+    }
+  });
+  var semAc = Object.keys(ACENTO_FALTA);
+  var ocAc = buscarLiteral(semAc, txt);
+  if(ocAc.length){
+    nDesvios += ocAc.length;
+    var porPalavra = {};
+    ocAc.forEach(function(o){ (porPalavra[o.txt.toLowerCase()] = porPalavra[o.txt.toLowerCase()] || []).push(o); });
+    Object.keys(porPalavra).slice(0, 6).forEach(function(w){
+      nota(0,"ruim","Falta acento: o certo é “" + ACENTO_FALTA[w] + "”.", porPalavra[w]);
+    });
+  }
+  if(nDesvios) c1 -= Math.min(1.5, nDesvios * 0.5);
+  else nota(0,"ok","Nenhum dos desvios gramaticais mais frequentes foi encontrado, e todos os acentos conferidos estão no lugar.");
+
+  var frases = txt.split(/(?<=[.!?])\s+/).filter(function(f){ return f.trim(); });
+  var longas = frases.filter(function(f){ return f.trim().split(/\s+/).length > 45; });
+  if(longas.length){
+    c1 -= 0.5;
+    nota(0,"ruim","Frase longa demais (mais de 45 palavras). Corta em duas — frase curta quase nunca erra concordância.");
+  }
+  var semPonto = paras.filter(function(p){ return !/[.!?]\s*$/.test(p.t.trim()); });
+  if(semPonto.length){ nota(0,"", semPonto.length + " parágrafo(s) sem ponto final."); }
+  c1 = Math.max(0, Math.min(2, c1));
+
+  /* ---------- C2: tema e tipo textual ---------- */
+  var c2 = 2;
+  var narr = buscar(L_NARRATIVA, txt, 0);
+  var cart = buscar(L_CARTA, txt, 0);
+  if(narr.length || cart.length){
+    c2 = 0;
+    nota(1,"ruim","Marca de outro gênero textual (narrativa ou carta). Isso zera a competência 2.", narr.concat(cart));
+  }
+  if(!tema){
+    c2 = Math.min(c2, 1);
+    nota(1,"ruim","Tema não informado no campo acima — sem ele o corretor não consegue conferir se tu ficaste no assunto.");
+  }else{
+    var chaves = semAcento(tema).toLowerCase().split(/[^a-z0-9]+/)
+      .filter(function(w){ return w.length > 3 && VAZIAS.indexOf(w) < 0; })
+      .map(function(w){ return w.slice(0, 4); });
+    chaves = chaves.filter(function(w, k){ return chaves.indexOf(w) === k; });
+    var corpo = semAcento(txt).toLowerCase();
+    var achadas = chaves.filter(function(w){ return corpo.indexOf(w) >= 0; });
+    var cobertura = chaves.length ? achadas.length / chaves.length : 0;
+    if(cobertura === 0 && c2 > 0){
+      c2 = Math.min(c2, 1);
+      nota(1,"ruim","Nenhuma palavra do tema aparece no texto. Confere se tu não fugiu do tema — é a causa número 1 de nota zero. Se o assunto está lá com outras palavras, nomeia ele com todas as letras pelo menos uma vez.");
+    }else if(cobertura < 0.34){
+      c2 = Math.min(c2, 1.5);
+      nota(1,"ruim","Só " + achadas.length + " de " + chaves.length + " palavras do tema aparecem no texto. Retoma o assunto com as palavras da proposta na abertura de cada parágrafo.");
+    }else{
+      nota(1,"ok","Tema retomado ao longo do texto (" + achadas.length + " de " + chaves.length + " palavras da proposta).");
+    }
+  }
+  if(paras.length < 4){
+    c2 = Math.max(0, c2 - 0.5);
+    nota(1,"ruim","O texto tem " + paras.length + " parágrafo(s). A estrutura dissertativa pede 4: introdução, dois desenvolvimentos e conclusão. Deixa uma linha em branco entre eles.");
+  }else{
+    nota(1,"ok","Estrutura de " + paras.length + " parágrafos.");
+  }
+  c2 = Math.max(0, Math.min(2, c2));
+
+  /* ---------- C3: argumentos ---------- */
+  var c3 = 0;
+  var devsOk = meio.filter(function(p){ return p.t.trim().split(/\s+/).length >= 40; });
+  if(devsOk.length >= 2){ c3 += 1; nota(2,"ok","Dois parágrafos de desenvolvimento com corpo suficiente."); }
+  else if(devsOk.length === 1){ c3 += 0.5; nota(2,"ruim","Só um parágrafo de desenvolvimento está desenvolvido de fato. O outro precisa de pelo menos 40 palavras."); }
+  else { nota(2,"ruim","Falta desenvolvimento: nenhum parágrafo do meio chegou a 40 palavras. Um argumento por parágrafo, explicado até a consequência."); }
+
+  var rep = buscar(L_REPERTORIO, txt, 0);
+  var repDistintos = {}; rep.forEach(function(r){ repDistintos[r.txt.toLowerCase()] = 1; });
+  var nRep = Object.keys(repDistintos).length;
+  if(nRep >= 2){ c3 += 1; nota(2,"ok","Dois ou mais repertórios citados (lei, instituição, autor ou dado)."); }
+  else if(nRep === 1){ c3 += 0.5; nota(2,"","Só um repertório. Acrescenta outro no segundo desenvolvimento: a Constituição, o IBGE, a OMS ou um autor já resolvem."); }
+  else { nota(2,"ruim","Nenhum repertório encontrado. Sem lei, instituição, autor ou dado, o argumento fica sem sustentação — é o teto da competência 3."); }
+
+  if(temAlgum(L_CAUSA, txt)){ c3 += 0.5; nota(2,"ok","Há relação de causa e consequência explicitada."); }
+  else nota(2,"ruim","Falta ligar causa e consequência. Usa “uma vez que”, “devido a”, “como consequência” dentro dos desenvolvimentos.");
+  c3 = Math.max(0, Math.min(2, c3));
+
+  /* ---------- C4: coesão ---------- */
+  var c4 = 0;
+  var aberturas = [];
+  paras.slice(1).forEach(function(p, k){
+    var comeco = p.t.trim().slice(0, 30);
+    var ach = buscar(L_CONECT_INI, comeco, 0);
+    if(ach.length){ c4 += 0.5; aberturas.push(ach[0].txt.toLowerCase()); }
+    else nota(3,"ruim","O parágrafo " + (k + 2) + " começa sem conectivo. Abre com “Em primeiro lugar”, “Além disso” ou “Portanto”.");
+  });
+  if(aberturas.length) nota(3,"ok", aberturas.length + " parágrafo(s) abrindo com conectivo.");
+  var repetidos = aberturas.filter(function(a, k){ return aberturas.indexOf(a) !== k; });
+  if(repetidos.length){ nota(3,"ruim","Conectivo de abertura repetido (“" + repetidos[0] + "”). Cada parágrafo pede um diferente."); }
+  else if(aberturas.length >= 2){ c4 += 0.25; nota(3,"ok","Conectivos de abertura variados."); }
+  var densidade = palavras ? buscar(L_CONECT_GERAL, txt, 0).length / palavras * 100 : 0;
+  if(densidade >= 2.5){ c4 += 0.25; nota(3,"ok","Boa densidade de conectivos dentro dos parágrafos."); }
+  else nota(3,"","Poucos conectivos dentro das frases. Liga as ideias com “dessa forma”, “uma vez que”, “por isso”.");
+  c4 = Math.max(0, Math.min(2, c4));
+
+  /* ---------- C5: proposta de intervenção ---------- */
+  var c5 = 0;
+  if(!ultimo){
+    nota(4,"ruim","Não há parágrafo de conclusão. Sem ele a competência 5 fica zerada — são 2 pontos de graça.");
+  }else{
+    var conc = ultimo.t;
+    var partes = [
+      {lista:L_AGENTE, nome:"o agente (quem faz)", dica:"Nomeia quem executa: o Ministério da Educação, o poder público municipal, as escolas."},
+      {lista:L_ACAO,   nome:"a ação (o que fazer)", dica:"Diz o que deve ser feito com um verbo: criar, ampliar, fiscalizar, implementar."},
+      {lista:L_MEIO,   nome:"o meio (por qual caminho)", dica:"Encaixa um “por meio de” seguido do caminho concreto: campanhas, aulas, verba do orçamento."},
+      {lista:L_FIM,    nome:"a finalidade (para quê)", dica:"Fecha com “a fim de que” ou “para que” e o resultado esperado."}
+    ];
+    partes.forEach(function(pt){
+      if(temAlgum(pt.lista, conc)){ c5 += 0.5; nota(4,"ok","Tem " + pt.nome + "."); }
+      else nota(4,"ruim","Falta " + pt.nome + ". " + pt.dica);
+    });
+  }
+  c5 = Math.max(0, Math.min(2, c5));
+
+  /* ---------- tamanho ---------- */
+  if(linhas > 0 && linhas < 20){
+    nota(1,"ruim","Texto curto: cerca de " + linhas + " linhas. Abaixo de 20 a nota cai em várias competências ao mesmo tempo.");
+    c2 = Math.max(0, c2 - 0.5); c3 = Math.max(0, c3 - 0.5);
+  }else if(linhas > 30){
+    nota(1,"","Cerca de " + linhas + " linhas: passou das 30 da folha oficial. O que exceder não é corrigido.");
+  }else if(linhas >= 20){
+    nota(1,"ok","Tamanho dentro da folha oficial (cerca de " + linhas + " linhas).");
+  }
+
+  var notas = [c1, c2, c3, c4, c5].map(function(n){ return Math.round(n * 2) / 2; });
+  var total = notas.reduce(function(a, b){ return a + b; }, 0);
+  return {notas:notas, total:total, obs:obs, itens:itens, marcas:marcas, linhas:linhas, palavras:palavras};
+}
+
+function renderCorrecao(r){
+  var caixa = $("#res-correcao");
+  caixa.hidden = false;
+
+  var nt = $("#r-nota");
+  nt.textContent = String(r.total).replace(".", ",");
+  var cx = nt.parentNode;
+  cx.className = "nota-caixa" + (r.total < 5 ? " baixa" : r.total < 7 ? " media" : "");
+  $("#r-faixa").textContent = r.total < 5 ? "abaixo da nota de corte"
+    : r.total < 7 ? "aprovado, com folga curta"
+    : r.total < 9 ? "boa redação" : "redação muito acima do exigido";
+  $("#r-veredito").textContent = r.total < 5
+    ? "A nota mínima para certificar é 5. Começa pelos itens marcados em vermelho — cada um deles vale meio ponto ou mais."
+    : r.total < 7
+    ? "Já passa. Agora sobe o que está mais barato: quase sempre é a proposta de intervenção e os conectivos de abertura."
+    : r.total < 9
+    ? "Estrutura sólida. Os ajustes que restam são de acabamento."
+    : "Nada estrutural a corrigir. Repete exatamente esse esqueleto no domingo.";
+
+  var alvo = $("#r-comps");
+  alvo.innerHTML = "";
+  r.notas.forEach(function(n, k){
+    var faixa = n >= 2 ? "n2" : n >= 1 ? "n1" : "n0";
+    var div = document.createElement("div");
+    div.className = "comp";
+    var linhas = r.obs[k].map(function(o){
+      return '<span class="' + (o.nivel === "ok" ? "ok" : o.nivel === "ruim" ? "ruim" : "") + '">' + escHtml(o.msg) + '</span>';
+    }).join("");
+    div.innerHTML =
+      '<span class="comp-nome">' + NOMES_COMP[k] + '</span>' +
+      '<span class="comp-nota ' + faixa + '">' + String(n).replace(".", ",") + ' / 2</span>' +
+      '<span class="comp-barra ' + faixa + '"><i style="width:' + (n / 2 * 100) + '%"></i></span>' +
+      '<span class="comp-obs">' + linhas + '</span>';
+    alvo.appendChild(div);
+  });
+
+  var ap = $("#r-apontamentos");
+  ap.innerHTML = "";
+  if(r.itens.length){
+    var t = document.createElement("h3");
+    t.textContent = "Onde mexer, trecho por trecho";
+    t.style.marginTop = "18px";
+    ap.appendChild(t);
+    r.itens.slice(0, 25).forEach(function(it){
+      var d = document.createElement("div");
+      d.className = "aponta";
+      d.innerHTML = '<div class="aponta-tit"><span class="marca ' + it.nivel + '">' +
+        (it.nivel === "erro" ? "corrigir" : "conferir") + '</span>' + escHtml(it.msg) + '</div>' +
+        '<div class="aponta-trecho">' + escHtml(it.trecho) + '</div>';
+      ap.appendChild(d);
+    });
+  }
+
+  var txt = $("#txt-red").value;
+  var marcas = r.marcas.slice().sort(function(a, b){ return a.i - b.i; });
+  var html = "", pos = 0;
+  marcas.forEach(function(mk){
+    if(mk.i < pos) return;
+    html += escHtml(txt.slice(pos, mk.i));
+    html += '<mark class="' + mk.nivel + '">' + escHtml(txt.slice(mk.i, mk.j)) + '</mark>';
+    pos = mk.j;
+  });
+  html += escHtml(txt.slice(pos));
+  $("#r-anotado").innerHTML = html;
+  $("#r-box-anotado").hidden = marcas.length === 0;
+  caixa.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+$("#btn-corrigir").addEventListener("click", function(){
+  var txt = $("#txt-red").value;
+  if(txt.trim().split(/\s+/).length < 30){
+    alert("Escreve a redação primeiro — pelo menos a introdução e um desenvolvimento. Com menos de 30 palavras não há o que corrigir.");
+    return;
+  }
+  renderCorrecao(analisarRedacao(txt, $("#tema-red").value.trim()));
+});
+
+$("#btn-copiar").addEventListener("click", function(){
+  var pedido =
+    "Corrige esta redação do Encceja (Ensino Médio) pelas 5 competências oficiais. " +
+    "Dá nota de 0 a 2 em cada competência e a nota final de 0 a 10, aponta os trechos fracos citando-os, " +
+    "explica o que está errado em cada um e mostra como reescrever.\n\n" +
+    "TEMA: " + ($("#tema-red").value.trim() || "(não informado)") + "\n\n" +
+    "TEXTO:\n" + $("#txt-red").value;
+  var btn = $("#btn-copiar"), original = "Copiar para correção detalhada";
+  function feito(ok){
+    btn.textContent = ok ? "Copiado" : "Não deu — seleciona e copia à mão";
+    setTimeout(function(){ btn.textContent = original; }, 2200);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(pedido).then(function(){ feito(true); }, function(){ feito(false); });
+  }else{
+    var ta = document.createElement("textarea");
+    ta.value = pedido; document.body.appendChild(ta); ta.select();
+    var ok = false; try{ ok = document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(ta); feito(ok);
+  }
+});
+
+/* ------------------------------------------------------------------
    PLACAR
 ------------------------------------------------------------------ */
 function atualizarPlacar(){
@@ -1381,10 +2181,11 @@ function atualizarPlacar(){
 ------------------------------------------------------------------ */
 $("#btn-limpar").addEventListener("click", function(){
   if(!confirm("Apagar blocos concluídos, minutos estudados, respostas do simulado e a redação salva?")) return;
-  S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, tema:S.tema};
+  S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, treino:{i:0,certas:0}, tema:S.tema};
   try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){}
   $("#txt-red").value = ""; $("#tema-red").value = "";
   $$("#check-red input").forEach(function(i){ i.checked = false; });
+  tIdx = 0; tCertas = 0; mostrarTreino();
   montarPlano(); montarSimulado(); contarRedacao(); atualizarChecklist(); atualizarPlacar();
 });
 
@@ -1396,6 +2197,7 @@ $("#tema-red").value = S.red.tema || "";
 $$("#check-red input").forEach(function(i){ i.checked = !!S.ck[i.dataset.ck]; });
 montarPlano();
 montarSimulado();
+mostrarTreino();
 contarRedacao();
 atualizarChecklist();
 atualizarPlacar();
