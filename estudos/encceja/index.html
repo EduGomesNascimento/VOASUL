@@ -1,0 +1,1405 @@
+<title>Encceja em 6 Horas</title>
+<meta name="description" content="Plano cronometrado, revisão focada e simulado para o Encceja Ensino Médio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* PALETA - painel de instrumentos: fundo osso frio, verde-pinho de comando,
+   laranja de alta visibilidade como sinal de atencao. */
+:root{
+  --paper:#EDF0EE; --surface:#FFFFFF; --surface-2:#F5F8F6;
+  --ink:#131A18; --ink-2:#4A5854; --ink-3:#7B8984;
+  --line:#D5DCD9; --line-2:#E6ECE9;
+  --primary:#0E5B50; --primary-ink:#0B4A41; --primary-soft:#DCEAE6;
+  --signal:#B8461A; --signal-soft:#F8E5DC;
+  --amber:#8F6612; --amber-soft:#F6EDD6;
+  --ok:#35702F; --ok-soft:#E0EDDD;
+  --shadow:0 1px 1px rgba(19,26,24,.05), 0 10px 26px -16px rgba(19,26,24,.30);
+  --radius:10px; --on-primary:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1413; --surface:#151D1B; --surface-2:#1C2523;
+    --ink:#E7EDEA; --ink-2:#A6B4AF; --ink-3:#7E8C87;
+    --line:#28322F; --line-2:#202A27;
+    --primary:#4FC0AC; --primary-ink:#7FD6C6; --primary-soft:#12312B;
+    --signal:#F07E45; --signal-soft:#331A0F;
+    --amber:#D9A947; --amber-soft:#2E2512;
+    --ok:#79C06E; --ok-soft:#152913;
+    --shadow:0 1px 1px rgba(0,0,0,.4), 0 10px 26px -16px rgba(0,0,0,.7); --on-primary:#0B1211;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1413; --surface:#151D1B; --surface-2:#1C2523;
+  --ink:#E7EDEA; --ink-2:#A6B4AF; --ink-3:#7E8C87;
+  --line:#28322F; --line-2:#202A27;
+  --primary:#4FC0AC; --primary-ink:#7FD6C6; --primary-soft:#12312B;
+  --signal:#F07E45; --signal-soft:#331A0F;
+  --amber:#D9A947; --amber-soft:#2E2512;
+  --ok:#79C06E; --ok-soft:#152913;
+  --shadow:0 1px 1px rgba(0,0,0,.4), 0 10px 26px -16px rgba(0,0,0,.7); --on-primary:#0B1211;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,h4{margin:0; text-wrap:balance; line-height:1.15; font-weight:600}
+p{margin:0}
+a{color:var(--primary-ink)}
+:focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:4px}
+
+/* ---- utilidades tipograficas ---- */
+.eyebrow{
+  font-family:"Barlow Condensed","Archivo",sans-serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.10em; font-size:.82rem;
+  color:var(--ink-3);
+}
+.num{font-family:"Barlow Condensed","Archivo",sans-serif; font-variant-numeric:tabular-nums; font-weight:700}
+.prosa{font-family:"Source Serif 4",Georgia,serif; font-size:1.02rem; line-height:1.62; color:var(--ink-2); max-width:66ch}
+.prosa strong{color:var(--ink); font-weight:600}
+
+/* ---- faixa de missao (topo fixo) ---- */
+.topo{position:sticky; top:0; z-index:30}
+.strip{background:var(--surface); border-bottom:1px solid var(--line)}
+.strip-in{
+  max-width:1080px; margin:0 auto; padding:10px 16px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:baseline; gap:8px; margin-right:auto}
+.brand b{font-size:1.02rem; font-weight:700; letter-spacing:-.01em}
+.brand span{font-size:.78rem; color:var(--ink-3)}
+.gauge{display:flex; align-items:center; gap:7px; font-size:.78rem; color:var(--ink-2)}
+.gauge .num{font-size:1.28rem; color:var(--ink); line-height:1}
+.gauge.hot .num{color:var(--signal)}
+.iconbtn{
+  border:1px solid var(--line); background:var(--surface-2); color:var(--ink-2);
+  width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:15px;
+}
+.iconbtn:hover{border-color:var(--primary); color:var(--primary)}
+.rail{height:4px; background:var(--line-2); width:100%}
+.rail i{display:block; height:100%; background:var(--primary); width:0; transition:width .4s ease}
+@media (max-width:600px){
+  .strip-in{padding:8px 14px; gap:10px; flex-wrap:nowrap}
+  .brand span{display:none}
+  .brand b{font-size:.95rem}
+  .gauge{font-size:.7rem; gap:5px}
+  .gauge .num{font-size:1.05rem}
+  .iconbtn{width:30px; height:30px; font-size:13px; flex:0 0 auto}
+  nav button{padding:11px 10px; font-size:.88rem}
+}
+
+/* ---- navegacao ---- */
+nav{
+  background:var(--paper); border-bottom:1px solid var(--line);
+  overflow-x:auto; scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none}
+.nav-in{max-width:1080px; margin:0 auto; display:flex; gap:2px; padding:0 10px}
+nav button{
+  flex:0 0 auto; background:none; border:0; border-bottom:2px solid transparent;
+  padding:12px 12px; cursor:pointer; color:var(--ink-3); font:inherit; font-size:.92rem;
+  font-weight:500; white-space:nowrap;
+}
+nav button:hover{color:var(--ink)}
+nav button[aria-selected="true"]{color:var(--primary-ink); border-bottom-color:var(--primary); font-weight:600}
+
+/* ---- estrutura ---- */
+main{max-width:1080px; margin:0 auto; padding:22px 16px 90px}
+.panel{display:none; flex-direction:column; gap:18px}
+.panel.on{display:flex}
+.head{display:flex; flex-direction:column; gap:6px; margin-bottom:2px}
+.head h2{font-size:1.55rem; letter-spacing:-.015em}
+
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px; box-shadow:var(--shadow);
+}
+.card > * + *{margin-top:12px}
+.card h3{font-size:1.06rem; display:flex; align-items:center; gap:8px}
+.grid{display:grid; gap:14px}
+.grid > *, .panel > *, .card{min-width:0}
+@media (min-width:760px){ .grid.two{grid-template-columns:1fr 1fr} .grid.three{grid-template-columns:repeat(3,1fr)} }
+
+.tag{
+  display:inline-block; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.07em; font-size:.76rem;
+  padding:2px 7px; border-radius:4px; background:var(--surface-2); color:var(--ink-2);
+  border:1px solid var(--line);
+}
+.tag.mat{background:var(--signal-soft); color:var(--signal); border-color:transparent}
+.tag.red{background:var(--amber-soft); color:var(--amber); border-color:transparent}
+.tag.ok{background:var(--ok-soft); color:var(--ok); border-color:transparent}
+.tag.pri{background:var(--primary-soft); color:var(--primary-ink); border-color:transparent}
+
+ul.lista{margin:0; padding-left:1.1em; color:var(--ink-2); display:flex; flex-direction:column; gap:6px}
+ul.lista li::marker{color:var(--primary)}
+ul.lista b{color:var(--ink)}
+
+/* ---- caixa de alerta ---- */
+.nota{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:12px 14px; border-radius:0 8px 8px 0; color:var(--ink);
+  font-size:.94rem;
+}
+.nota.pri{border-left-color:var(--primary); background:var(--primary-soft)}
+.nota.amb{border-left-color:var(--amber); background:var(--amber-soft)}
+
+/* ---- placar / metricas ---- */
+.metricas{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px}
+.metrica{
+  background:var(--surface-2); border:1px solid var(--line-2); border-radius:8px;
+  padding:12px 14px; display:flex; flex-direction:column; gap:2px;
+}
+.metrica .num{font-size:1.9rem; line-height:1; color:var(--ink)}
+.metrica small{font-size:.76rem; color:var(--ink-3); text-transform:uppercase; letter-spacing:.06em; font-family:"Barlow Condensed",sans-serif; font-weight:600}
+
+/* ---- cronometro ---- */
+.timer{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.clock{
+  font-family:"Barlow Condensed",sans-serif; font-weight:700; font-variant-numeric:tabular-nums;
+  font-size:3.4rem; line-height:.9; letter-spacing:.01em; color:var(--ink);
+}
+.clock.run{color:var(--primary-ink)}
+.clock.done{color:var(--signal)}
+.chips{display:flex; gap:6px; flex-wrap:wrap}
+button.chip{
+  font:inherit; font-size:.86rem; padding:6px 11px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--line); background:var(--surface-2); color:var(--ink-2);
+}
+button.chip:hover{border-color:var(--primary); color:var(--primary-ink)}
+button.chip[aria-pressed="true"]{background:var(--primary); border-color:var(--primary); color:var(--on-primary)}
+button.act{
+  font:inherit; font-weight:600; font-size:.92rem; padding:9px 16px; border-radius:8px;
+  border:1px solid var(--primary); background:var(--primary); color:var(--on-primary); cursor:pointer;
+}
+button.act:hover{filter:brightness(1.08)}
+button.act.ghost{background:transparent; color:var(--primary-ink)}
+button.act.ghost:hover{background:var(--primary-soft); filter:none}
+button.act:disabled{opacity:.45; cursor:not-allowed}
+
+/* ---- blocos do plano ---- */
+.bloco{
+  display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:start;
+  padding:14px; border:1px solid var(--line); border-radius:8px; background:var(--surface);
+}
+.bloco + .bloco{margin-top:10px}
+.bloco.feito{background:var(--surface-2); border-color:var(--line-2)}
+.bloco.feito .bloco-tit{text-decoration:line-through; color:var(--ink-3)}
+.bloco input[type=checkbox]{width:22px; height:22px; accent-color:var(--primary); margin-top:2px; cursor:pointer}
+.bloco-tit{font-weight:600; font-size:1rem; display:flex; gap:8px; align-items:baseline; flex-wrap:wrap}
+.bloco-tit .dur{font-family:"Barlow Condensed",sans-serif; color:var(--signal); font-weight:700; font-size:.95rem}
+.bloco-desc{font-size:.92rem; color:var(--ink-2); margin-top:4px}
+.dia{display:flex; align-items:baseline; gap:10px; margin:6px 0 2px}
+.dia h3{font-size:1.15rem}
+
+/* ---- sanfona de revisao ---- */
+details.acc{border:1px solid var(--line); border-radius:8px; background:var(--surface); overflow:hidden}
+details.acc + details.acc{margin-top:8px}
+details.acc > summary{
+  cursor:pointer; padding:13px 15px; font-weight:600; list-style:none;
+  display:flex; align-items:center; gap:10px; font-size:.99rem;
+}
+details.acc > summary::-webkit-details-marker{display:none}
+details.acc > summary::after{content:"+"; margin-left:auto; color:var(--ink-3); font-size:1.25rem; line-height:1}
+details.acc[open] > summary::after{content:"\2212"}
+details.acc[open] > summary{border-bottom:1px solid var(--line-2); background:var(--surface-2)}
+.acc-body{padding:15px; display:flex; flex-direction:column; gap:12px}
+.acc-body h4{font-size:.95rem; color:var(--primary-ink); font-weight:600}
+
+/* ---- formulas ---- */
+.formulas{display:grid; gap:8px; grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.formula{
+  background:var(--surface-2); border:1px solid var(--line-2); border-radius:8px; padding:10px 12px;
+}
+.formula b{display:block; font-family:"Barlow Condensed",sans-serif; font-size:.82rem;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
+.formula code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:.95rem; color:var(--ink)}
+
+/* ---- simulado ---- */
+.q{border:1px solid var(--line); border-radius:8px; background:var(--surface); padding:16px}
+.q + .q{margin-top:12px}
+.q-top{display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap}
+.q-num{font-family:"Barlow Condensed",sans-serif; font-weight:700; color:var(--ink-3); font-size:.95rem}
+.q-txt{font-family:"Source Serif 4",Georgia,serif; font-size:1.02rem; line-height:1.55; color:var(--ink); white-space:pre-line}
+.alts{display:flex; flex-direction:column; gap:7px; margin-top:12px}
+.alt{
+  display:flex; gap:10px; align-items:flex-start; padding:10px 12px; cursor:pointer;
+  border:1px solid var(--line); border-radius:8px; background:var(--surface); font-size:.95rem;
+  color:var(--ink-2); text-align:left; font-family:inherit; line-height:1.45;
+}
+.alt:hover{border-color:var(--primary)}
+.alt b{font-family:"Barlow Condensed",sans-serif; color:var(--ink-3); font-size:1rem; min-width:14px}
+.alt.certa{background:var(--ok-soft); border-color:var(--ok); color:var(--ink)}
+.alt.certa b{color:var(--ok)}
+.alt.errada{background:var(--signal-soft); border-color:var(--signal); color:var(--ink)}
+.alt.errada b{color:var(--signal)}
+.alt:disabled{cursor:default}
+.expl{
+  margin-top:12px; padding:12px 14px; border-radius:8px; background:var(--surface-2);
+  border-left:3px solid var(--primary); font-size:.93rem; color:var(--ink-2);
+}
+.expl b{color:var(--ink)}
+
+/* ---- redacao ---- */
+textarea{
+  width:100%; min-height:300px; padding:14px; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface-2); color:var(--ink); font-family:"Source Serif 4",Georgia,serif;
+  font-size:1rem; line-height:1.7; resize:vertical;
+}
+.contador{display:flex; gap:16px; align-items:baseline; flex-wrap:wrap; font-size:.85rem; color:var(--ink-3)}
+.contador .num{font-size:1.35rem; color:var(--ink)}
+.contador .num.bom{color:var(--ok)}
+.contador .num.ruim{color:var(--signal)}
+.checklist{display:flex; flex-direction:column; gap:9px}
+.checklist label{display:flex; gap:10px; align-items:flex-start; font-size:.94rem; color:var(--ink-2); cursor:pointer}
+.checklist input{width:19px; height:19px; accent-color:var(--primary); margin-top:1px; flex:0 0 auto}
+.modelo{
+  border:1px dashed var(--line); border-radius:8px; padding:13px 15px; background:var(--surface-2);
+}
+.modelo h4{font-size:.9rem; font-family:"Barlow Condensed",sans-serif; text-transform:uppercase;
+  letter-spacing:.07em; color:var(--signal); font-weight:700}
+.modelo p{font-family:"Source Serif 4",Georgia,serif; font-size:.98rem; color:var(--ink-2); margin-top:6px; line-height:1.6}
+.modelo em{color:var(--primary-ink); font-style:italic}
+
+/* ---- tabela ---- */
+.tabela-wrap{overflow-x:auto; max-width:100%; border:1px solid var(--line); border-radius:8px}
+table{border-collapse:collapse; width:100%; font-size:.92rem; min-width:340px}
+th,td{padding:9px 11px; text-align:left; border-bottom:1px solid var(--line-2)}
+th{background:var(--surface-2); font-family:"Barlow Condensed",sans-serif; text-transform:uppercase;
+  letter-spacing:.06em; font-size:.82rem; color:var(--ink-3); font-weight:600}
+td{color:var(--ink-2)} td b{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+
+footer{
+  max-width:1080px; margin:0 auto; padding:26px 16px 40px; color:var(--ink-3); font-size:.83rem;
+  border-top:1px solid var(--line);
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+
+<div class="topo">
+<div class="strip">
+  <div class="strip-in">
+    <div class="brand">
+      <b>Encceja em 6 horas</b>
+      <span>Ensino Médio &middot; 23 de agosto</span>
+    </div>
+    <div class="gauge" id="g-dias"><span class="num">–</span> dias</div>
+    <div class="gauge" id="g-min"><span class="num">0</span> min estudados</div>
+    <button class="iconbtn" id="btn-tema" title="Alternar claro/escuro" aria-label="Alternar tema">◐</button>
+  </div>
+  <div class="rail"><i id="rail-plano"></i></div>
+</div>
+
+<nav>
+  <div class="nav-in" role="tablist">
+    <button role="tab" aria-selected="true"  data-p="painel">Painel</button>
+    <button role="tab" aria-selected="false" data-p="plano">Plano 6h</button>
+    <button role="tab" aria-selected="false" data-p="matematica">Matemática</button>
+    <button role="tab" aria-selected="false" data-p="redacao">Redação</button>
+    <button role="tab" aria-selected="false" data-p="revisao">Revisão</button>
+    <button role="tab" aria-selected="false" data-p="simulado">Simulado</button>
+    <button role="tab" aria-selected="false" data-p="prova">Dia da prova</button>
+  </div>
+</nav>
+</div>
+
+<main>
+
+<!-- ================= PAINEL ================= -->
+<section class="panel on" id="p-painel">
+  <div class="head">
+    <span class="eyebrow">Ponto de partida</span>
+    <h2>Tu não precisa gabaritar. Precisa passar.</h2>
+    <p class="prosa">O Encceja não é vestibular: ninguém disputa vaga contigo. Existe uma linha de corte fixa, e tudo que importa é cruzar essa linha em cada uma das quatro provas e tirar 5 na redação. Esse app foi montado em cima dessa diferença — as 6 horas vão para o que te leva até a linha, e nada além disso.</p>
+  </div>
+
+  <div class="card">
+    <h3>A regra do jogo</h3>
+    <div class="tabela-wrap">
+      <table>
+        <tr><th>O que</th><th>Como é</th></tr>
+        <tr><td><b>Provas</b></td><td>4 provas objetivas de <b>30 questões</b> cada + redação</td></tr>
+        <tr><td><b>Manhã (9h–13h)</b></td><td>Matemática e Ciências da Natureza</td></tr>
+        <tr><td><b>Tarde (15h30–20h30)</b></td><td>Linguagens, Ciências Humanas e a <b>redação</b></td></tr>
+        <tr><td><b>Para aprovar</b></td><td><b>100 pontos</b> (escala até 180) em cada área <b>e nota 5</b> na redação</td></tr>
+        <tr><td><b>Reprovou numa área?</b></td><td>As áreas aprovadas ficam guardadas. Tu refaz só o que faltou, na próxima edição</td></tr>
+      </table>
+    </div>
+    <div class="nota pri"><b>Traduzindo:</b> a linha de corte costuma bater perto de <b>metade da prova certa</b>. São 15 acertos em 30. Com 5 alternativas, chute cego já entrega ~6 questões. Tu precisa <em>construir</em> nove ou dez.</div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Onde as 6 horas rendem mais</h3>
+      <ul class="lista">
+        <li><b>Redação (1h45).</b> É a única parte eliminatória que não perdoa: fugiu do tema ou escreveu no gênero errado, zerou. Também é a parte que mais sobe rápido — dá pra sair do zero e chegar em 7 aprendendo uma estrutura fixa. Melhor investimento da lista.</li>
+        <li><b>Matemática (1h45).</b> A prova concentra porcentagem, regra de três, média, gráficos, área/volume e juros. Seis assuntos cobrem a maior parte das 30 questões, e são todos de conta curta.</li>
+        <li><b>Humanas, Natureza e Linguagens (1h15 no total).</b> Quase tudo se resolve interpretando o texto de apoio. Aqui a técnica de leitura vale mais que decorar conteúdo.</li>
+        <li><b>Simulado e dia da prova (1h15).</b> Fazer questão de verdade e errar hoje é o que impede o erro no domingo.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Três coisas que não vale fazer</h3>
+      <ul class="lista">
+        <li><b>Estudar conteúdo novo.</b> Com 6h, o que tu não sabe hoje não vai entrar. Reforça o que já está meio sabido — o custo por ponto é muito menor.</li>
+        <li><b>Ler resumo sem responder questão.</b> Ler dá sensação de progresso e quase não fixa. Cada bloco daqui termina em questão respondida.</li>
+        <li><b>Deixar questão em branco.</b> Não há desconto por erro no Encceja. Item sem resposta é ponto jogado fora, sempre.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Cronômetro</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Escolhe a duração do bloco, aperta iniciar e fecha as outras abas do celular. O tempo estudado vai somando na faixa lá em cima.</p>
+    <div class="timer">
+      <div class="clock" id="clock">25:00</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="chips" id="presets">
+          <button class="chip" data-min="15">15 min</button>
+          <button class="chip" data-min="25" aria-pressed="true">25 min</button>
+          <button class="chip" data-min="45">45 min</button>
+          <button class="chip" data-min="60">60 min</button>
+        </div>
+        <div class="chips">
+          <button class="act" id="btn-play">Iniciar</button>
+          <button class="act ghost" id="btn-reset">Zerar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Teu progresso</h3>
+    <div class="metricas">
+      <div class="metrica"><span class="num" id="m-blocos">0/12</span><small>Blocos do plano</small></div>
+      <div class="metrica"><span class="num" id="m-min">0</span><small>Minutos estudados</small></div>
+      <div class="metrica"><span class="num" id="m-quest">0/34</span><small>Questões respondidas</small></div>
+      <div class="metrica"><span class="num" id="m-acerto">–</span><small>Aproveitamento</small></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--ink-3)">Fica tudo salvo neste navegador. Podes fechar e voltar depois que não perde nada. <button class="chip" id="btn-limpar" style="margin-left:6px">Apagar progresso</button></p>
+  </div>
+</section>
+
+<!-- ================= PLANO ================= -->
+<section class="panel" id="p-plano">
+  <div class="head">
+    <span class="eyebrow">Dois dias, seis horas</span>
+    <h2>O plano</h2>
+    <p class="prosa">Doze blocos. Marca cada um assim que terminar — a barra lá em cima é a tua barra. Se o tempo apertar, corta na ordem inversa: os blocos do fim do Dia 2 são os primeiros descartáveis, os de redação e matemática nunca são.</p>
+  </div>
+
+  <div class="dia"><h3>Dia 1</h3><span class="tag pri">3 horas</span></div>
+  <div id="lista-dia1"></div>
+
+  <div class="dia"><h3>Dia 2</h3><span class="tag pri">3 horas</span></div>
+  <div id="lista-dia2"></div>
+
+  <div class="card">
+    <h3>Se tu só tiver 2 horas no total</h3>
+    <ul class="lista">
+      <li><b>50 min</b> — Redação: estrutura dos 4 parágrafos + repertórios coringa (aba Redação).</li>
+      <li><b>45 min</b> — Matemática: porcentagem, regra de três, média e leitura de gráfico (aba Matemática).</li>
+      <li><b>25 min</b> — Simulado: as questões marcadas como Matemática, com as explicações.</li>
+    </ul>
+    <div class="nota">Isso sozinho já muda o resultado de quem estava indo pra prova sem abrir nada.</div>
+  </div>
+</section>
+
+<!-- ================= MATEMÁTICA ================= -->
+<section class="panel" id="p-matematica">
+  <div class="head">
+    <span class="eyebrow">Prioridade 1 · manhã de domingo</span>
+    <h2>Matemática sem enrolação</h2>
+    <p class="prosa">A prova de Matemática do Encceja é a mesma prova todo ano, com números diferentes. Ela pergunta sobre dinheiro, receita, conta de luz, mapa, terreno, gráfico de jornal e caixa d'água. Os sete blocos abaixo cobrem a esmagadora maioria das 30 questões. Lê o exemplo resolvido de cada um em voz alta e refaz a conta no papel — ler sem escrever não pega.</p>
+  </div>
+
+  <div class="nota"><b>A regra de ouro:</b> nunca comece pela fórmula. Comece escrevendo o que o enunciado deu, com unidade ao lado de cada número. Metade dos erros em prova é somar reais com por cento, ou metro com centímetro.</div>
+
+  <details class="acc" open>
+    <summary><span class="tag mat">1</span> Porcentagem — a que mais cai</summary>
+    <div class="acc-body">
+      <h4>O único truque que precisas</h4>
+      <p class="prosa">Porcentagem é multiplicação. <b>x% de um valor = valor × (x ÷ 100)</b>. E o pulo do gato: em vez de calcular o desconto e subtrair, calcula direto o que <em>sobra</em>.</p>
+      <div class="formulas">
+        <div class="formula"><b>Desconto de 15%</b><code>valor × 0,85</code></div>
+        <div class="formula"><b>Aumento de 15%</b><code>valor × 1,15</code></div>
+        <div class="formula"><b>Aumento de 8%</b><code>valor × 1,08</code></div>
+        <div class="formula"><b>Variação percentual</b><code>(novo − velho) ÷ velho × 100</code></div>
+      </div>
+      <h4>Exemplo resolvido</h4>
+      <p class="prosa">Um drone custa R$ 2.400 e está com 15% de desconto. Quanto sai?<br>
+      Sobra 100% − 15% = 85% → <b>2400 × 0,85 = R$ 2.040</b>. Uma linha, sem subtração.</p>
+      <h4>A pegadinha clássica: aumentos seguidos</h4>
+      <p class="prosa">Um produto de R$ 200 aumenta 10% e depois aumenta 10% de novo. <b>Não é 20%.</b> É 200 × 1,10 × 1,10 = <b>R$ 242</b> — um aumento de 21%, porque o segundo aumento incide sobre o valor já aumentado. Mesma lógica para dois descontos seguidos: 10% e 10% viram 19%, não 20%.</p>
+      <div class="nota amb"><b>Contas de cabeça que salvam tempo:</b> 10% é dividir por 10. 1% é dividir por 100. 50% é metade. 25% é metade da metade. 20% é o dobro de 10%. 15% é 10% + metade do 10%.</div>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">2</span> Regra de três, proporção e escala</summary>
+    <div class="acc-body">
+      <h4>Como montar sem errar</h4>
+      <p class="prosa">Escreve as duas grandezas em coluna, com a unidade no cabeçalho, e o valor desconhecido como <b>x</b>. Depois pergunta: <b>se uma cresce, a outra cresce?</b> Se sim, é direta — multiplica em cruz. Se uma cresce e a outra diminui (mais operários, menos tempo), é inversa — multiplica em linha.</p>
+      <h4>Exemplo resolvido (direta)</h4>
+      <p class="prosa">Se 4 kg de ração custam R$ 36, quanto custam 7 kg?<br>
+      4 kg → 36 &nbsp;|&nbsp; 7 kg → x. Cruz: 4x = 36 × 7 = 252 → <b>x = R$ 63</b>.</p>
+      <h4>Exemplo resolvido (inversa)</h4>
+      <p class="prosa">6 pedreiros levantam um muro em 10 dias. Em quantos dias 15 pedreiros levantam?<br>
+      Mais pedreiros, menos dias → inversa. Multiplica em linha: 6 × 10 = 15 × x → 60 = 15x → <b>x = 4 dias</b>.</p>
+      <h4>Escala de mapa</h4>
+      <p class="prosa">Escala 1:50.000 significa: 1 cm no papel = 50.000 cm no mundo. Então 8 cm no mapa = 400.000 cm. Divide por 100 pra virar metro (4.000 m) e por 1.000 pra virar quilômetro → <b>4 km</b>.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">3</span> Média, moda, mediana e gráficos</summary>
+    <div class="acc-body">
+      <div class="formulas">
+        <div class="formula"><b>Média aritmética</b><code>soma ÷ quantidade</code></div>
+        <div class="formula"><b>Média ponderada</b><code>Σ(valor × peso) ÷ Σpesos</code></div>
+        <div class="formula"><b>Moda</b><code>o valor que mais se repete</code></div>
+        <div class="formula"><b>Mediana</b><code>ordena e pega o do meio</code></div>
+      </div>
+      <h4>Exemplo resolvido (ponderada)</h4>
+      <p class="prosa">Notas 6 (peso 2), 8 (peso 3) e 5 (peso 5).<br>
+      Em cima: 6×2 + 8×3 + 5×5 = 12 + 24 + 25 = 61. Embaixo: 2+3+5 = 10. <b>Média = 6,1</b>.<br>
+      O erro mais comum é dividir por 3 (a quantidade de notas) em vez de 10 (a soma dos pesos).</p>
+      <h4>Mediana quando a lista é par</h4>
+      <p class="prosa">Ordena os números. Se sobram dois no meio, a mediana é a média dos dois. Em 3, 5, 8, 12 → mediana = (5+8)÷2 = <b>6,5</b>.</p>
+      <h4>Ler gráfico é ler a legenda</h4>
+      <p class="prosa">Antes de olhar as barras: lê o <b>título</b>, o que está no eixo de baixo, o que está no eixo de lado e <b>qual a unidade</b> (milhares? milhões? por cento?). Metade das questões de gráfico no Encceja se resolve só com isso — a alternativa errada quase sempre é a que confunde a unidade ou compara o ano errado.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">4</span> Unidades — onde se perde ponto de graça</summary>
+    <div class="acc-body">
+      <div class="formulas">
+        <div class="formula"><b>Comprimento</b><code>1 km = 1.000 m = 100.000 cm</code></div>
+        <div class="formula"><b>Massa</b><code>1 t = 1.000 kg = 1.000.000 g</code></div>
+        <div class="formula"><b>Volume e litro</b><code>1 m³ = 1.000 L &nbsp; | &nbsp; 1 L = 1.000 mL</code></div>
+        <div class="formula"><b>Área</b><code>1 m² = 10.000 cm² &nbsp; | &nbsp; 1 ha = 10.000 m²</code></div>
+        <div class="formula"><b>Tempo</b><code>1 h = 60 min = 3.600 s</code></div>
+        <div class="formula"><b>Energia elétrica</b><code>1 kWh = 1.000 W ligados por 1 h</code></div>
+      </div>
+      <div class="nota"><b>A conversão que mais cai:</b> metro cúbico para litro. Uma caixa d'água de <b>0,75 m³ tem 750 litros</b>. Multiplica por mil, sempre.</div>
+      <p class="prosa">Cuidado com área e volume: 1 m² <b>não</b> é 100 cm², é 10.000 cm² (100 × 100). E 1 m³ é 1.000.000 cm³. Quando muda de unidade em área, o fator é elevado ao quadrado; em volume, ao cubo.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">5</span> Geometria: área, volume e Pitágoras</summary>
+    <div class="acc-body">
+      <div class="formulas">
+        <div class="formula"><b>Retângulo</b><code>A = base × altura</code></div>
+        <div class="formula"><b>Triângulo</b><code>A = (base × altura) ÷ 2</code></div>
+        <div class="formula"><b>Círculo</b><code>A = π·r² &nbsp; | &nbsp; C = 2·π·r</code></div>
+        <div class="formula"><b>Trapézio</b><code>A = (B + b) × h ÷ 2</code></div>
+        <div class="formula"><b>Caixa / bloco</b><code>V = comp × larg × alt</code></div>
+        <div class="formula"><b>Cilindro</b><code>V = π·r²·h</code></div>
+        <div class="formula"><b>Pitágoras</b><code>a² = b² + c²</code></div>
+        <div class="formula"><b>Perímetro</b><code>soma de todos os lados</code></div>
+      </div>
+      <h4>Exemplo resolvido (área e custo)</h4>
+      <p class="prosa">Terreno de 25 m por 16 m, grama a R$ 12 o metro quadrado.<br>
+      Área = 25 × 16 = <b>400 m²</b>. Custo = 400 × 12 = <b>R$ 4.800</b>. Questão de área quase sempre termina em multiplicação por preço.</p>
+      <h4>Exemplo resolvido (volume)</h4>
+      <p class="prosa">Caixa d'água cilíndrica de raio 1 m e altura 2 m, usando π = 3.<br>
+      V = 3 × 1² × 2 = <b>6 m³</b> = <b>6.000 litros</b>.</p>
+      <h4>Pitágoras: só em triângulo retângulo</h4>
+      <p class="prosa">A hipotenusa (o lado maior, na frente do ângulo de 90°) ao quadrado é igual à soma dos quadrados dos outros dois. Escada de 5 m com o pé a 3 m da parede: 5² = 3² + x² → 25 = 9 + x² → x² = 16 → <b>x = 4 m</b>.<br>
+      Decora o trio <b>3, 4, 5</b> (e seus múltiplos 6-8-10, 9-12-15). Aparece direto.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">6</span> Equação, função do 1º grau e juros</summary>
+    <div class="acc-body">
+      <h4>Equação do 1º grau</h4>
+      <p class="prosa">Letra de um lado, número do outro; o que atravessa o igual troca de sinal.<br>
+      3x − 7 = 2x + 5 → 3x − 2x = 5 + 7 → <b>x = 12</b>.</p>
+      <h4>Função do 1º grau: o modelo &ldquo;taxa fixa + por unidade&rdquo;</h4>
+      <p class="prosa">Quase toda questão de função no Encceja é uma conta de serviço: uma parte fixa mais uma parte que varia. <b>y = valor fixo + (preço por unidade × quantidade)</b>.<br>
+      Frete de R$ 50 mais R$ 3 por km: y = 50 + 3x. Se a conta deu R$ 200 → 200 = 50 + 3x → 150 = 3x → <b>x = 50 km</b>.<br>
+      No gráfico, o valor fixo é onde a reta corta o eixo vertical, e o preço por unidade é a inclinação.</p>
+      <h4>Juros</h4>
+      <div class="formulas">
+        <div class="formula"><b>Juros simples</b><code>J = C × i × t</code></div>
+        <div class="formula"><b>Montante simples</b><code>M = C + J</code></div>
+        <div class="formula"><b>Juros compostos</b><code>M = C × (1 + i)^t</code></div>
+      </div>
+      <p class="prosa">C é o capital, i é a taxa em decimal (2% = 0,02) e t é o tempo <b>na mesma unidade da taxa</b> (taxa ao mês pede tempo em meses).<br>
+      R$ 1.500 a 2% ao mês por 5 meses, juros simples: J = 1500 × 0,02 × 5 = <b>R$ 150</b>, montante <b>R$ 1.650</b>.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag mat">7</span> Probabilidade e contagem</summary>
+    <div class="acc-body">
+      <div class="formulas">
+        <div class="formula"><b>Probabilidade</b><code>casos favoráveis ÷ casos possíveis</code></div>
+        <div class="formula"><b>Em porcentagem</b><code>resultado × 100</code></div>
+      </div>
+      <p class="prosa">Urna com 5 bolas azuis, 3 vermelhas e 2 verdes. Total = 10.<br>
+      P(vermelha) = 3/10 = 0,3 = <b>30%</b>.<br>
+      Dado comum: P(sair 4) = 1/6. P(sair par) = 3/6 = 1/2 = 50%.</p>
+      <p class="prosa">Se pedir a chance de <b>dois eventos seguidos</b>, multiplica: chance de tirar cara duas vezes na moeda = ½ × ½ = <b>25%</b>.</p>
+    </div>
+  </details>
+
+  <div class="card">
+    <h3>Chute inteligente em Matemática</h3>
+    <ul class="lista">
+      <li><b>Estima a ordem de grandeza antes de contar.</b> Se o terreno tem uns 20 por 20 metros, a área anda perto de 400 m². Alternativa com 40 ou com 40.000 já morreu.</li>
+      <li><b>Desconto nunca aumenta.</b> Se a questão é de desconto, elimina toda alternativa maior que o preço original. Se é de aumento, elimina as menores.</li>
+      <li><b>Alternativa que repete um número do enunciado</b> costuma ser a pegadinha de quem parou na metade da conta.</li>
+      <li><b>Sem tempo?</b> Nas questões que sobraram, marca tudo na mesma letra. Estatisticamente rende mais que marcar aleatório e é muito mais rápido.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= REDAÇÃO ================= -->
+<section class="panel" id="p-redacao">
+  <div class="head">
+    <span class="eyebrow">Prioridade 1 · tarde de domingo</span>
+    <h2>A redação é a parte mais fácil de subir</h2>
+    <p class="prosa">Texto <b>dissertativo-argumentativo</b> sobre um tema social brasileiro, com proposta de intervenção — o mesmo formato do Enem, corrigido com menos rigor. Cinco competências, cada uma de 0 a 2 pontos, total de 10. Tu precisa de <b>5</b>. Quem escreve quatro parágrafos organizados, sem fugir do tema e com uma proposta no final, dificilmente fica abaixo disso.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>As cinco competências</h3>
+      <div class="tabela-wrap">
+        <table>
+          <tr><th>Comp.</th><th>O que o corretor procura</th></tr>
+          <tr><td><b>1</b></td><td>Português escrito formal: ortografia, pontuação, concordância, frases inteiras</td></tr>
+          <tr><td><b>2</b></td><td>Ficou no tema e escreveu dissertativo-argumentativo (não conto, não carta)</td></tr>
+          <tr><td><b>3</b></td><td>Argumentos selecionados e organizados em defesa de um ponto de vista</td></tr>
+          <tr><td><b>4</b></td><td>Conectivos ligando parágrafos e frases — o texto anda, não pula</td></tr>
+          <tr><td><b>5</b></td><td>Proposta de intervenção para o problema, coerente com o que foi argumentado</td></tr>
+        </table>
+      </div>
+      <div class="nota pri">Cada uma vale no máximo 2. Escrever razoavelmente bem em todas as cinco (1 ou 2 em cada) já passa dos 5 pontos com folga. Não precisa brilhar em nenhuma.</div>
+    </div>
+
+    <div class="card">
+      <h3>O que zera a redação</h3>
+      <ul class="lista">
+        <li><b>Fugir do tema.</b> O maior risco. Antes de escrever, sublinha o tema e escreve ele com tuas palavras num canto da folha de rascunho.</li>
+        <li><b>Escrever outro gênero.</b> Nada de carta, poema, receita ou história. É texto dissertativo.</li>
+        <li><b>Copiar os textos motivadores.</b> Podes usar as ideias, nunca as frases. Reescreve com tuas palavras.</li>
+        <li><b>Texto curto demais</b> ou ilegível.</li>
+        <li><b>Desenho, recado ao corretor, palavrão, assinatura ou qualquer marca</b> que identifique quem escreveu.</li>
+        <li><b>Escrever fora da folha oficial</b> ou a lápis.</li>
+      </ul>
+      <div class="nota"><b>Regra prática de tamanho:</b> mira em <b>25 a 30 linhas</b>. Nunca entregue com menos de 20. Texto curto derruba nota em várias competências ao mesmo tempo, mesmo quando não zera.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>A estrutura fixa: quatro parágrafos</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Decora esse esqueleto. No domingo, tu só troca o assunto dentro dele. As partes em <em>itálico</em> são o que tu preenche.</p>
+
+    <div class="modelo">
+      <h4>Parágrafo 1 · Introdução — 4 a 5 linhas</h4>
+      <p>Contextualiza e já entrega a tua tese na última frase.<br>
+      &ldquo;<em>[Repertório: um artigo da Constituição, um fato histórico, um dado]</em>. No entanto, na sociedade brasileira contemporânea, <em>[o problema do tema]</em> ainda persiste. Isso ocorre principalmente por dois motivos: <em>[causa 1]</em> e <em>[causa 2]</em>.&rdquo;</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Parágrafo 2 · Desenvolvimento 1 — 7 a 9 linhas</h4>
+      <p>Um argumento só, bem explicado.<br>
+      &ldquo;<b>Em primeiro lugar</b>, é preciso considerar que <em>[causa 1]</em>. <em>[Explica em duas ou três frases por que isso acontece]</em>. Segundo <em>[fonte: a Constituição, o IBGE, a OMS, um autor]</em>, <em>[o dado ou a ideia]</em>. <b>Dessa forma</b>, <em>[a consequência disso na vida das pessoas]</em>.&rdquo;</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Parágrafo 3 · Desenvolvimento 2 — 7 a 9 linhas</h4>
+      <p>Outro argumento, de outro ângulo. Se o primeiro foi social, faz esse econômico, ou vice-versa.<br>
+      &ldquo;<b>Além disso</b>, <em>[causa 2]</em> agrava o quadro. <em>[Explica]</em>. <b>Como consequência</b>, <em>[quem é prejudicado e como]</em>. <b>Portanto</b>, o problema não se resolve sozinho.&rdquo;</p>
+    </div>
+
+    <div class="modelo">
+      <h4>Parágrafo 4 · Conclusão com proposta — 5 a 7 linhas</h4>
+      <p>Aqui está a competência 5 inteira. Responde às quatro perguntas na ordem.<br>
+      &ldquo;<b>Portanto</b>, medidas são necessárias. <em>[QUEM: o Ministério da Educação / as escolas / o poder público municipal]</em> deve <em>[O QUÊ: criar, ampliar, fiscalizar…]</em>, <b>por meio de</b> <em>[COMO: campanhas em rádio e redes sociais, aulas no currículo, verba do orçamento]</em>, <b>a fim de que</b> <em>[PARA QUÊ: o resultado esperado]</em>.&rdquo;</p>
+    </div>
+
+    <div class="nota amb"><b>Agente, ação, meio e finalidade.</b> Se esses quatro estiverem na conclusão, a competência 5 está garantida. É o ponto mais barato da redação inteira e o que mais gente esquece.</div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Conectivos por posição</h3>
+      <div class="tabela-wrap">
+        <table>
+          <tr><th>Onde</th><th>Usa</th></tr>
+          <tr><td>Começo do D1</td><td>Em primeiro lugar, Primeiramente, Nesse sentido</td></tr>
+          <tr><td>Começo do D2</td><td>Além disso, Ademais, Somado a isso, Por outro lado</td></tr>
+          <tr><td>Começo da conclusão</td><td>Portanto, Diante do exposto, Logo</td></tr>
+          <tr><td>Para concluir uma ideia</td><td>Dessa forma, Assim, Como consequência</td></tr>
+          <tr><td>Para contrapor</td><td>No entanto, Contudo, Entretanto, Todavia</td></tr>
+          <tr><td>Para exemplificar</td><td>Por exemplo, A título de exemplo, Como se observa em</td></tr>
+          <tr><td>Para explicar a causa</td><td>Uma vez que, Visto que, Já que, Pois</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Repertórios coringa</h3>
+      <p style="font-size:.93rem;color:var(--ink-2)">Servem em quase qualquer tema social. Escolhe dois e leva na cabeça.</p>
+      <ul class="lista">
+        <li><b>Constituição de 1988.</b> Artigo 5º: todos são iguais perante a lei. Artigo 6º: são direitos sociais a educação, a saúde, o trabalho, a moradia e a segurança. Artigo 205: a educação é direito de todos e dever do Estado e da família.</li>
+        <li><b>Declaração Universal dos Direitos Humanos (ONU, 1948).</b> Todos nascem livres e iguais em dignidade e direitos.</li>
+        <li><b>Paulo Freire.</b> A educação não transforma o mundo; transforma as pessoas, e as pessoas transformam o mundo.</li>
+        <li><b>Milton Santos.</b> A globalização produz um mundo desigual: as mesmas tecnologias que aproximam alguns excluem outros.</li>
+        <li><b>Zygmunt Bauman.</b> Vivemos relações e vínculos frágeis, que se desfazem rápido — a &ldquo;modernidade líquida&rdquo;.</li>
+        <li><b>Instituições que dão peso a um dado:</b> IBGE (população, renda, moradia), OMS (saúde), SUS, ECA (crianças e adolescentes), LDB (educação).</li>
+      </ul>
+      <div class="nota">Não precisa citar número exato. &ldquo;Segundo dados do IBGE, boa parte dos domicílios brasileiros ainda…&rdquo; funciona. Número inventado com precisão falsa é pior que nenhum.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Temas prováveis para 2026</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">O Encceja escolhe temas do cotidiano brasileiro, com solução visível. Em 2025 caiu o vício em apostas na internet. Pensa numa causa e numa consequência para cada um destes — cinco minutos por tema já te deixa pronto:</p>
+    <ul class="lista">
+      <li>Saúde mental e o excesso de tempo em telas</li>
+      <li>Eventos climáticos extremos e a preparação das cidades brasileiras</li>
+      <li>Inteligência artificial e as mudanças no mundo do trabalho</li>
+      <li>O envelhecimento da população brasileira</li>
+      <li>Desinformação e notícias falsas nas redes</li>
+      <li>Valorização da educação de jovens e adultos</li>
+      <li>Mobilidade urbana e transporte público</li>
+      <li>Violência contra a mulher</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Treino cronometrado</h3>
+    <p style="font-size:.93rem;color:var(--ink-2)">Escreve uma redação inteira aqui, de uma sentada, em 45 minutos — é o tempo que tu vai ter no domingo depois de resolver as objetivas. Escolhe um tema da lista acima e vai. Sai ruim na primeira; é exatamente pra isso que serve.</p>
+    <input id="tema-red" placeholder="Escreve aqui o tema que tu escolheu" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:inherit">
+    <textarea id="txt-red" placeholder="Começa pela introdução: repertório, o problema, e a tese com as duas causas."></textarea>
+    <div class="contador">
+      <span><span class="num" id="c-linhas">0</span> linhas aprox.</span>
+      <span><span class="num" id="c-palavras">0</span> palavras</span>
+      <span><span class="num" id="c-par">0</span> parágrafos</span>
+      <span id="c-aviso" style="color:var(--ink-3)"></span>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink-3)">A contagem de linhas é uma estimativa da folha oficial (cerca de 60 caracteres por linha). Salva sozinho enquanto tu escreve.</p>
+  </div>
+
+  <div class="card">
+    <h3>Autoavaliação — passa item por item no que tu escreveu</h3>
+    <div class="checklist" id="check-red">
+      <label><input type="checkbox" data-ck="r1"> Tem <b>quatro parágrafos</b> e todos começam com recuo</label>
+      <label><input type="checkbox" data-ck="r2"> A <b>tese</b> aparece já na última frase da introdução</label>
+      <label><input type="checkbox" data-ck="r3"> Cada desenvolvimento defende <b>um argumento só</b>, explicado até o fim</label>
+      <label><input type="checkbox" data-ck="r4"> Usei pelo menos <b>um repertório</b> (lei, autor, instituição, fato histórico)</label>
+      <label><input type="checkbox" data-ck="r5"> Cada parágrafo começa com um <b>conectivo</b> diferente</label>
+      <label><input type="checkbox" data-ck="r6"> A conclusão tem <b>agente, ação, meio e finalidade</b></label>
+      <label><input type="checkbox" data-ck="r7"> Não usei &ldquo;eu acho&rdquo;, &ldquo;na minha opinião&rdquo;, &ldquo;a gente&rdquo; nem gíria</label>
+      <label><input type="checkbox" data-ck="r8"> Não copiei nenhuma frase dos textos motivadores</label>
+      <label><input type="checkbox" data-ck="r9"> Passei de <b>20 linhas</b> e não estourei as 30</label>
+      <label><input type="checkbox" data-ck="r10"> Reli procurando ponto final, vírgula e concordância</label>
+    </div>
+    <div class="nota pri" id="res-red">Marcados: 0 de 10.</div>
+  </div>
+</section>
+
+<!-- ================= REVISÃO ================= -->
+<section class="panel" id="p-revisao">
+  <div class="head">
+    <span class="eyebrow">Prioridade 2 · varredura rápida</span>
+    <h2>As outras três áreas</h2>
+    <p class="prosa">Linguagens, Ciências Humanas e Ciências da Natureza têm uma coisa em comum no Encceja: a maioria das questões vem com um texto, uma tirinha, um gráfico ou uma notícia antes da pergunta, e a resposta está lá dentro. Por isso a técnica de leitura abaixo vale mais tempo do que qualquer resumo — lê ela primeiro, mesmo que pules o resto.</p>
+  </div>
+
+  <div class="card">
+    <h3>A técnica que serve para as três áreas</h3>
+    <ul class="lista">
+      <li><b>Lê a pergunta antes do texto.</b> Assim tu lê o texto procurando algo, em vez de ler por ler. Economiza metade do tempo.</li>
+      <li><b>Sublinha o verbo do comando.</b> &ldquo;A principal <em>consequência</em>&rdquo; é diferente de &ldquo;a principal <em>causa</em>&rdquo;. Muita gente sabe a matéria e responde a outra pergunta.</li>
+      <li><b>Desconfia de &ldquo;sempre&rdquo;, &ldquo;nunca&rdquo;, &ldquo;todos&rdquo;, &ldquo;único&rdquo;.</b> Alternativa absoluta quase sempre é a errada. A certa costuma ser a mais moderada.</li>
+      <li><b>A resposta certa é sinônimo do texto, não cópia.</b> Alternativa que repete uma frase inteirinha do texto de apoio geralmente é isca.</li>
+      <li><b>Elimina duas e escolhe entre as três.</b> De 20% de chance tu vai pra 33% — em 30 questões isso é ponto de verdade.</li>
+      <li><b>Não deixa nada em branco.</b> Não existe desconto por erro.</li>
+    </ul>
+  </div>
+
+  <details class="acc" open>
+    <summary><span class="tag pri">LC</span> Linguagens, Códigos e suas Tecnologias</summary>
+    <div class="acc-body">
+      <h4>Variação linguística — cai todo ano</h4>
+      <p class="prosa">A ideia central que a prova cobra: <b>não existe jeito errado de falar, existe jeito adequado a cada situação</b>. A fala do interior, a gíria do jovem, o sotaque nordestino e o português formal do jornal são variedades diferentes, não versões piores. Preconceito linguístico é julgar a pessoa pelo jeito de falar. Se uma alternativa disser que uma variedade é &ldquo;errada&rdquo; ou &ldquo;pobre&rdquo;, ela está errada.</p>
+      <h4>Funções da linguagem</h4>
+      <div class="tabela-wrap"><table>
+        <tr><th>Função</th><th>Foco</th><th>Onde aparece</th></tr>
+        <tr><td><b>Referencial</b></td><td>a informação</td><td>notícia, texto científico, bula</td></tr>
+        <tr><td><b>Conativa</b> (apelativa)</td><td>o leitor</td><td>propaganda, verbo no imperativo: &ldquo;Compre&rdquo;, &ldquo;Vote&rdquo;</td></tr>
+        <tr><td><b>Emotiva</b></td><td>quem fala</td><td>1ª pessoa, diário, desabafo, poema pessoal</td></tr>
+        <tr><td><b>Fática</b></td><td>o contato</td><td>&ldquo;alô?&rdquo;, &ldquo;tá me ouvindo?&rdquo;, &ldquo;né?&rdquo;</td></tr>
+        <tr><td><b>Metalinguística</b></td><td>a própria língua</td><td>dicionário, filme sobre cinema</td></tr>
+        <tr><td><b>Poética</b></td><td>a forma da mensagem</td><td>poema, slogan com rima</td></tr>
+      </table></div>
+      <h4>Figuras de linguagem</h4>
+      <ul class="lista">
+        <li><b>Metáfora</b> — comparação sem &ldquo;como&rdquo;: &ldquo;meu coração é um deserto&rdquo;.</li>
+        <li><b>Comparação</b> — com &ldquo;como&rdquo;: &ldquo;forte como um touro&rdquo;.</li>
+        <li><b>Metonímia</b> — a parte pelo todo: &ldquo;li Machado de Assis&rdquo; (o livro dele).</li>
+        <li><b>Hipérbole</b> — exagero: &ldquo;morri de rir&rdquo;.</li>
+        <li><b>Ironia</b> — dizer o contrário do que se pensa. É a mais cobrada, principalmente em tirinha e charge.</li>
+        <li><b>Personificação</b> — dar vida ao que não tem: &ldquo;o vento sussurrou&rdquo;.</li>
+        <li><b>Eufemismo</b> — suavizar: &ldquo;ele nos deixou&rdquo;.</li>
+        <li><b>Antítese</b> — ideias opostas juntas: &ldquo;é um doce amargo&rdquo;.</li>
+      </ul>
+      <h4>Gêneros e intenção</h4>
+      <p class="prosa">Reconhece pela finalidade: <b>notícia</b> informa (impessoal, terceira pessoa), <b>artigo de opinião</b> defende uma tese, <b>propaganda</b> convence a comprar ou aderir, <b>crônica</b> comenta o cotidiano com leveza, <b>charge</b> critica um fato do noticiário pelo humor. A pergunta costuma ser: &ldquo;qual a intenção do autor?&rdquo;.</p>
+      <h4>Coesão</h4>
+      <p class="prosa">Conectivo indica relação: <b>mas / porém / no entanto</b> = oposição; <b>portanto / logo</b> = conclusão; <b>porque / pois</b> = causa; <b>além disso</b> = adição; <b>embora / apesar de</b> = concessão. Pronomes (ele, isso, o qual) evitam repetição — a questão pergunta a que palavra eles se referem, e a resposta está sempre <em>antes</em> no texto.</p>
+      <h4>Literatura e artes, em três linhas</h4>
+      <p class="prosa"><b>Romantismo</b>: sentimento, natureza, idealização, índio como herói (José de Alencar, Gonçalves Dias). <b>Realismo</b>: crítica à sociedade e à hipocrisia, análise fria (Machado de Assis). <b>Modernismo</b>: Semana de Arte Moderna de 1922, ruptura com o formalismo, língua brasileira falada, temas nacionais (Mário e Oswald de Andrade, Tarsila do Amaral). Em artes, a pergunta quase sempre é de leitura de imagem: o que a obra critica ou representa.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag pri">CH</span> Ciências Humanas e suas Tecnologias</summary>
+    <div class="acc-body">
+      <h4>História do Brasil — a linha do tempo que resolve a maioria</h4>
+      <div class="tabela-wrap"><table>
+        <tr><th>Marco</th><th>O que precisa saber</th></tr>
+        <tr><td><b>Colônia</b></td><td>Açúcar no Nordeste, ouro em Minas, trabalho escravizado africano e indígena como base de tudo; resistência nos quilombos (Palmares, Zumbi)</td></tr>
+        <tr><td><b>1822 · Independência</b></td><td>Rompe com Portugal mas mantém escravidão, monarquia e grandes propriedades</td></tr>
+        <tr><td><b>1888 · Lei Áurea</b></td><td>Abolição sem terra, sem escola e sem trabalho para os libertos — origem direta da desigualdade racial de hoje</td></tr>
+        <tr><td><b>1889 · República</b></td><td>República Velha: café, coronelismo, voto de cabresto</td></tr>
+        <tr><td><b>1930–45 · Era Vargas</b></td><td>Industrialização, leis trabalhistas, <b>CLT em 1943</b>, carteira de trabalho; Estado Novo foi ditadura</td></tr>
+        <tr><td><b>1964–85 · Ditadura militar</b></td><td>Golpe de 64, <b>AI-5 em 1968</b> (fecha o Congresso, censura, cassação), tortura e desaparecidos; &ldquo;milagre econômico&rdquo; com concentração de renda</td></tr>
+        <tr><td><b>1985–88 · Redemocratização</b></td><td>Diretas Já, <b>Constituição de 1988</b>, a &ldquo;Constituição Cidadã&rdquo;: cria o SUS, garante direitos sociais e voto para analfabetos</td></tr>
+      </table></div>
+      <h4>História geral — o mínimo</h4>
+      <ul class="lista">
+        <li><b>Revolução Industrial</b> (séc. XVIII, Inglaterra): máquina a vapor, fábrica, êxodo rural, jornadas de 14 horas, surgimento dos sindicatos.</li>
+        <li><b>Revolução Francesa</b> (1789): liberdade, igualdade, fraternidade; fim do poder absoluto do rei; base dos direitos civis modernos.</li>
+        <li><b>1ª e 2ª Guerras</b>: a segunda (1939–45) traz nazismo, Holocausto, bomba atômica e, como resposta, a ONU e a Declaração dos Direitos Humanos em 1948.</li>
+        <li><b>Guerra Fria</b> (1947–91): EUA capitalista contra URSS socialista, sem confronto direto; termina com a queda do Muro de Berlim em 1989.</li>
+      </ul>
+      <h4>Geografia do Brasil</h4>
+      <ul class="lista">
+        <li><b>Urbanização</b>: a partir de 1950 o país virou urbano em poucas décadas por causa do êxodo rural (mecanização do campo empurra, indústria puxa). Consequência: periferias, favelas, falta de saneamento, trânsito.</li>
+        <li><b>Biomas</b>: Amazônia (floresta equatorial, maior biodiversidade), Cerrado (savana, berço das águas, avanço da soja), Caatinga (semiárido, única exclusivamente brasileira), Mata Atlântica (mais devastada, onde mora a maior parte da população), Pampa (campos do Sul, pecuária), Pantanal (planície alagável).</li>
+        <li><b>Matriz energética</b>: o Brasil é fora da curva por gerar muita eletricidade de <b>hidrelétricas</b>, com eólica e solar crescendo rápido. Renovável não quer dizer sem impacto: barragem alaga área e desloca população.</li>
+        <li><b>População</b>: a pirâmide etária está <b>envelhecendo</b> — menos filhos, mais idosos. Impacto direto na Previdência e na saúde.</li>
+        <li><b>Migração</b>: historicamente Nordeste → Sudeste; hoje há retorno e forte migração internacional (venezuelanos, haitianos).</li>
+      </ul>
+      <h4>Filosofia e Sociologia — as ideias que a prova cobra</h4>
+      <ul class="lista">
+        <li><b>Cidadania</b> é o conjunto de direitos <b>e</b> deveres; direitos civis (liberdade), políticos (votar) e sociais (saúde, educação, trabalho) foram conquistados em momentos diferentes, por luta.</li>
+        <li><b>Democracia</b> é mais que votar: é ter direitos garantidos, imprensa livre, poderes independentes e possibilidade de contestar.</li>
+        <li><b>Trabalho</b>: a CLT nasce de conflito, não de bondade. Direitos trabalhistas são resultado de organização coletiva.</li>
+        <li><b>Cultura</b>: nenhuma cultura é superior a outra — isso é relativismo cultural; o contrário é etnocentrismo.</li>
+        <li><b>Movimentos sociais</b> (sem-terra, negro, feminista, indígena, LGBTQIA+) são formas legítimas de pressão por direitos dentro da democracia.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="tag pri">CN</span> Ciências da Natureza e suas Tecnologias</summary>
+    <div class="acc-body">
+      <h4>Física — o que realmente cai</h4>
+      <div class="formulas">
+        <div class="formula"><b>Velocidade média</b><code>v = distância ÷ tempo</code></div>
+        <div class="formula"><b>Energia elétrica</b><code>E(kWh) = P(kW) × t(h)</code></div>
+        <div class="formula"><b>Densidade</b><code>d = massa ÷ volume</code></div>
+        <div class="formula"><b>Potência</b><code>P = energia ÷ tempo</code></div>
+      </div>
+      <p class="prosa"><b>Conta de luz é o carro-chefe.</b> Divide a potência em watts por 1.000 pra ter kW, multiplica pelas horas de uso e pelos dias. Chuveiro de 5.500 W ligado meia hora por dia durante 30 dias: 5,5 kW × 0,5 h × 30 = <b>82,5 kWh</b> no mês.</p>
+      <p class="prosa"><b>Calor não é temperatura.</b> Calor é energia que passa do corpo mais quente para o mais frio; temperatura é o quanto as partículas se agitam. Condução (pela panela), convecção (o ar quente sobe) e irradiação (o Sol chega pelo vácuo).</p>
+      <p class="prosa"><b>Energia se transforma, não some.</b> Hidrelétrica: potencial da água → cinética → elétrica. Painel solar: luminosa → elétrica. Chuveiro: elétrica → térmica.</p>
+      <h4>Química — o que realmente cai</h4>
+      <ul class="lista">
+        <li><b>Mudanças de estado</b>: fusão (sólido→líquido), vaporização (líquido→gás), condensação (gás→líquido), solidificação, sublimação (sólido→gás direto, como a naftalina).</li>
+        <li><b>Transformação física x química</b>: rasgar papel e derreter gelo é física (a substância continua a mesma); queimar, enferrujar e cozinhar é química (vira outra substância).</li>
+        <li><b>pH</b>: abaixo de 7 é ácido (limão, vinagre, refrigerante), 7 é neutro (água pura), acima de 7 é básico (sabão, leite de magnésia). Chuva ácida vem de gases de enxofre e nitrogênio queimados por indústria e carro.</li>
+        <li><b>Separação de misturas</b>: filtração (sólido em líquido), decantação (deixa assentar), destilação (separa líquidos pelo ponto de ebulição, como no álcool), catação, peneiração.</li>
+        <li><b>Combustíveis</b>: fósseis (petróleo, carvão, gás) são finitos e emitem muito CO₂; etanol e biodiesel são renováveis e vêm de biomassa.</li>
+      </ul>
+      <h4>Biologia — o que realmente cai</h4>
+      <ul class="lista">
+        <li><b>Ecologia</b> é o assunto número 1. Cadeia alimentar: produtor (planta, faz fotossíntese) → consumidor primário (herbívoro) → consumidor secundário → decompositor (fungo e bactéria, devolvem nutriente ao solo). A energia diminui a cada nível.</li>
+        <li><b>Efeito estufa</b> é natural e necessário; o problema é a <b>intensificação</b> pelo excesso de CO₂ e metano da queima de combustível fóssil, do desmatamento e da pecuária. Resultado: aquecimento global e eventos climáticos extremos.</li>
+        <li><b>Ciclo da água</b>: evaporação, condensação, precipitação, infiltração. Desmatar reduz a evapotranspiração e altera o regime de chuva.</li>
+        <li><b>Corpo humano</b>: digestório quebra o alimento em nutriente; respiratório faz a troca gasosa nos <b>alvéolos</b>; circulatório leva oxigênio e nutriente às células e recolhe o gás carbônico.</li>
+        <li><b>Saúde</b>: vacina ensina o corpo a produzir anticorpo antes da doença chegar; antibiótico só age em bactéria, nunca em vírus — e usar errado cria bactéria resistente. Dengue, zika e chikungunya vêm do <em>Aedes aegypti</em>, e o combate é a água parada.</li>
+        <li><b>Genética</b>: o DNA guarda a informação; gene é um trecho dele. Característica dominante aparece com uma cópia só; recessiva precisa de duas.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ================= SIMULADO ================= -->
+<section class="panel" id="p-simulado">
+  <div class="head">
+    <span class="eyebrow">34 questões no estilo da prova</span>
+    <h2>Simulado</h2>
+    <p class="prosa">Responde e a correção aparece na hora, com a explicação. Erra à vontade — errar aqui é o objetivo. Faz de caneta e papel do lado: no domingo tu não vai ter calculadora.</p>
+  </div>
+
+  <div class="card">
+    <div class="chips" id="filtros">
+      <button class="chip" data-f="todas" aria-pressed="true">Todas</button>
+      <button class="chip" data-f="Matemática">Matemática</button>
+      <button class="chip" data-f="Linguagens">Linguagens</button>
+      <button class="chip" data-f="Humanas">Humanas</button>
+      <button class="chip" data-f="Natureza">Natureza</button>
+    </div>
+    <div class="metricas">
+      <div class="metrica"><span class="num" id="s-resp">0</span><small>Respondidas</small></div>
+      <div class="metrica"><span class="num" id="s-certas">0</span><small>Certas</small></div>
+      <div class="metrica"><span class="num" id="s-pct">–</span><small>Aproveitamento</small></div>
+    </div>
+    <p style="font-size:.88rem;color:var(--ink-2)" id="s-leitura">Meta de referência: <b>50% ou mais</b> em cada área é a faixa de quem passa. <button class="chip" id="btn-refazer" style="margin-left:6px">Refazer simulado</button></p>
+  </div>
+
+  <div id="lista-q"></div>
+</section>
+
+<!-- ================= DIA DA PROVA ================= -->
+<section class="panel" id="p-prova">
+  <div class="head">
+    <span class="eyebrow">Domingo, 23 de agosto</span>
+    <h2>Como não perder ponto por besteira</h2>
+    <p class="prosa">É um dia longo: duas provas de manhã, três coisas à tarde, com quase duas horas de intervalo no meio. Quem chega sem plano perde mais ponto por cansaço e má gestão de tempo do que por não saber a matéria.</p>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Horários</h3>
+      <div class="tabela-wrap"><table>
+        <tr><th>Turno</th><th>Portões</th><th>Prova</th><th>O que cai</th></tr>
+        <tr><td><b>Manhã</b></td><td>abrem 8h, <b>fecham 8h45</b></td><td>9h às 13h</td><td>Matemática e Ciências da Natureza</td></tr>
+        <tr><td><b>Tarde</b></td><td>abrem 14h30, <b>fecham 15h15</b></td><td>15h30 às 20h30</td><td>Linguagens, Ciências Humanas e redação</td></tr>
+      </table></div>
+      <div class="nota"><b>Horário de Brasília</b>, mesmo em estado com fuso diferente. Portão fechado é portão fechado — não tem tolerância. Sai de casa contando com 40 minutos de folga e confere o local no cartão de confirmação na véspera, não no domingo de manhã.</div>
+    </div>
+
+    <div class="card">
+      <h3>O que levar</h3>
+      <ul class="lista">
+        <li><b>Documento oficial com foto</b>, original. Sem ele não entra.</li>
+        <li><b>Caneta esferográfica preta de material transparente.</b> Leva duas. Redação a lápis não é corrigida.</li>
+        <li>Cartão de confirmação impresso ou no celular (o celular fica desligado no envelope durante a prova).</li>
+        <li>Água em garrafa transparente sem rótulo, e comida de verdade para o intervalo — cinco horas de prova à tarde com fome derruba qualquer um.</li>
+        <li>Casaco. Sala fria em agosto, no Sul, é regra.</li>
+      </ul>
+      <div class="nota amb"><b>Não leva:</b> calculadora, relógio de qualquer tipo, boné, corretivo, régua ou qualquer eletrônico ligado.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Gestão de tempo dentro da sala</h3>
+    <ul class="lista">
+      <li><b>Manhã, 4 horas para 60 questões.</b> Sobra tempo. Faz Matemática primeiro enquanto a cabeça está fresca, porque é a que exige conta.</li>
+      <li><b>Três passadas em cada prova.</b> Primeira: responde só o que sai em menos de um minuto. Segunda: volta nas médias. Terceira: as difíceis e o chute nas que restaram. Isso garante que nenhuma questão fácil fique sem resposta por falta de tempo.</li>
+      <li><b>À tarde, escreve a redação no meio, não no fim.</b> Resolve Linguagens, faz a redação com a cabeça ainda funcionando, e deixa Ciências Humanas — que é a mais interpretativa e menos cansativa — para o final.</li>
+      <li><b>Reserva 45 minutos para a redação</b>: 5 lendo a proposta e montando o esqueleto no rascunho, 25 escrevendo o rascunho, 15 passando a limpo e revisando.</li>
+      <li><b>Passa o cartão-resposta a limpo faltando 30 minutos.</b> Ninguém quer descobrir às 20h28 que preencheu tudo deslocado uma linha.</li>
+      <li><b>Confere se não pulou questão</b> ao transferir. Compara o número da questão com o número na linha do cartão a cada dez itens.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Na véspera</h3>
+    <ul class="lista">
+      <li>Nada de estudar até tarde. Depois das 21h, revisa só a estrutura dos quatro parágrafos da redação e vai dormir.</li>
+      <li>Separa documento, canetas e cartão de confirmação em cima da mesa antes de deitar.</li>
+      <li>Confere o endereço do local no mapa e como tu vai chegar.</li>
+      <li>Dois alarmes.</li>
+    </ul>
+    <div class="nota pri">Se travar numa questão no domingo: marca uma letra, circula o número no caderno e segue. Voltar depois com a cabeça limpa resolve; ficar dez minutos travado custa três questões fáceis lá na frente.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Feito para o Encceja 2026 — Ensino Médio, aplicação em 23 de agosto. Formato da prova, horários e critérios conferidos no que o Inep divulgou para esta edição; confirma sempre no teu cartão de confirmação e no edital. Todo o progresso fica salvo só neste navegador.
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ------------------------------------------------------------------
+   ESTADO
+------------------------------------------------------------------ */
+var CHAVE = "encceja6h.v1";
+var S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, tema:"auto"};
+try{
+  var salvo = localStorage.getItem(CHAVE);
+  if(salvo){ var o = JSON.parse(salvo); for(var k in o){ if(o[k]!==undefined) S[k]=o[k]; } }
+}catch(e){}
+var salvarPendente = null;
+function salvar(){
+  clearTimeout(salvarPendente);
+  salvarPendente = setTimeout(function(){
+    try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){}
+  }, 250);
+}
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+/* ------------------------------------------------------------------
+   TEMA
+------------------------------------------------------------------ */
+function aplicarTema(){
+  if(S.tema === "auto"){ document.documentElement.removeAttribute("data-theme"); }
+  else{ document.documentElement.setAttribute("data-theme", S.tema); }
+}
+aplicarTema();
+$("#btn-tema").addEventListener("click", function(){
+  var escuroAgora = S.tema === "dark" ||
+    (S.tema === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  S.tema = escuroAgora ? "light" : "dark";
+  aplicarTema(); salvar();
+});
+
+/* ------------------------------------------------------------------
+   NAVEGAÇÃO
+------------------------------------------------------------------ */
+$$("nav button").forEach(function(b){
+  b.addEventListener("click", function(){
+    $$("nav button").forEach(function(x){ x.setAttribute("aria-selected", x===b ? "true":"false"); });
+    $$(".panel").forEach(function(p){ p.classList.remove("on"); });
+    $("#p-" + b.dataset.p).classList.add("on");
+    window.scrollTo({top:0, behavior:"instant" in window ? "auto" : "auto"});
+  });
+});
+
+/* ------------------------------------------------------------------
+   CONTAGEM REGRESSIVA
+------------------------------------------------------------------ */
+(function(){
+  var prova = new Date(2026, 7, 23);           // 23 de agosto de 2026
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var dias = Math.round((prova - hoje) / 86400000);
+  var el = $("#g-dias");
+  var n = el.querySelector(".num");
+  if(dias > 1){ n.textContent = dias; el.lastChild.textContent = " dias"; }
+  else if(dias === 1){ n.textContent = "1"; el.lastChild.textContent = " dia"; }
+  else if(dias === 0){ n.textContent = "HOJE"; el.lastChild.textContent = " é a prova"; }
+  else { n.textContent = "—"; el.lastChild.textContent = " prova aplicada"; }
+  if(dias <= 2){ el.classList.add("hot"); }
+})();
+
+/* ------------------------------------------------------------------
+   PLANO — 12 blocos
+------------------------------------------------------------------ */
+var PLANO = [
+  {id:"d1b1", dia:1, dur:"15 min", tit:"Entender a regra do jogo",
+   desc:"Aba Painel. Lê a linha de corte, o que rende mais e o que não vale fazer. É o bloco que decide como as outras 5h45 são gastas."},
+  {id:"d1b2", dia:1, dur:"55 min", tit:"Redação: a estrutura",
+   desc:"Aba Redação. As cinco competências, o que zera, e principalmente o modelo dos quatro parágrafos. Copia o esqueleto à mão num papel — copiar fixa muito mais que ler."},
+  {id:"d1b3", dia:1, dur:"10 min", tit:"Pausa de verdade",
+   desc:"Levanta, caminha, bebe água. Sem tela. Pausa cortada é bloco seguinte perdido."},
+  {id:"d1b4", dia:1, dur:"55 min", tit:"Matemática: porcentagem, regra de três, média e gráfico",
+   desc:"Aba Matemática, blocos 1 a 3. Refaz cada exemplo resolvido no papel antes de olhar a resposta."},
+  {id:"d1b5", dia:1, dur:"30 min", tit:"Simulado: só Matemática",
+   desc:"Aba Simulado, filtro Matemática. Responde as 16 sem pressa e lê a explicação de cada uma, inclusive das que acertou."},
+  {id:"d1b6", dia:1, dur:"15 min", tit:"Anotar os erros",
+   desc:"Escreve numa folha só os assuntos que tu errou. Essa folha é o teu material de revisão de domingo de manhã."},
+
+  {id:"d2b1", dia:2, dur:"45 min", tit:"Matemática: unidades, geometria, função e juros",
+   desc:"Aba Matemática, blocos 4 a 7. Presta atenção especial em m³ para litro e nas fórmulas de área — são as que mais aparecem."},
+  {id:"d2b2", dia:2, dur:"45 min", tit:"Escrever uma redação inteira, cronometrada",
+   desc:"Aba Redação, treino no fim da página. Escolhe um tema da lista, marca 45 minutos no cronômetro e escreve sem parar até acabar. Não interrompe para pesquisar."},
+  {id:"d2b3", dia:2, dur:"10 min", tit:"Pausa",
+   desc:"Fecha o app. Volta em dez minutos."},
+  {id:"d2b4", dia:2, dur:"20 min", tit:"Corrigir a própria redação",
+   desc:"Passa o checklist de autoavaliação item por item. Cada item desmarcado é um ponto que tu ainda pode ganhar no domingo — arruma o parágrafo ali mesmo."},
+  {id:"d2b5", dia:2, dur:"40 min", tit:"Varredura de Humanas, Natureza e Linguagens",
+   desc:"Aba Revisão. Começa pela técnica de leitura, que serve para as três. Depois passa os três blocos lendo rápido, sem tentar decorar nada."},
+  {id:"d2b6", dia:2, dur:"20 min", tit:"Simulado final e logística",
+   desc:"Aba Simulado, as 18 questões das outras áreas. Termina lendo a aba Dia da prova e separando documento e canetas."}
+];
+
+function montarPlano(){
+  [1,2].forEach(function(d){
+    var alvo = $("#lista-dia" + d);
+    alvo.innerHTML = "";
+    PLANO.filter(function(b){ return b.dia === d; }).forEach(function(b){
+      var div = document.createElement("div");
+      div.className = "bloco" + (S.blocos[b.id] ? " feito" : "");
+      var cb = document.createElement("input");
+      cb.type = "checkbox"; cb.checked = !!S.blocos[b.id];
+      cb.setAttribute("aria-label", "Concluir bloco: " + b.tit);
+      cb.addEventListener("change", function(){
+        S.blocos[b.id] = cb.checked;
+        div.classList.toggle("feito", cb.checked);
+        salvar(); atualizarPlacar();
+      });
+      var txt = document.createElement("div");
+      var h = document.createElement("div");
+      h.className = "bloco-tit";
+      h.innerHTML = '<span>' + b.tit + '</span><span class="dur">' + b.dur + '</span>';
+      var p = document.createElement("div");
+      p.className = "bloco-desc"; p.textContent = b.desc;
+      txt.appendChild(h); txt.appendChild(p);
+      div.appendChild(cb); div.appendChild(txt);
+      alvo.appendChild(div);
+    });
+  });
+}
+
+/* ------------------------------------------------------------------
+   CRONÔMETRO
+------------------------------------------------------------------ */
+var alvoSeg = 25*60, restante = alvoSeg, rodando = false, tick = null, acumulado = 0;
+function pintarRelogio(){
+  var m = Math.floor(restante/60), s = restante % 60;
+  var c = $("#clock");
+  c.textContent = (m<10?"0":"") + m + ":" + (s<10?"0":"") + s;
+  c.classList.toggle("run", rodando && restante > 0);
+  c.classList.toggle("done", restante === 0);
+}
+function pararRelogio(){
+  rodando = false; clearInterval(tick); tick = null;
+  $("#btn-play").textContent = "Iniciar"; pintarRelogio();
+}
+$$("#presets .chip").forEach(function(b){
+  b.addEventListener("click", function(){
+    $$("#presets .chip").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+    alvoSeg = parseInt(b.dataset.min,10) * 60;
+    restante = alvoSeg; pararRelogio();
+  });
+});
+$("#btn-play").addEventListener("click", function(){
+  if(rodando){ pararRelogio(); return; }
+  if(restante === 0){ restante = alvoSeg; }
+  rodando = true; $("#btn-play").textContent = "Pausar"; pintarRelogio();
+  tick = setInterval(function(){
+    restante--; acumulado++;
+    if(acumulado >= 60){ acumulado = 0; S.min++; salvar(); atualizarPlacar(); }
+    if(restante <= 0){ restante = 0; pararRelogio(); }
+    pintarRelogio();
+  }, 1000);
+});
+$("#btn-reset").addEventListener("click", function(){ restante = alvoSeg; acumulado = 0; pararRelogio(); });
+
+/* ------------------------------------------------------------------
+   BANCO DE QUESTÕES — 34, no estilo do Encceja
+------------------------------------------------------------------ */
+var Q = [
+{ar:"Matemática", t:"Uma loja vende um drone recreativo por R$ 2.400,00. Em uma promoção, a loja oferece 15% de desconto para pagamento à vista.\n\nQuanto um cliente pagará à vista por esse drone?",
+ a:["R$ 1.960,00","R$ 2.040,00","R$ 2.100,00","R$ 2.160,00","R$ 2.260,00"], c:1,
+ e:"Com 15% de desconto, sobra 85% do preço. Basta multiplicar: 2400 × 0,85 = 2040. Calcular o desconto (2400 × 0,15 = 360) e subtrair dá o mesmo resultado, mas gasta o dobro do tempo."},
+
+{ar:"Matemática", t:"O preço de um produto era R$ 200,00. Ele sofreu um aumento de 10% em janeiro e, sobre o novo valor, outro aumento de 10% em fevereiro.\n\nQual passou a ser o preço do produto?",
+ a:["R$ 220,00","R$ 240,00","R$ 242,00","R$ 244,00","R$ 250,00"], c:2,
+ e:"Aumentos sucessivos não se somam. 200 × 1,10 = 220 em janeiro; 220 × 1,10 = 242 em fevereiro. O aumento total foi de 21%, não de 20% — o segundo aumento incidiu sobre um valor já maior. A alternativa R$ 240,00 é a pegadinha de quem somou 10% + 10%."},
+
+{ar:"Matemática", t:"Em um mercado, 4 kg de ração para cães custam R$ 36,00.\n\nMantido o mesmo preço por quilo, quanto custarão 7 kg dessa ração?",
+ a:["R$ 54,00","R$ 58,00","R$ 63,00","R$ 68,00","R$ 72,00"], c:2,
+ e:"Regra de três direta: mais quilos, mais reais. 4 está para 36 assim como 7 está para x. Multiplicando em cruz: 4x = 252, logo x = 63. Também dá para achar o preço do quilo primeiro: 36 ÷ 4 = R$ 9,00; depois 9 × 7 = R$ 63,00."},
+
+{ar:"Matemática", t:"Uma equipe de 6 pedreiros constrói um muro em 10 dias, todos trabalhando no mesmo ritmo.\n\nSe a equipe passasse a ter 15 pedreiros, em quantos dias o muro ficaria pronto?",
+ a:["3 dias","4 dias","5 dias","6 dias","8 dias"], c:1,
+ e:"Aqui as grandezas são inversamente proporcionais: quanto mais pedreiros, menos dias. Nesse caso multiplica-se em linha, não em cruz: 6 × 10 = 15 × x, ou seja, 60 = 15x, logo x = 4 dias. Se tivesse feito regra de três direta, daria 25 dias — resultado sem sentido, já que mais gente não pode demorar mais."},
+
+{ar:"Matemática", t:"Um curso avalia o aluno por três notas com pesos diferentes: prova escrita 6,0 (peso 2), trabalho 8,0 (peso 3) e prova prática 5,0 (peso 5).\n\nQual é a média final desse aluno?",
+ a:["5,9","6,0","6,1","6,3","6,5"], c:2,
+ e:"Na média ponderada, multiplica-se cada nota pelo seu peso e divide-se pela soma dos pesos: (6×2 + 8×3 + 5×5) ÷ (2+3+5) = (12+24+25) ÷ 10 = 61 ÷ 10 = 6,1. O erro mais comum é dividir por 3, a quantidade de notas, em vez de 10, a soma dos pesos."},
+
+{ar:"Matemática", t:"Em um mapa desenhado na escala 1:50.000, a distância entre duas cidades mede 8 cm.\n\nQual é a distância real entre essas cidades?",
+ a:["0,4 km","4 km","40 km","400 km","500 km"], c:1,
+ e:"A escala 1:50.000 significa que 1 cm no mapa vale 50.000 cm no terreno. Então 8 cm valem 8 × 50.000 = 400.000 cm. Para converter em metros divide-se por 100 (4.000 m) e, para quilômetros, por 1.000: 4 km."},
+
+{ar:"Matemática", t:"Um terreno retangular mede 25 m de comprimento por 16 m de largura. O proprietário vai cobrir todo o terreno com grama, ao preço de R$ 12,00 o metro quadrado.\n\nQuanto ele gastará com a grama?",
+ a:["R$ 984,00","R$ 3.600,00","R$ 4.800,00","R$ 5.200,00","R$ 9.600,00"], c:2,
+ e:"Primeiro a área do retângulo: 25 × 16 = 400 m². Depois o custo: 400 × 12 = R$ 4.800,00. Atenção para não usar o perímetro (82 m) no lugar da área — o enunciado fala em metro quadrado, o que sempre indica área."},
+
+{ar:"Matemática", t:"Uma caixa d'água tem formato de cilindro, com 1 m de raio e 2 m de altura. Considere π = 3.\n\nQuantos litros de água essa caixa comporta quando está cheia?",
+ a:["600 litros","3.000 litros","6.000 litros","12.000 litros","60.000 litros"], c:2,
+ e:"O volume do cilindro é π × r² × h = 3 × 1² × 2 = 6 m³. Como 1 m³ equivale a 1.000 litros, a caixa comporta 6.000 litros. Esquecer essa conversão e responder 6 é o erro clássico dessa questão."},
+
+{ar:"Matemática", t:"Uma escada de 5 m de comprimento está apoiada em uma parede vertical. O pé da escada está a 3 m da base da parede.\n\nA que altura da parede a escada se apoia?",
+ a:["2 m","3,5 m","4 m","4,5 m","8 m"], c:2,
+ e:"A escada, a parede e o chão formam um triângulo retângulo, e a escada é a hipotenusa. Pelo teorema de Pitágoras: 5² = 3² + x², ou 25 = 9 + x², logo x² = 16 e x = 4 m. Vale decorar o trio 3-4-5: ele aparece com frequência nessas questões."},
+
+{ar:"Matemática", t:"Uma transportadora cobra uma taxa fixa de R$ 50,00 por entrega, mais R$ 3,00 por quilômetro rodado.\n\nSe o valor cobrado em uma entrega foi de R$ 200,00, quantos quilômetros foram rodados?",
+ a:["30 km","45 km","50 km","60 km","66 km"], c:2,
+ e:"A situação é uma função do 1º grau: valor = 50 + 3 × km. Substituindo o valor: 200 = 50 + 3x. Passando o 50 para o outro lado: 150 = 3x, logo x = 50 km. Dividir 200 direto por 3 (dando cerca de 66 km) é o erro de quem esqueceu de tirar a taxa fixa antes."},
+
+{ar:"Matemática", t:"Uma pessoa aplicou R$ 1.500,00 a juros simples, com taxa de 2% ao mês, durante 5 meses.\n\nQual será o montante ao final da aplicação?",
+ a:["R$ 1.515,00","R$ 1.575,00","R$ 1.600,00","R$ 1.650,00","R$ 1.800,00"], c:3,
+ e:"Nos juros simples, J = C × i × t, com a taxa em decimal: J = 1500 × 0,02 × 5 = R$ 150,00. O montante é o capital mais os juros: 1500 + 150 = R$ 1.650,00. Cuidado: a questão pede o montante, não os juros — R$ 150,00 sozinho seria resposta incompleta."},
+
+{ar:"Matemática", t:"Uma urna contém 5 bolas azuis, 3 bolas vermelhas e 2 bolas verdes, todas do mesmo tamanho. Uma bola é retirada ao acaso.\n\nQual é a probabilidade de a bola retirada ser vermelha?",
+ a:["10%","20%","30%","33%","50%"], c:2,
+ e:"Probabilidade é o número de casos favoráveis dividido pelo total de casos possíveis. São 3 bolas vermelhas em um total de 5 + 3 + 2 = 10 bolas: 3/10 = 0,3 = 30%. A alternativa 33% é a de quem dividiu por 9 ou considerou apenas as três cores como igualmente prováveis."},
+
+{ar:"Matemática", t:"O gráfico de vendas de uma loja mostrou os seguintes valores: janeiro, 120 unidades; fevereiro, 150; março, 90; abril, 180.\n\nDe janeiro para abril, qual foi o aumento percentual nas vendas?",
+ a:["30%","50%","60%","66%","150%"], c:1,
+ e:"A variação percentual é (valor novo − valor antigo) ÷ valor antigo × 100: (180 − 120) ÷ 120 × 100 = 60 ÷ 120 × 100 = 50%. A alternativa 150% é a pegadinha de quem calculou quanto abril representa de janeiro (180/120 = 150%) em vez do quanto aumentou."},
+
+{ar:"Matemática", t:"Uma caixa d'água tem capacidade de 0,75 m³.\n\nQuantos litros de água ela comporta?",
+ a:["7,5 litros","75 litros","750 litros","7.500 litros","75.000 litros"], c:2,
+ e:"Um metro cúbico corresponde a 1.000 litros. Então 0,75 m³ = 0,75 × 1.000 = 750 litros. Essa conversão aparece quase todo ano em alguma questão de caixa d'água, piscina ou tanque."},
+
+{ar:"Matemática", t:"Em um mês, uma pequena oficina registrou os seguintes números de atendimentos por semana: 4, 7, 2, 9 e 5.\n\nQual é a mediana dessa distribuição?",
+ a:["2","4","5","5,4","7"], c:2,
+ e:"A mediana exige ordenar os valores primeiro: 2, 4, 5, 7, 9. Como são cinco valores, a mediana é o do meio, ou seja, 5. Note que 5,4 é a média aritmética (27 ÷ 5) — mediana e média são coisas diferentes e a prova costuma oferecer as duas como alternativas."},
+
+{ar:"Matemática", t:"Resolva a equação abaixo.\n\n3x − 7 = 2x + 5",
+ a:["x = −2","x = 2","x = 5","x = 12","x = 24"], c:3,
+ e:"Passa-se o que tem x para um lado e os números para o outro, trocando o sinal ao atravessar o igual: 3x − 2x = 5 + 7, ou seja, x = 12. Para conferir, basta substituir: 3(12) − 7 = 29 e 2(12) + 5 = 29."},
+
+{ar:"Linguagens", t:"Leia o texto de uma campanha publicitária.\n\n\"Beba mais água. Cuide do seu corpo. Comece hoje mesmo.\"\n\nA função da linguagem predominante nesse texto é a",
+ a:["referencial, porque informa dados objetivos sobre a saúde.","emotiva, porque expressa os sentimentos de quem escreve.","conativa, porque procura convencer o leitor a agir.","metalinguística, porque explica o funcionamento da língua.","fática, porque testa se o canal de comunicação funciona."], c:2,
+ e:"Os verbos estão no imperativo — beba, cuide, comece — e todos se dirigem diretamente ao leitor, tentando levá-lo a fazer algo. Essa é a marca da função conativa (ou apelativa), típica de propaganda e campanha. Verbo no imperativo em anúncio é praticamente sinônimo de função conativa."},
+
+{ar:"Linguagens", t:"Leia o verso a seguir.\n\n\"Meu coração é um balde despejado.\"\n(Fernando Pessoa)\n\nA figura de linguagem presente no verso é a",
+ a:["comparação.","metáfora.","hipérbole.","eufemismo.","metonímia."], c:1,
+ e:"O coração é apresentado como sendo um balde despejado, sem qualquer palavra de comparação como 'como' ou 'tal qual'. Comparação implícita é metáfora. Se o verso dissesse 'meu coração é como um balde despejado', aí sim seria comparação."},
+
+{ar:"Linguagens", t:"Em uma entrevista, um agricultor do interior diz: \"Nós vai plantar na semana que vem, se Deus quiser.\"\n\nSobre essa fala, é correto afirmar que",
+ a:["revela ignorância do falante, que desconhece a língua portuguesa.","apresenta um erro grave que impede a compreensão da mensagem.","corresponde a uma variedade linguística adequada à situação informal em que foi produzida.","deve ser corrigida antes de ser publicada, pois nenhuma variedade não padrão pode ser registrada.","comprova que o português falado no campo é uma língua diferente do português."], c:2,
+ e:"A prova cobra sempre a mesma ideia: variedades linguísticas não são erradas, são adequadas ou inadequadas a cada situação. A fala é compreensível e própria de um contexto informal. Julgar o falante por ela é preconceito linguístico. Repare que as alternativas erradas usam termos absolutos — 'ignorância', 'nenhuma', 'impede' — sinal frequente de alternativa a ser descartada."},
+
+{ar:"Linguagens", t:"Leia o período abaixo.\n\n\"O transporte público da cidade foi ampliado nos últimos anos. No entanto, a maioria dos moradores da periferia ainda leva mais de duas horas para chegar ao trabalho.\"\n\nA expressão \"No entanto\" estabelece entre as duas orações uma relação de",
+ a:["causa.","oposição.","conclusão.","adição.","finalidade."], c:1,
+ e:"'No entanto' pertence ao grupo de mas, porém, contudo, entretanto e todavia: todos marcam oposição ou contraste. O segundo período nega a expectativa criada pelo primeiro — ampliou o transporte, mas o problema continua. Se fosse conclusão, apareceria 'portanto' ou 'logo'; se fosse causa, 'porque' ou 'uma vez que'."},
+
+{ar:"Linguagens", t:"Uma charge de jornal mostra um político em frente a um cartaz onde se lê \"Saúde é prioridade\", enquanto, ao fundo, pacientes esperam deitados no corredor de um hospital.\n\nO recurso empregado pelo chargista para construir a crítica é a",
+ a:["ironia, pois o que se afirma contrasta com o que se mostra.","hipérbole, pois há exagero na quantidade de pacientes.","metonímia, pois o hospital representa o país inteiro.","personificação, pois objetos ganham características humanas.","eufemismo, pois a crítica é suavizada pela imagem."], c:0,
+ e:"A charge coloca lado a lado uma afirmação e uma cena que a desmente. Dizer uma coisa e mostrar exatamente o contrário para criticar é ironia — o recurso mais cobrado em charges e tirinhas no Encceja. Quando a questão trouxer charge e perguntar pelo recurso, a ironia deve ser a primeira hipótese a testar."},
+
+{ar:"Linguagens", t:"Dois textos tratam do mesmo assunto. O primeiro relata, em terceira pessoa, quando e onde ocorreu um acidente, quantas pessoas foram atingidas e o que disseram os bombeiros. O segundo defende que o poder público precisa investir mais em prevenção e apresenta argumentos para isso.\n\nEsses textos pertencem, respectivamente, aos gêneros",
+ a:["notícia e artigo de opinião.","artigo de opinião e notícia.","crônica e reportagem.","editorial e conto.","relato pessoal e propaganda."], c:0,
+ e:"O primeiro apenas informa fatos verificáveis, de forma impessoal, em terceira pessoa: é notícia. O segundo defende um ponto de vista e usa argumentos para convencer: é artigo de opinião. O critério de reconhecimento de gênero é sempre a finalidade do texto — informar, convencer, entreter, instruir."},
+
+{ar:"Humanas", t:"Em 1943, foi promulgada no Brasil a Consolidação das Leis do Trabalho, que reuniu em um único texto normas sobre jornada, férias, salário mínimo e carteira de trabalho.\n\nEssa medida está associada ao governo de",
+ a:["Deodoro da Fonseca, na Proclamação da República.","Getúlio Vargas, no período conhecido como Era Vargas.","Juscelino Kubitschek, no Plano de Metas.","João Goulart, nas Reformas de Base.","Fernando Henrique Cardoso, no Plano Real."], c:1,
+ e:"A CLT é de 1943, em pleno Estado Novo de Getúlio Vargas. A legislação trabalhista foi um dos pilares do getulismo: ampliou direitos ao mesmo tempo em que o governo controlava os sindicatos e restringia liberdades políticas. Vale guardar o par CLT–1943–Vargas, porque ele aparece com frequência."},
+
+{ar:"Humanas", t:"Em dezembro de 1968, o governo militar brasileiro editou o Ato Institucional nº 5, que permitiu ao presidente fechar o Congresso Nacional, cassar mandatos e suspender direitos políticos, além de instituir a censura prévia à imprensa.\n\nO AI-5 representou",
+ a:["o início do processo de abertura política do regime.","a restauração das eleições diretas para presidente.","o endurecimento do regime militar e a supressão de direitos.","uma resposta às pressões internacionais por democratização.","a transferência do poder aos governadores estaduais."], c:2,
+ e:"O AI-5 é o marco do período mais duro da ditadura militar, os chamados anos de chumbo: censura, prisões, tortura e perseguição a opositores. A abertura política só começaria mais tarde, no governo Geisel, e culminaria com a anistia de 1979 e as Diretas Já em 1984."},
+
+{ar:"Humanas", t:"A Constituição promulgada em 1988 ficou conhecida como \"Constituição Cidadã\".\n\nEntre os avanços que justificam essa denominação está a",
+ a:["criação do Sistema Único de Saúde e a ampliação dos direitos sociais.","instituição do voto censitário, restrito aos proprietários de terras.","manutenção da censura prévia aos meios de comunicação.","redução dos direitos trabalhistas garantidos pela CLT.","proibição da organização de sindicatos e partidos políticos."], c:0,
+ e:"A Constituição de 1988 criou o SUS, garantiu direitos sociais como educação, saúde, trabalho e moradia, estendeu o voto aos analfabetos e aos jovens de 16 anos e restabeleceu as liberdades civis suprimidas na ditadura. Todas as demais alternativas descrevem retrocessos — exatamente o oposto do que o texto constitucional representou."},
+
+{ar:"Humanas", t:"A partir da década de 1950, o Brasil passou por uma inversão: em poucas décadas, deixou de ser um país majoritariamente rural para se tornar majoritariamente urbano.\n\nEsse processo é explicado principalmente pela",
+ a:["chegada de imigrantes europeus atraídos pela agricultura familiar.","mecanização do campo somada à oferta de empregos na indústria urbana.","política de distribuição de terras que fixou o trabalhador no campo.","queda da população total do país no período.","expansão das áreas de proteção ambiental nas cidades."], c:1,
+ e:"O êxodo rural resulta de dois movimentos ao mesmo tempo: a mecanização da agricultura reduz a necessidade de mão de obra e expulsa o trabalhador do campo, enquanto a industrialização das grandes cidades o atrai. Como a urbanização foi rápida e sem planejamento, gerou periferias sem saneamento, favelas e problemas de mobilidade — consequências que a prova costuma cobrar na sequência."},
+
+{ar:"Humanas", t:"Comparada à de outros países, a matriz de geração de energia elétrica do Brasil apresenta uma característica marcante.\n\nEssa característica é a",
+ a:["predominância do carvão mineral como fonte principal.","forte participação das usinas nucleares na geração total.","elevada participação de fontes renováveis, com destaque para a hidreletricidade.","dependência quase exclusiva da importação de energia de países vizinhos.","ausência total de fontes fósseis na geração de eletricidade."], c:2,
+ e:"O Brasil gera a maior parte de sua eletricidade em hidrelétricas, complementadas por eólica, solar e biomassa em crescimento, o que torna sua matriz elétrica bem mais renovável que a média mundial. Isso não significa ausência de impacto: barragens alagam grandes áreas e deslocam populações. E não é 'total' — termoelétricas fósseis são acionadas em períodos de seca, o que já elimina a última alternativa."},
+
+{ar:"Humanas", t:"A Revolução Industrial, iniciada na Inglaterra no século XVIII, transformou profundamente a organização do trabalho.\n\nEntre suas consequências diretas está a",
+ a:["substituição da produção fabril pelo trabalho artesanal em oficinas.","redução imediata das jornadas de trabalho por decisão dos industriais.","concentração de trabalhadores nas cidades e o surgimento dos sindicatos.","extinção do trabalho infantil já nas primeiras décadas do processo.","volta da população das cidades para o campo em busca de terras."], c:2,
+ e:"A industrialização levou multidões do campo para as cidades, onde encontraram jornadas de até 14 horas, salários baixos e trabalho infantil. Foi justamente diante dessas condições que os trabalhadores se organizaram em sindicatos e passaram a lutar por direitos — as reduções de jornada vieram como conquista dessa luta, décadas depois, e não por iniciativa dos patrões."},
+
+{ar:"Natureza", t:"Um chuveiro elétrico de 5.500 W é utilizado, em média, 30 minutos por dia, durante 30 dias.\n\nQual é o consumo mensal de energia desse chuveiro?",
+ a:["8,25 kWh","41,25 kWh","82,5 kWh","165 kWh","4.950 kWh"], c:2,
+ e:"Primeiro converte-se a potência para quilowatts: 5.500 W ÷ 1.000 = 5,5 kW. Depois, o tempo para horas: 30 minutos = 0,5 h. A energia é potência × tempo × dias: 5,5 × 0,5 × 30 = 82,5 kWh. Esquecer de dividir por 1.000, ou usar 30 minutos como se fossem 30 horas, são os dois erros mais comuns aqui."},
+
+{ar:"Natureza", t:"Em uma cadeia alimentar de um ecossistema terrestre, aparecem capim, gafanhoto, sapo e cobra.\n\nO organismo produtor dessa cadeia é",
+ a:["o capim, porque produz seu próprio alimento pela fotossíntese.","o gafanhoto, porque é o primeiro animal da sequência.","o sapo, porque se alimenta de um consumidor primário.","a cobra, porque está no topo da cadeia.","nenhum, porque produtores só existem em ambientes aquáticos."], c:0,
+ e:"Produtor é o organismo capaz de fabricar o próprio alimento — no caso, o capim, por fotossíntese. O gafanhoto que o come é consumidor primário, o sapo é secundário e a cobra, terciária. Faltam ainda os decompositores, fungos e bactérias, que devolvem os nutrientes ao solo. A energia disponível diminui a cada nível da cadeia."},
+
+{ar:"Natureza", t:"O efeito estufa é um fenômeno natural que mantém a temperatura média da Terra compatível com a vida. Nas últimas décadas, porém, ele vem sendo intensificado.\n\nEssa intensificação é causada principalmente pela",
+ a:["diminuição da camada de ozônio provocada pelos gases CFC.","queima de combustíveis fósseis e pelo desmatamento, que aumentam o CO₂ na atmosfera.","redução da radiação solar que chega à superfície terrestre.","evaporação natural da água dos oceanos ao longo do ano.","expansão das áreas cobertas por florestas nativas."], c:1,
+ e:"A queima de petróleo, carvão e gás lança gás carbônico na atmosfera, e o desmatamento remove justamente as árvores que o absorveriam. O resultado é mais calor retido e o aquecimento global. Cuidado para não confundir com o buraco na camada de ozônio: são fenômenos diferentes, com causas diferentes — o ozônio é afetado pelos CFCs."},
+
+{ar:"Natureza", t:"Uma substância foi testada com fita indicadora e apresentou pH igual a 3.\n\nEssa substância é classificada como",
+ a:["ácida, e pode ser exemplificada pelo suco de limão.","neutra, como a água pura.","básica, como o leite de magnésia.","salina, como o sal de cozinha dissolvido.","gasosa, pois o pH só se aplica a gases."], c:0,
+ e:"A escala de pH vai de 0 a 14: abaixo de 7 é ácido, 7 é neutro e acima de 7 é básico. Um pH 3 é bem ácido, faixa de limão, vinagre e refrigerante. Quanto menor o número, mais ácida a substância — é uma escala que anda ao contrário da intuição de muita gente."},
+
+{ar:"Natureza", t:"No sistema respiratório humano, o oxigênio do ar inspirado passa para o sangue e o gás carbônico faz o caminho inverso.\n\nEssa troca gasosa ocorre",
+ a:["na traqueia.","nos brônquios.","nos alvéolos pulmonares.","no diafragma.","na laringe."], c:2,
+ e:"Os alvéolos são pequenas bolsas de parede finíssima, envolvidas por vasos sanguíneos, e é ali que oxigênio e gás carbônico atravessam entre o ar e o sangue. Traqueia e brônquios apenas conduzem o ar até lá; o diafragma é o músculo que faz o pulmão encher e esvaziar."},
+
+{ar:"Natureza", t:"Uma pessoa com gripe, doença causada por um vírus, procura a farmácia e pede um antibiótico.\n\nSobre essa situação, é correto afirmar que",
+ a:["o antibiótico curará a gripe mais rapidamente que o repouso.","o antibiótico não age sobre vírus, e o uso indevido favorece o surgimento de bactérias resistentes.","antibióticos e vacinas atuam da mesma forma no organismo.","o antibiótico impede que a pessoa volte a ter gripe no futuro.","vírus e bactérias são o mesmo tipo de organismo, tratados igualmente."], c:1,
+ e:"Antibióticos combatem bactérias e não têm nenhum efeito sobre vírus. Tomá-los sem necessidade elimina bactérias sensíveis e deixa sobreviver as resistentes, que se multiplicam — é assim que surge a resistência bacteriana, hoje um problema mundial de saúde pública. A prevenção contra vírus vem de outro caminho: a vacina, que ensina o organismo a produzir anticorpos antes do contato com a doença."}
+];
+
+/* ------------------------------------------------------------------
+   SIMULADO
+------------------------------------------------------------------ */
+var filtroAtual = "todas";
+var LETRAS = ["A","B","C","D","E"];
+var CLASSE_AREA = {"Matemática":"mat","Linguagens":"pri","Humanas":"pri","Natureza":"pri"};
+
+function montarSimulado(){
+  var alvo = $("#lista-q");
+  alvo.innerHTML = "";
+  Q.forEach(function(q, i){
+    if(filtroAtual !== "todas" && q.ar !== filtroAtual) return;
+
+    var box = document.createElement("div");
+    box.className = "q";
+
+    var top = document.createElement("div");
+    top.className = "q-top";
+    top.innerHTML = '<span class="q-num">Questão ' + (i+1) + '</span>' +
+                    '<span class="tag ' + (CLASSE_AREA[q.ar]||"") + '">' + q.ar + '</span>';
+    box.appendChild(top);
+
+    var txt = document.createElement("div");
+    txt.className = "q-txt"; txt.textContent = q.t;
+    box.appendChild(txt);
+
+    var alts = document.createElement("div");
+    alts.className = "alts";
+    var expl = document.createElement("div");
+    expl.className = "expl"; expl.style.display = "none";
+    expl.innerHTML = "<b>Resposta: " + LETRAS[q.c] + ".</b> " + q.e;
+
+    var botoes = [];
+    function revelar(escolha){
+      botoes.forEach(function(bt, j){
+        bt.disabled = true;
+        if(j === q.c){ bt.classList.add("certa"); }
+        else if(j === escolha){ bt.classList.add("errada"); }
+      });
+      expl.style.display = "block";
+    }
+
+    q.a.forEach(function(texto, j){
+      var bt = document.createElement("button");
+      bt.className = "alt"; bt.type = "button";
+      bt.innerHTML = '<b>' + LETRAS[j] + '</b><span></span>';
+      bt.lastChild.textContent = texto;
+      bt.addEventListener("click", function(){
+        if(S.resp[i] !== undefined) return;
+        S.resp[i] = j; salvar();
+        revelar(j); atualizarPlacar();
+      });
+      botoes.push(bt);
+      alts.appendChild(bt);
+    });
+
+    box.appendChild(alts);
+    box.appendChild(expl);
+    alvo.appendChild(box);
+
+    if(S.resp[i] !== undefined){ revelar(S.resp[i]); }
+  });
+}
+
+$$("#filtros .chip").forEach(function(b){
+  b.addEventListener("click", function(){
+    $$("#filtros .chip").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+    filtroAtual = b.dataset.f;
+    montarSimulado();
+  });
+});
+
+$("#btn-refazer").addEventListener("click", function(){
+  if(!confirm("Isso apaga as respostas do simulado. As questões voltam em branco. Continuar?")) return;
+  S.resp = {}; salvar(); montarSimulado(); atualizarPlacar();
+});
+
+/* ------------------------------------------------------------------
+   REDAÇÃO — contadores e checklist
+------------------------------------------------------------------ */
+var CARACTERES_POR_LINHA = 60;
+function contarRedacao(){
+  var t = $("#txt-red").value;
+  var paragrafos = t.split(/\n+/).filter(function(p){ return p.trim().length > 0; });
+  var linhas = paragrafos.reduce(function(soma, p){
+    return soma + Math.max(1, Math.ceil(p.trim().length / CARACTERES_POR_LINHA));
+  }, 0);
+  var palavras = t.trim() ? t.trim().split(/\s+/).length : 0;
+
+  var elLinhas = $("#c-linhas");
+  elLinhas.textContent = linhas;
+  elLinhas.className = "num" + (linhas >= 20 && linhas <= 30 ? " bom" : (linhas > 0 ? " ruim" : ""));
+  $("#c-palavras").textContent = palavras;
+  $("#c-par").textContent = paragrafos.length;
+
+  var aviso = "";
+  if(linhas === 0){ aviso = ""; }
+  else if(linhas < 20){ aviso = "Ainda curto — mira em 25 a 30 linhas."; }
+  else if(linhas > 30){ aviso = "Passou das 30 linhas da folha oficial. Corta."; }
+  else if(paragrafos.length < 4){ aviso = "Tamanho bom, mas faltam parágrafos: são quatro."; }
+  else { aviso = "Tamanho e estrutura no ponto."; }
+  $("#c-aviso").textContent = aviso;
+}
+$("#txt-red").addEventListener("input", function(){
+  S.red.txt = $("#txt-red").value; salvar(); contarRedacao();
+});
+$("#tema-red").addEventListener("input", function(){
+  S.red.tema = $("#tema-red").value; salvar();
+});
+
+function atualizarChecklist(){
+  var itens = $$("#check-red input");
+  var n = itens.filter(function(i){ return i.checked; }).length;
+  var res = $("#res-red");
+  res.innerHTML = "Marcados: <b>" + n + " de 10</b>. " +
+    (n === 10 ? "Essa redação passa. Guarda a estrutura que tu usou e repete no domingo."
+     : n >= 7 ? "Já está na faixa de aprovação. Arruma os itens que sobraram e sobe mais."
+     : n >= 4 ? "Metade do caminho. Cada item desmarcado é ponto ainda disponível — volta no texto e resolve um por vez."
+     : "Reescreve olhando o modelo dos quatro parágrafos acima, item por item.");
+}
+$$("#check-red input").forEach(function(i){
+  i.addEventListener("change", function(){
+    S.ck[i.dataset.ck] = i.checked; salvar(); atualizarChecklist();
+  });
+});
+
+/* ------------------------------------------------------------------
+   PLACAR
+------------------------------------------------------------------ */
+function atualizarPlacar(){
+  var feitos = PLANO.filter(function(b){ return S.blocos[b.id]; }).length;
+  $("#m-blocos").textContent = feitos + "/" + PLANO.length;
+  $("#rail-plano").style.width = (feitos / PLANO.length * 100) + "%";
+
+  $("#m-min").textContent = S.min;
+  $("#g-min").querySelector(".num").textContent = S.min;
+
+  var chaves = Object.keys(S.resp);
+  var certas = chaves.filter(function(k){ return S.resp[k] === Q[k].c; }).length;
+  $("#m-quest").textContent = chaves.length + "/" + Q.length;
+  $("#s-resp").textContent = chaves.length;
+  $("#s-certas").textContent = certas;
+  var pct = chaves.length ? Math.round(certas / chaves.length * 100) + "%" : "–";
+  $("#m-acerto").textContent = pct;
+  $("#s-pct").textContent = pct;
+}
+
+/* ------------------------------------------------------------------
+   APAGAR TUDO
+------------------------------------------------------------------ */
+$("#btn-limpar").addEventListener("click", function(){
+  if(!confirm("Apagar blocos concluídos, minutos estudados, respostas do simulado e a redação salva?")) return;
+  S = {blocos:{}, min:0, resp:{}, red:{tema:"", txt:""}, ck:{}, tema:S.tema};
+  try{ localStorage.setItem(CHAVE, JSON.stringify(S)); }catch(e){}
+  $("#txt-red").value = ""; $("#tema-red").value = "";
+  $$("#check-red input").forEach(function(i){ i.checked = false; });
+  montarPlano(); montarSimulado(); contarRedacao(); atualizarChecklist(); atualizarPlacar();
+});
+
+/* ------------------------------------------------------------------
+   INÍCIO
+------------------------------------------------------------------ */
+$("#txt-red").value = S.red.txt || "";
+$("#tema-red").value = S.red.tema || "";
+$$("#check-red input").forEach(function(i){ i.checked = !!S.ck[i.dataset.ck]; });
+montarPlano();
+montarSimulado();
+contarRedacao();
+atualizarChecklist();
+atualizarPlacar();
+pintarRelogio();
+
+})();
+</script>
