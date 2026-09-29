@@ -1,0 +1,3 @@
+# Arquivos de lote precisam de quebra de linha do Windows (CRLF), senão o
+# interpretador de comandos pode falhar em blocos com parênteses e rótulos.
+*.bat text eol=crlf
