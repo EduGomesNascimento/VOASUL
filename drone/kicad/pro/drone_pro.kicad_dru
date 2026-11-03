@@ -1,0 +1,17 @@
+(version 1)
+# BMI160 e BMP280 ficam EMBAIXO do ESP32 (entre as barras femea, 8,5 mm de vao):
+# a sobreposicao dos contornos e de proposito.
+(rule "sensores_sob_esp32"
+  (constraint courtyard_clearance (min -100mm))
+  (condition "A.Reference == 'U1' && (B.Reference == 'U3' || B.Reference == 'U4')"))
+(rule "sensores_lado_a_lado"
+  (constraint courtyard_clearance (min -100mm))
+  (condition "(A.Reference == 'U3' && B.Reference == 'U4') || (A.Reference == 'U4' && B.Reference == 'U3')"))
+# resistores de pull-down em pe ficam embaixo da borda do ESP32 (que esta a 11 mm de altura)
+(rule "pulldown_sob_esp32"
+  (constraint courtyard_clearance (min -100mm))
+  (condition "A.Reference == 'U1' && B.Reference == 'R*'"))
+# pull-down em pe ao lado do MT3608, que fica 5 mm acima da placa nas pernas de fio
+(rule "pulldown_ao_lado_mt3608"
+  (constraint courtyard_clearance (min -100mm))
+  (condition "A.Reference == 'U2' && B.Reference == 'R*'"))

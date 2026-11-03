@@ -1,0 +1,220 @@
+<title>Drone VoaSul em 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: palco 3D em tela cheia, painel de controles flutuante no canto */
+:root{
+  --bg:#e9ece8; --painel:#ffffffe6; --fg:#1b221d; --muted:#5d6a62; --line:#cdd5cf; --accent:#0f6b4f;
+  --f-ui:"IBM Plex Sans","Segoe UI",Roboto,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121714;--painel:#1b221ee6;--fg:#e2e9e4;--muted:#9aa89f;--line:#2e3a33;--accent:#4fc59a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121714;--painel:#1b221ee6;--fg:#e2e9e4;--muted:#9aa89f;--line:#2e3a33;--accent:#4fc59a;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);overflow:hidden}
+#palco{position:fixed;inset:0}
+#palco canvas{display:block;width:100%;height:100%}
+.painel{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left,0px));
+  background:var(--painel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;max-width:min(330px,calc(100vw - 24px));
+  display:flex;flex-direction:column;gap:8px;font-size:13.5px;backdrop-filter:blur(6px)}
+.painel h1{font-size:16px;margin:0;font-weight:700}
+.painel p{margin:0;color:var(--muted)}
+.linha{display:flex;flex-wrap:wrap;gap:6px}
+.painel button{font:500 13px var(--f-ui);border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:999px;padding:5px 11px;cursor:pointer}
+.painel button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--painel)}
+.painel button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#estado{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+</style>
+
+<div id="palco" role="img" aria-label="Placa do drone em 3D dentro do frame"></div>
+<div class="painel">
+  <h1>Drone VoaSul em 3D</h1>
+  <p>Arraste para girar, role para aproximar. Frente = seta do frame.</p>
+  <div class="linha" role="group" aria-label="O que mostrar">
+    <button id="b-frame" aria-pressed="true">Frame</button>
+    <button id="b-helice" aria-pressed="true">Hélices</button>
+    <button id="b-pecas" aria-pressed="true">Peças</button>
+  </div>
+  <div class="linha" role="group" aria-label="Vistas">
+    <button data-vista="iso">3/4</button>
+    <button data-vista="cima">Cima</button>
+    <button data-vista="baixo">Baixo (cobre)</button>
+  </div>
+  <div id="estado">Carregando modelos…</div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.150.1/build/three.module.js","three/addons/":"https://unpkg.com/three@0.150.1/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { VRMLLoader } from 'three/addons/loaders/VRMLLoader.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+
+const estado = document.getElementById('estado');
+const palco = document.getElementById('palco');
+const ESP = 1.6;              // espessura da placa (mm)
+const Z_APOIO = 4.0;          // a placa encosta no degrau do frame a 4 mm da base
+const R_MOTOR = 100.4 / Math.SQRT2;
+
+const renderer = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+palco.appendChild(renderer.domElement);
+const cena = new THREE.Scene();
+const corFundo = () => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#e9ece8';
+cena.background = new THREE.Color(corFundo());
+const cam = new THREE.PerspectiveCamera(35, 1, 1, 3000);
+cam.up.set(0,0,1);
+const ctl = new OrbitControls(cam, renderer.domElement);
+ctl.enableDamping = true;
+cena.add(new THREE.HemisphereLight(0xffffff, 0x445544, 0.9));
+const sol = new THREE.DirectionalLight(0xffffff, 0.9); sol.position.set(120,-160,260); cena.add(sol);
+const sol2 = new THREE.DirectionalLight(0xffffff, 0.35); sol2.position.set(-150,120,-200); cena.add(sol2);
+
+const drone = new THREE.Group(); cena.add(drone);
+const placa = new THREE.Group(); placa.position.z = Z_APOIO + ESP; drone.add(placa);   // z=0 da placa = face de cima
+const gFrame = new THREE.Group(), gHelice = new THREE.Group(), gPecas = new THREE.Group();
+drone.add(gFrame); drone.add(gHelice); placa.add(gPecas);
+
+function vistas(v){
+  const d = 260;
+  if(v==='cima'){ cam.position.set(0,-1,d*1.25); }
+  else if(v==='baixo'){ cam.position.set(0,-1,-d*1.25); }
+  else { cam.position.set(d*0.55,-d*0.75,d*0.6); }
+  ctl.target.set(0,0,Z_APOIO); ctl.update();
+}
+
+function tamanho(){
+  const w = palco.clientWidth, h = palco.clientHeight;
+  renderer.setSize(w,h,false); cam.aspect = w/h; cam.updateProjectionMatrix();
+}
+window.addEventListener('resize', tamanho);
+
+// ---------------- placa: disco de fenolite + cobre embaixo
+async function montarPlaca(c){
+  const disco = new THREE.Mesh(new THREE.CylinderGeometry(c.raio, c.raio, ESP, 128),
+    new THREE.MeshStandardMaterial({color:0xb07a3c, roughness:0.8}));
+  disco.rotation.x = Math.PI/2; disco.position.z = -ESP/2; placa.add(disco);
+  const cobre = new THREE.MeshStandardMaterial({color:0xc8743c, metalness:0.6, roughness:0.35});
+  const zc = -ESP - 0.04;
+  for(const t of c.trilhas){
+    const dx=t.x2-t.x1, dy=t.y2-t.y1, L=Math.hypot(dx,dy);
+    if(t.lado==='F'){   // jumper: fio por cima, em arco baixo
+      const a = new THREE.Vector3(t.x1,t.y1,0.2), b = new THREE.Vector3(t.x2,t.y2,0.2);
+      const m = a.clone().add(b).multiplyScalar(0.5); m.z = 1.6;
+      const curva = new THREE.QuadraticBezierCurve3(a,m,b);
+      placa.add(new THREE.Mesh(new THREE.TubeGeometry(curva, 16, 0.3, 8), new THREE.MeshStandardMaterial({color:0x9a9a9a, metalness:0.8, roughness:0.3})));
+      continue;
+    }
+    const g = new THREE.BoxGeometry(L + 0.001, t.w, 0.07);
+    const mm = new THREE.Mesh(g, cobre);
+    mm.position.set((t.x1+t.x2)/2,(t.y1+t.y2)/2,zc); mm.rotation.z = Math.atan2(dy,dx); placa.add(mm);
+    for(const [x,y] of [[t.x1,t.y1],[t.x2,t.y2]]){
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(t.w/2,t.w/2,0.07,16), cobre);
+      cap.rotation.x = Math.PI/2; cap.position.set(x,y,zc); placa.add(cap);
+    }
+  }
+  const furo = new THREE.MeshBasicMaterial({color:0x1a1a1a});
+  for(const p of c.pads){
+    let g;
+    if(p.circ) g = new THREE.CylinderGeometry(p.w/2,p.w/2,0.08,24);
+    else g = new THREE.BoxGeometry(p.w,p.h,0.08);
+    const m = new THREE.Mesh(g, cobre);
+    if(p.circ) m.rotation.x = Math.PI/2;
+    const s = new THREE.Group(); s.add(m); s.position.set(p.x,p.y,zc-0.01); s.rotation.z = THREE.MathUtils.degToRad(p.rot);
+    placa.add(s);
+    if(p.furo>0){
+      const f = new THREE.Mesh(new THREE.CylinderGeometry(p.furo/2,p.furo/2,0.1,12), furo);
+      f.rotation.x = Math.PI/2; f.position.set(p.x,p.y,zc-0.06); placa.add(f);
+    }
+  }
+  for(const v of c.vias){
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(v.d/2,v.d/2,0.08,20), cobre);
+    m.rotation.x = Math.PI/2; m.position.set(v.x,v.y,zc-0.01); placa.add(m);
+  }
+}
+
+// ---------------- pecas: modelos VRML do KiCad (unidade 0,1 pol = 2,54 mm)
+const cache = {};
+const vrml = new VRMLLoader();
+async function modelo(arq){
+  if(!cache[arq]){
+    cache[arq] = fetch('3d/' + arq).then(r => { if(!r.ok) throw new Error(arq); return r.text(); })
+      .then(txt => vrml.parse(
+        // os VRML da biblioteca do KiCad tem comentario longo e nome com '-' (PIN-01)
+        txt.replace(/^#(?!VRML).*$/gm, '').replace(/\b(DEF|USE)\s+([A-Za-z0-9_-]+)/g, (m,a,b) => a + ' M_' + b.replace(/-/g,'_')), ''));
+  }
+  return (await cache[arq]).clone(true);
+}
+async function montarPecas(c){
+  let n = 0;
+  for(const p of c.pecas){
+    const gp = new THREE.Group();
+    gp.position.set(p.x, p.y, p.lado==='B' ? -ESP : 0);
+    gp.rotation.z = THREE.MathUtils.degToRad(p.rot);
+    const lado = new THREE.Group();
+    if(p.lado==='B') lado.rotation.y = Math.PI;      // vira para baixo
+    gp.add(lado);
+    for(const m of p.modelos){
+      try{
+        const obj = await modelo(m.arq);
+        const g = new THREE.Group();
+        g.position.set(m.off[0], m.off[1], m.off[2]);
+        g.rotation.order = 'ZYX';
+        g.rotation.set(THREE.MathUtils.degToRad(m.rot[0]), THREE.MathUtils.degToRad(m.rot[1]), THREE.MathUtils.degToRad(m.rot[2]));
+        obj.scale.set(2.54*m.esc[0], 2.54*m.esc[1], 2.54*m.esc[2]);
+        g.add(obj); lado.add(g);
+      }catch(e){ console.warn('modelo', m.arq, e); }
+    }
+    gPecas.add(gp);
+    n++; estado.textContent = `Peças: ${n}/${c.pecas.length}`;
+  }
+}
+
+// ---------------- frame, motores, helices
+async function montarFrame(){
+  try{
+    const geo = new STLLoader().parse(await (await fetch('frame_redondo.stl')).arrayBuffer());
+    geo.computeVertexNormals();
+    gFrame.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x2b2f33, roughness:0.7})));
+  }catch(e){ console.warn('frame', e); }
+  const metal = new THREE.MeshStandardMaterial({color:0xb9bec4, metalness:0.8, roughness:0.3});
+  const helMat = new THREE.MeshStandardMaterial({color:0x2f6fd0, transparent:true, opacity:0.35, side:THREE.DoubleSide});
+  for(const [sx,sy] of [[1,1],[1,-1],[-1,-1],[-1,1]]){
+    const x = sx*R_MOTOR, y = sy*R_MOTOR;
+    const mot = new THREE.Mesh(new THREE.CylinderGeometry(5,5,20,32), metal);
+    mot.rotation.x = Math.PI/2; mot.position.set(x,y,2); gFrame.add(mot);
+    const eixo = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,6,8), metal);
+    eixo.rotation.x = Math.PI/2; eixo.position.set(x,y,15); gHelice.add(eixo);
+    const hel = new THREE.Mesh(new THREE.CircleGeometry(37.5,48), helMat);
+    hel.position.set(x,y,17); gHelice.add(hel);
+    const pa = new THREE.Mesh(new THREE.BoxGeometry(75,6,0.8), new THREE.MeshStandardMaterial({color:0x1d4fa0}));
+    pa.position.set(x,y,17); pa.rotation.z = (sx*sy>0?0.6:-0.6); gHelice.add(pa);
+  }
+  const bat = new THREE.Mesh(new THREE.BoxGeometry(25,40,8), new THREE.MeshStandardMaterial({color:0xd8d2c0, roughness:0.6}));
+  bat.position.set(0,0,-4.5); gFrame.add(bat);
+}
+
+function alternar(id, grupo){
+  const b = document.getElementById(id);
+  b.addEventListener('click', () => { grupo.visible = !grupo.visible; b.setAttribute('aria-pressed', String(grupo.visible)); });
+}
+alternar('b-frame', gFrame); alternar('b-helice', gHelice); alternar('b-pecas', gPecas);
+document.querySelectorAll('[data-vista]').forEach(b => b.addEventListener('click', () => vistas(b.dataset.vista)));
+
+tamanho(); vistas('iso');
+(function loop(){ ctl.update(); renderer.render(cena, cam); requestAnimationFrame(loop); })();
+
+(async () => {
+  try{
+    const c = await (await fetch('cena3d.json')).json();
+    await montarPlaca(c);
+    await montarFrame();
+    await montarPecas(c);
+    estado.textContent = `${c.pecas.length} peças · ${c.trilhas.filter(t=>t.lado==='B').length} trilhas · ${c.trilhas.filter(t=>t.lado==='F').length} jumpers`;
+    window.__pronto = true;
+  }catch(e){
+    estado.textContent = 'Não consegui carregar a cena: ' + e.message;
+    window.__pronto = true;
+  }
+})();
+</script>

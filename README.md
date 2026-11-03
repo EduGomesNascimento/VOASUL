@@ -66,3 +66,10 @@ Os blocos entram conforme a página é rolada: o `main.js` aplica a classe
 continue legível se o script não carregar. Quem tem
 `prefers-reduced-motion: reduce` no sistema recebe a página sem
 movimento algum, com todo o conteúdo visível.
+
+## Projeto do drone
+
+A pasta [`drone/`](drone/README.md) guarda o quadricóptero da VoaSul: firmware (ESP32/Pico W),
+placa no KiCad (caseira de face única e versão para fábrica com Gerber), frame impresso em 3D,
+plano de montagem e a luva de gestos. Ela é independente do site.
+

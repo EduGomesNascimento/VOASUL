@@ -1,0 +1,6 @@
+__pycache__/
+*.kicad_prl
+*-bak
+fp-info-cache
+rotas_t*.json
+saidas/_teste.html
