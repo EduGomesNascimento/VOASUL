@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Drone VoaSul: o que falta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+@page { size: A4; margin: 0; }
+:root{
+  --verde:#0f6b4f; --verde-claro:#e3f1ea; --tinta:#17201b; --cinza:#5d6a62; --linha:#d7ded8;
+  --papel:#fbfcfa; --laranja:#b4531a; --laranja-claro:#fbeee4; --azul:#1d5fa8; --azul-claro:#e5eef9;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif; --corpo:"IBM Plex Sans","Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--corpo);font-size:10.2pt;line-height:1.4}
+.pagina{width:210mm;height:297mm;padding:0 15mm 14mm;position:relative;page-break-after:always;overflow:hidden;display:flex;flex-direction:column}
+.pagina:last-child{page-break-after:auto}
+/* barra de abas */
+.abas{display:flex;gap:2mm;padding-top:9mm;border-bottom:2px solid var(--verde);margin:0 0 7mm}
+.abas a{flex:1;text-align:center;text-decoration:none;color:var(--cinza);font:600 8.6pt var(--corpo);
+  padding:2.2mm 1mm 1.8mm;border:1px solid var(--linha);border-bottom:none;border-radius:2.5mm 2.5mm 0 0;background:#fff}
+.abas a.ativa{background:var(--verde);border-color:var(--verde);color:#fff}
+.abas a span{display:block;font:500 6.4pt var(--mono);opacity:.75;letter-spacing:.04em}
+h1{font:800 21pt/1.1 var(--display);margin:0 0 1.5mm;letter-spacing:-.01em}
+.sub{color:var(--cinza);margin:0 0 6mm;font-size:9.6pt}
+h2{font:600 11.5pt var(--display);margin:5mm 0 2mm;display:flex;align-items:baseline;gap:3mm}
+h2 small{font:500 8pt var(--mono);color:var(--cinza)}
+.numeros{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm}
+.num{border:1px solid var(--linha);border-radius:2mm;padding:3mm 3.5mm;background:#fff}
+.num b{display:block;font:800 17pt/1.1 var(--display);color:var(--verde)}
+.num span{font-size:8pt;color:var(--cinza)}
+.dois{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.caixa{border:1px solid var(--linha);border-radius:2mm;padding:3.5mm 4mm;background:#fff}
+.caixa h3{font:600 9.5pt var(--display);margin:0 0 2mm;text-transform:uppercase;letter-spacing:.05em}
+.caixa.ok h3{color:var(--verde)} .caixa.falta h3{color:var(--laranja)}
+ul.l{margin:0;padding:0;list-style:none}
+ul.l li{padding:1.1mm 0 1.1mm 5mm;position:relative;border-bottom:1px solid #eef1ee}
+ul.l li:last-child{border-bottom:none}
+.ok ul.l li::before{content:"✓";position:absolute;left:0;color:var(--verde);font-weight:600}
+.falta ul.l li::before{content:"•";position:absolute;left:1mm;color:var(--laranja);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:8.9pt}
+th{text-align:left;font:600 7.4pt var(--corpo);text-transform:uppercase;letter-spacing:.06em;color:var(--cinza);
+  border-bottom:1.5px solid var(--tinta);padding:1.4mm 1.5mm}
+td{border-bottom:1px solid var(--linha);padding:1.35mm 1.5mm;vertical-align:top}
+td.q{font:500 8.4pt var(--mono);white-space:nowrap;color:var(--cinza)}
+td.r{text-align:right;font:500 8.6pt var(--mono);white-space:nowrap}
+td.ck{width:6mm}
+.box{display:inline-block;width:3.4mm;height:3.4mm;border:1.2px solid var(--tinta);border-radius:.6mm;vertical-align:-.5mm}
+td a{color:var(--azul);text-decoration:none;font-weight:600}
+td em{font-style:normal;color:var(--cinza);font-size:8pt}
+tr.sub td{font-weight:600;border-bottom:none;padding-top:2mm}
+tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none}
+.tag{display:inline-block;font:600 6.8pt var(--corpo);padding:.3mm 1.6mm;border-radius:1mm;text-transform:uppercase;letter-spacing:.04em}
+.tag.ali{background:var(--laranja-claro);color:var(--laranja)} .tag.br{background:var(--azul-claro);color:var(--azul)}
+.totais{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-top:4mm}
+.totais div{border-radius:2mm;padding:3mm 3.5mm;background:var(--verde-claro)}
+.totais b{display:block;font:800 14pt var(--display);color:var(--verde)}
+.totais span{font-size:8pt;color:var(--tinta)}
+.nota{font-size:8.2pt;color:var(--cinza);margin-top:3mm}
+/* passos */
+.passos{display:flex;flex-direction:column;gap:1.8mm}
+.passo{display:grid;grid-template-columns:6mm 9mm 1fr 52mm;gap:2mm;align-items:start;border:1px solid var(--linha);
+  border-radius:2mm;padding:2.1mm 3mm;background:#fff}
+.passo .n{font:800 12pt var(--display);color:var(--verde)}
+.passo b{font-size:9.6pt}
+.passo p{margin:.5mm 0 0;font-size:8.6pt;color:var(--cinza)}
+.passo .ate{font-size:8.2pt;background:var(--verde-claro);border-radius:1.5mm;padding:1.2mm 2mm}
+.passo .ate::before{content:"Pronto quando: ";font-weight:600;color:var(--verde)}
+.decisao{display:grid;grid-template-columns:1fr 62mm;gap:3mm;border:1px solid var(--linha);border-radius:2mm;padding:3mm 3.5mm;background:#fff;margin-bottom:2.6mm}
+.decisao b{font-size:10pt}
+.decisao p{margin:.8mm 0 0;font-size:8.7pt;color:var(--cinza)}
+.decisao .rec{font-size:8.4pt;background:var(--azul-claro);border-radius:1.5mm;padding:1.6mm 2.2mm;align-self:start}
+.decisao .rec::before{content:"Sugestão: ";font-weight:600;color:var(--azul)}
+.rodape{margin-top:auto;padding-top:3mm;border-top:1px solid var(--linha);display:flex;justify-content:space-between;font:500 7.2pt var(--mono);color:var(--cinza)}
+.alerta{border-left:3px solid var(--laranja);background:var(--laranja-claro);padding:2.4mm 3.5mm;border-radius:0 2mm 2mm 0;font-size:8.8pt;margin-top:4mm}
+</style>
+</head>
+<body>
+
+<!-- ======================================================== RESUMO -->
+<section class="pagina" id="resumo">
+  <nav class="abas">
+    <a class="ativa" href="#resumo"><span>01</span>Resumo</a>
+    <a href="#comprar"><span>02</span>Comprar</a>
+    <a href="#fazer"><span>03</span>Fazer</a>
+    <a href="#decidir"><span>04</span>Decidir</a>
+    <a href="#bancada"><span>05</span>Bancada</a>
+  </nav>
+  <h1>Drone VoaSul: o que falta</h1>
+  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 04/11/2026.</p>
+
+  <div class="numeros">
+    <div class="num"><b>19</b><span>itens para comprar</span></div>
+    <div class="num"><b>R$ 310–440</b><span>total estimado</span></div>
+    <div class="num"><b>12</b><span>etapas até voar e testar</span></div>
+    <div class="num"><b>~110 g</b><span>peso com frame de compensado</span></div>
+  </div>
+
+  <div class="dois">
+    <div class="caixa ok">
+      <h3>Já está pronto</h3>
+      <ul class="l">
+        <li>Esquema e placa no KiCad, conferidos (0 diferenças, DRC limpo)</li>
+        <li>PDF de transferência 1:1 da placa caseira e lista de jumpers</li>
+        <li>Versão profissional com Gerber para mandar fazer</li>
+        <li>Firmware com a pinagem nova da placa</li>
+        <li>Molde 1:1 do frame em compensado</li>
+        <li>Plano de montagem com teste em cada fase</li>
+        <li>Projeto da luva de gestos</li>
+        <li>Tudo no GitHub (VOASUL, pasta <code>drone/</code>)</li>
+      </ul>
+    </div>
+    <div class="caixa falta">
+      <h3>Falta</h3>
+      <ul class="l">
+        <li>Comprar 19 itens (aba Comprar)</li>
+        <li>Confirmar o modelo e a medida do ESP32</li>
+        <li>Compilar e gravar o firmware no ESP32 (nunca foi testado nele)</li>
+        <li>Fabricar e soldar a placa</li>
+        <li>Montar o frame e pesar</li>
+        <li>Testar empuxo, voar amarrado, voar livre</li>
+        <li>Medir o alcance para o relatório</li>
+        <li>Construir a luva de gestos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alerta"><b>Não fabrique a placa antiga do Proteus:</b> a pegada do ESP32 da biblioteca está espelhada e queimaria o ESP no primeiro liga. Use a placa nova do KiCad.</div>
+
+  <div class="rodape"><span>Drone VoaSul · Comunicações + Potência</span><span>01 / 05</span></div>
+</section>
+
+<!-- ======================================================== COMPRAR -->
+<section class="pagina" id="comprar">
+  <nav class="abas">
+    <a href="#resumo"><span>01</span>Resumo</a>
+    <a class="ativa" href="#comprar"><span>02</span>Comprar</a>
+    <a href="#fazer"><span>03</span>Fazer</a>
+    <a href="#decidir"><span>04</span>Decidir</a>
+    <a href="#bancada"><span>05</span>Bancada</a>
+  </nav>
+  <h1>Comprar</h1>
+  <p class="sub">Só o que está marcado "Falta" na sua lista. Preços da AliExpress de 04/11 ("a partir de"); itens do Brasil são estimativa.</p>
+
+  <table>
+    <thead><tr><th></th><th>Item</th><th>Qtd</th><th>Onde</th><th style="text-align:right">R$</th></tr></thead>
+    <tbody>
+      <tr class="sub"><td></td><td colspan="4">Drone</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Bateria LiPo 1S 530 mAh 30C</b> <em>Leão LB530LP1, conector Molex. Nunca 2S</em></td><td class="q">2</td><td><span class="tag br">Brasil</span> <a href="https://lista.mercadolivre.com.br/bateria-lipo-3.7v-530mah-leao">Mercado Livre</a></td><td class="r">70–90</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Hélice 75 mm, furo 1 mm</b> <em>2 CW + 2 CCW por jogo</em></td><td class="q">2 jogos</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005009802422121.html">Gemfan 75 mm</a></td><td class="r">18,28</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Carregador USB LiPo 1S</b> <em>saída Molex 51005</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005011742853878.html">anúncio</a></td><td class="r">10,90</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Conectores Molex 51005</b> <em>macho + fêmea com fio</em></td><td class="q">10 pares</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/32823826991.html">anúncio</a></td><td class="r">11,60</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>GY-BMI160</b> <em>giroscópio</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005006982538047.html">anúncio</a></td><td class="r">6,99</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>GY-BMP280-3.3</b> <em>6 pinos, não a BME280</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005004527984343.html">anúncio</a></td><td class="r">6,74</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Fio de silicone 24 AWG</b> <em>vermelho e preto</em></td><td class="q">2 m</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/4001283806251.html">anúncio</a></td><td class="r">7,22</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Fita dupla face espuma 3M</b></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005009045249531.html">anúncio</a></td><td class="r">9,61</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Velcro de bateria 10×130 mm</b></td><td class="q">5</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/4001316238579.html">anúncio</a></td><td class="r">11,26</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Frame:</b> PLA (~32 g, escola) <em>ou</em> compensado 3 mm</td><td class="q">1</td><td><span class="tag br">Brasil</span> escola / madeireira</td><td class="r">5–20</td></tr>
+
+      <tr class="sub"><td></td><td colspan="4">Fabricar a placa</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Placa de cobre face única 10×15</b> <em>FR-4</em></td><td class="q">5</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007937964904.html">anúncio</a></td><td class="r">23,84</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Papel de transferência</b> <em>A4, impressora laser</em></td><td class="q">20 fl.</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005012043692516.html">anúncio</a></td><td class="r">21,90</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Palha de aço + álcool isopropílico 99%</b></td><td class="q">1 + 1</td><td><span class="tag br">Brasil</span> mercado e farmácia</td><td class="r">25–35</td></tr>
+
+      <tr class="sub"><td></td><td colspan="4">Luva de gestos <em>(pode ficar para depois do primeiro voo)</em></td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>MPU-6050 (GY-521)</b></td><td class="q">4</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007169577953.html">anúncio</a></td><td class="r">27,96</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Fio de silicone 30 AWG</b></td><td class="q">5 m</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/4001283806251.html">anúncio</a></td><td class="r">7,22</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Luva fina de algodão</b></td><td class="q">10 pares</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007539926600.html">anúncio</a></td><td class="r">6,69</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Chave liga/desliga SS12D00</b></td><td class="q">20</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005005633418066.html">anúncio</a></td><td class="r">6,14</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Motor de vibração 1027</b> <em>avisa no pulso</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005005586911986.html">anúncio</a></td><td class="r">1,67</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Sensor de fluxo óptico PMW3901</b> <em>"pare" e "volte" precisos</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005011822845593.html">anúncio</a></td><td class="r">31,99</td></tr>
+
+      <tr class="sub"><td></td><td colspan="4">Recomendado</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Saco anti-chamas para LiPo</b> <em>carregar e guardar a bateria</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005004478094343.html">anúncio</a></td><td class="r">10,75</td></tr>
+    </tbody>
+  </table>
+
+  <div class="totais">
+    <div><b>R$ 210</b><span>AliExpress (sem impostos)</span></div>
+    <div><b>R$ 100–145</b><span>comprado no Brasil</span></div>
+    <div><b>R$ 310–440</b><span>total, conforme o imposto de importação</span></div>
+  </div>
+  <p class="nota">Só o drone (sem luva e sem fluxo óptico): ~R$ 230–320. Pedido da AliExpress abaixo de US$ 50: o imposto (~45%) aparece no carrinho. Entrega de 2 a 5 semanas.</p>
+
+  <div class="rodape"><span>Links clicáveis no PDF</span><span>02 / 05</span></div>
+</section>
+
+<!-- ======================================================== FAZER -->
+<section class="pagina" id="fazer">
+  <nav class="abas">
+    <a href="#resumo"><span>01</span>Resumo</a>
+    <a href="#comprar"><span>02</span>Comprar</a>
+    <a class="ativa" href="#fazer"><span>03</span>Fazer</a>
+    <a href="#decidir"><span>04</span>Decidir</a>
+    <a href="#bancada"><span>05</span>Bancada</a>
+  </nav>
+  <h1>Fazer</h1>
+  <p class="sub">Na ordem. Só passe para a próxima etapa quando a atual estiver "pronta". Detalhes em <code>docs/PLANO_DE_MONTAGEM.md</code>.</p>
+
+  <div class="passos">
+    <div class="passo"><span class="box"></span><span class="n">1</span><div><b>Gravar o firmware só no USB</b><p>PlatformIO, ambiente ESP32. Primeira vez compilando para o ESP32.</p></div><div class="ate">a rede DRONE-PICO aparece e 192.168.4.1 abre</div></div>
+    <div class="passo"><span class="box"></span><span class="n">2</span><div><b>Sensores na protoboard</b><p>BMP280 em 21/22, BMI160 em 16/18 (barramentos separados).</p></div><div class="ate">acha 0x76 e 0x69; inclinar mexe o ângulo certo</div></div>
+    <div class="passo"><span class="box"></span><span class="n">3</span><div><b>Fabricar a placa</b><p>Imprimir em 100%, lixar, passar o ferro 3–5 min, corroer morno, furar.</p></div><div class="ate">sem curto VBAT↔GND, 5V↔GND, 3V3↔GND</div></div>
+    <div class="passo"><span class="box"></span><span class="n">4</span><div><b>Soldar, em ordem</b><p>SMD → 14 jumpers → BMI/BMP → resistores → barras do ESP → conectores → eletrolíticos → MT3608 → fios.</p></div><div class="ate">continuidade de cada rede (redes.txt)</div></div>
+    <div class="passo"><span class="box"></span><span class="n">5</span><div><b>Primeiro liga, sem ESP e sem motor</b><p>Bateria passando pelo fusível. Ajustar o trimpot do MT3608.</p></div><div class="ate">5,0 V estáveis e fusível inteiro</div></div>
+    <div class="passo"><span class="box"></span><span class="n">6</span><div><b>Liga com ESP, sem hélice</b><p>Testar um motor por vez; medir a corrente de partida (relatório de Potência).</p></div><div class="ate">cada motor gira no sentido certo; failsafe para em &lt; 1 s</div></div>
+    <div class="passo"><span class="box"></span><span class="n">7</span><div><b>Montar o frame e pesar</b><p>PLA ou compensado (molde 1:1 em <code>cad/</code>). Bateria no centro.</p></div><div class="ate">peso ≤ 126 g e centro de gravidade no meio</div></div>
+    <div class="passo"><span class="box"></span><span class="n">8</span><div><b>Teste de empuxo na balança</b><p>Drone preso de cabeça para baixo sobre um peso.</p></div><div class="ate">empuxo ÷ peso ≥ 1,4</div></div>
+    <div class="passo"><span class="box"></span><span class="n">9</span><div><b>Voo amarrado</b><p>Linha de pesca em dois braços opostos, até 30 cm de altura. Ajustar PID.</p></div><div class="ate">paira 30 s sem oscilar</div></div>
+    <div class="passo"><span class="box"></span><span class="n">10</span><div><b>Primeiro voo livre</b><p>Lugar fechado e amplo, sem vento, 0,5 a 1 m de altura.</p></div><div class="ate">5 voos curtos sem susto</div></div>
+    <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Anotar RSSI e perda de pacotes a cada 10 m (celular e luva).</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
+    <div class="passo"><span class="box"></span><span class="n">12</span><div><b>Luva de gestos</b><p>1 sensor → 4 sensores → reconhecer gestos → drone sem hélice → amarrado.</p></div><div class="ate">cada gesto vira o comando certo na telemetria</div></div>
+  </div>
+
+  <div class="rodape"><span>Etapa 0 (antes de tudo): ver a aba Decidir</span><span>03 / 05</span></div>
+</section>
+
+<!-- ======================================================== DECIDIR -->
+<section class="pagina" id="decidir">
+  <nav class="abas">
+    <a href="#resumo"><span>01</span>Resumo</a>
+    <a href="#comprar"><span>02</span>Comprar</a>
+    <a href="#fazer"><span>03</span>Fazer</a>
+    <a class="ativa" href="#decidir"><span>04</span>Decidir</a>
+    <a href="#bancada"><span>05</span>Bancada</a>
+  </nav>
+  <h1>Decidir e confirmar</h1>
+  <p class="sub">Coisas que só você consegue ver ou escolher. As três primeiras travam a fabricação da placa.</p>
+
+  <div class="decisao"><div><b>1. Qual é o ESP32?</b><p>Conectorzinho dourado redondo no módulo = WROOM-32U (usa a antena externa). Antena em zigue-zague desenhada = WROOM-32. Se for WROVER, os pinos 16/17 não servem.</p></div><div class="rec">Você marcou que tem a antena: provavelmente é o 32U. Confirme olhando.</div></div>
+  <div class="decisao"><div><b>2. Distância entre as fileiras do ESP32</b><p>Meça de centro a centro dos pinos, com régua.</p></div><div class="rec">Tem que dar 25,4 mm. Se der 22,9 mm, me avise antes de fabricar.</div></div>
+  <div class="decisao"><div><b>3. Placa caseira ou profissional?</b><p>Caseira: face única, 14 jumpers, sai na hora. Profissional: furo metalizado e sem jumpers, Gerber pronto (<code>kicad/pro/</code>), chega em 1–3 semanas.</p></div><div class="rec">Faça a caseira agora e peça a profissional junto com a compra da AliExpress.</div></div>
+  <div class="decisao"><div><b>4. Frame de PLA ou de compensado?</b><p>PLA: ~28 g, a escola cobra por grama. Compensado 3 mm: ~12 g, molde 1:1 pronto.</p></div><div class="rec">Compensado: mais leve, a relação empuxo/peso sobe de 1,43 para ~1,6.</div></div>
+  <div class="decisao"><div><b>5. Versão profissional compacta (Ø ~66 mm)?</b><p>Placa bem menor, mas pede peças SMD e outro frame.</p></div><div class="rec">Depois do primeiro voo, se o empuxo ficar no limite.</div></div>
+  <div class="decisao"><div><b>6. Fluxo óptico agora ou depois?</b><p>Deixa o "pare" firme e o "volte" preciso. R$ 32.</p></div><div class="rec">Depois: o drone voa sem ele.</div></div>
+  <div class="decisao"><div><b>7. XIAO da luva ou da câmera do DAMP?</b><p>O XIAO ESP32-S3 Sense é hoje a câmera do DAMP.</p></div><div class="rec">Se precisar dos dois ao mesmo tempo, um XIAO S3 sem câmera basta para a luva.</div></div>
+
+  <div class="rodape"><span>Responda no chat que eu ajusto o projeto</span><span>04 / 05</span></div>
+</section>
+
+<!-- ======================================================== BANCADA -->
+<section class="pagina" id="bancada">
+  <nav class="abas">
+    <a href="#resumo"><span>01</span>Resumo</a>
+    <a href="#comprar"><span>02</span>Comprar</a>
+    <a href="#fazer"><span>03</span>Fazer</a>
+    <a href="#decidir"><span>04</span>Decidir</a>
+    <a class="ativa" href="#bancada"><span>05</span>Bancada</a>
+  </nav>
+  <h1>Bancada e segurança</h1>
+  <p class="sub">O que ter à mão nos testes. Tudo isso você já tem ou a escola tem.</p>
+
+  <table>
+    <thead><tr><th></th><th>Ferramenta</th><th>Para quê</th><th>Etapas</th></tr></thead>
+    <tbody>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Multímetro com bip</b> <em>robótica</em></td><td>curto, continuidade, tensão, corrente de partida</td><td class="q">3–6, 11</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Fusível 4 A + porta-fusível</b> <em>do DAMP</em></td><td>primeiro liga de toda placa nova</td><td class="q">5, 6</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Lupa com luz</b> <em>escola</em></td><td>conferir toner e soldas do SOT-23</td><td class="q">3, 4</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Balança</b> <em>robótica ou casa</em></td><td>peso e teste de empuxo</td><td class="q">7, 8</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Régua de aço</b></td><td>escala da impressão, fileiras do ESP32</td><td class="q">0, 3, 7</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Ferro, estanho, fluxo, malha, pinça</b> <em>robótica</em></td><td>soldagem</td><td class="q">4</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Micro retífica + brocas 0,9 / 1,0 / 1,3 mm</b> <em>robótica</em></td><td>furar a placa (e 10 mm no frame de madeira)</td><td class="q">3, 7</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Óculos de proteção</b></td><td>percloreto e hélice</td><td class="q">3, 8–10</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Linha de pesca</b></td><td>voo amarrado</td><td class="q">9</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Saco anti-chamas</b> <em>(comprar)</em></td><td>carregar a LiPo com segurança</td><td class="q">todas</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Regras de ouro</h2>
+  <div class="dois">
+    <div class="caixa falta"><h3>Nunca</h3><ul class="l">
+      <li>Bateria 2S (7,4 V) nos motores 1020</li>
+      <li>Hélice na bancada antes da etapa 8</li>
+      <li>Carregar LiPo sem estar olhando</li>
+      <li>Bateria abaixo de 3,3 V ou estufada</li>
+      <li>Percloreto no ralo</li>
+    </ul></div>
+    <div class="caixa ok"><h3>Sempre</h3><ul class="l">
+      <li>Fusível no primeiro liga de placa nova</li>
+      <li>MT3608 em 5,0 V antes de encaixar o ESP32</li>
+      <li>Conferir a polaridade dos eletrolíticos</li>
+      <li>Jumpers soldados antes dos módulos</li>
+      <li>Checklist pré-voo (bateria ≥ 4,1 V, hélices certas)</li>
+    </ul></div>
+  </div>
+
+  <div class="rodape"><span>VOASUL · drone/docs/PENDENCIAS.pdf</span><span>05 / 05</span></div>
+</section>
+
+</body>
+</html>
