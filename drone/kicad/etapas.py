@@ -124,7 +124,9 @@ def exportar():
                               for _, rede, a, b_ in P.JUMPERS_FIXOS],
                # pinos ligados so DEPOIS (rede:adiado): o 5V do J2 entra depois do sonar
                # (senao desce em diagonal no corredor dele)
-               adiar={'+5V': ['J2.6']})
+               adiar={'+5V': ['J2.6']},
+               # o GND nasce na bateria (de onde a corrente sai de verdade)
+               inicio={'GND': 'J1.2'})
     json.dump(geo, open(GEO, 'w'), indent=1)
     print('geometria:', len(pads), 'pinos,', len(redes), 'redes ->', GEO)
 

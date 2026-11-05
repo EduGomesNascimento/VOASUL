@@ -311,6 +311,9 @@ class Roteador:
             base = [k for k in faltam if nome(pads[k]) in potencia] or faltam
             cx = np.mean([pads[k]['x'] for k in base]); cy = np.mean([pads[k]['y'] for k in base])
             k0 = min(base, key=lambda k: math.hypot(pads[k]['x'] - cx, pads[k]['y'] - cy))
+            ini = self.geo.get('inicio', {}).get(rede)        # pino de onde a rede nasce
+            if ini:
+                k0 = next((k for k in faltam if nome(pads[k]) == ini), k0)
             g.marcar(arvore, pads[k0], 0.0)
             faltam.remove(k0)
             ligados.add(nome(pads[k0]))
