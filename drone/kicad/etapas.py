@@ -24,13 +24,14 @@ ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['M_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
-         ['SDA', 'SCL', 'ECHO_B5', 'ECHO_F5', 'ECHO_B', 'ECHO_F', 'TRIG_B', 'TRIG_F',
-          'IR_E', 'IR_D', 'VBAT_ADC', 'SDA2', 'SCL2', 'GND'])
+         ['SDA', 'SCL', 'TRIG_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', 'ECHO_B', 'ECHO_F',
+          'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+          'SDA2', 'SCL2', '+3V3:adiado', 'GND'])
 
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
 # corpo encostado na placa: jumper nao passa por cima nem fura embaixo
-SEM_JUMPER_TIPOS = ('C', 'R', 'J2', 'J3')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
+SEM_JUMPER_TIPOS = ('C', 'R', 'J2', 'J3', 'J4')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
 
 
 def loc(v):
@@ -85,6 +86,12 @@ def exportar():
         x0, y1 = loc(bb.GetOrigin())
         x1, y0 = loc(bb.GetEnd())
         sem_jumper.append(dict(x=(x0 + x1) / 2, y=(y0 + y1) / 2, w=x1 - x0, h=y1 - y0))
+    # barras femea do ESP32: encostadas na placa, o fio do jumper nao atravessa a
+    # faixa dos pinos (pode passar embaixo do modulo, entre as barras, e dobrar na ponta)
+    u1 = [loc(p.GetPosition()) for p in b.FindFootprintByReference('U1').Pads()]
+    for yb in sorted({round(y, 2) for _, y in u1}):
+        xs = [x for x, y in u1 if abs(y - yb) < 0.1]
+        sem_jumper.append(dict(x=(min(xs) + max(xs)) / 2, y=yb, w=max(xs) - min(xs), h=2.54))
     larg = {}
     for nome, (w, redes) in P.CLASSES.items():
         for r in redes:
@@ -98,7 +105,10 @@ def exportar():
                # GND por onde passa a corrente dos motores: so cobre da placa
                gnd_potencia=['J1.2', 'C1.2', 'U2.2', 'U1.20'] + [f'Q{n}.2' for n in range(1, 5)],
                # pinos ligados por dentro do proprio modulo
-               grupos_internos=[['U1.14', 'U1.20', 'U1.26'], ['U2.2', 'U2.4']])
+               grupos_internos=[['U1.14', 'U1.20', 'U1.26'], ['U2.2', 'U2.4']],
+               # pinos ligados so DEPOIS dos sinais (rede:adiado): o 3V3 do J4 nao pode
+               # dar a volta no ESP32 e fechar o caminho de todo mundo; entra por jumper
+               adiar={'+3V3': ['J4.1']})
     json.dump(geo, open(GEO, 'w'), indent=1)
     print('geometria:', len(pads), 'pinos,', len(redes), 'redes ->', GEO)
 
@@ -244,7 +254,42 @@ def saidas():
     cli('svg', '--layers', 'B.Cu,F.Cu,F.SilkS,Edge.Cuts', '--page-size-mode', '2',
         '--exclude-drawing-sheet', '-o', os.path.join(out, 'placa.svg'))
     # 3D: ver gerar.py cena3d + saidas/visualizador3d.html
+    print(conferir_esquema(b, out))
     print('saidas em', out)
+
+
+def conferir_esquema(b, out):
+    """netlist exportada pelo KiCad do ESQUEMA x redes da PLACA. Escreve
+    saidas/conferencia.txt (usado na folha de montagem) e para tudo se houver diferenca."""
+    import re
+    import subprocess
+    sch = os.path.join(AQUI, 'drone.kicad_sch')
+    net = os.path.join(out, 'esquema.net')
+    subprocess.run(['kicad-cli', 'sch', 'export', 'netlist', '-o', net, sch], check=True, capture_output=True)
+    txt = open(net).read()
+    esq = {}
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)\)\s*(?=\(net |\)\s*\)\s*$)', txt, re.S):
+        nome = m.group(1).lstrip('/')
+        nos = set(re.findall(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', m.group(2)))
+        if nome.startswith('unconnected') or len(nos) < 1:
+            continue
+        esq[nome] = nos
+    placa = {}
+    for fp in b.GetFootprints():
+        for pd in fp.Pads():
+            if pd.GetNetname():
+                placa.setdefault(pd.GetNetname(), set()).add((fp.GetReference(), pd.GetNumber()))
+    dif = []
+    for n in sorted(set(esq) | set(placa)):
+        if esq.get(n, set()) != placa.get(n, set()):
+            dif.append(f'{n}: esquema {sorted(esq.get(n, set()) - placa.get(n, set()))} '
+                       f'placa {sorted(placa.get(n, set()) - esq.get(n, set()))}')
+    npin = sum(len(v) for v in placa.values())
+    if dif:
+        raise SystemExit('ESQUEMA x PLACA DIFEREM:\n  ' + '\n  '.join(dif))
+    res = f'{len(placa)} redes, {npin} pinos'
+    open(os.path.join(out, 'conferencia.txt'), 'w').write(res + '\n')
+    return 'esquema x placa: 0 diferencas (' + res + ')'
 
 
 def regua(b):

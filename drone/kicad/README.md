@@ -35,12 +35,27 @@ já está atualizado:
 
 | Função | GPIO | | Função | GPIO |
 |---|---|---|---|---|
-| Motor FR | 17 | | Sonar baixo TRIG / ECHO | 26 / 25 |
-| Motor RR | 4 | | Sonar frente TRIG / ECHO | 27 / 14 |
+| Motor FR | 17 | | Sonar baixo TRIG / ECHO | 14 / 27 |
+| Motor RR | 4 | | Sonar frente TRIG / ECHO | 13 / 12 |
 | Motor RL | 23 | | IR esquerdo / direito | 36 / 39 |
 | Motor FL | 19 | | Bateria (ADC1) | 35 |
 | I²C 1 (BMP280) SDA / SCL | 21 / 22 | | LED | 2 |
-| I²C 2 (BMI160) SDA / SCL | 16 / 18 | | | |
+| I²C 2 (BMI160) SDA / SCL | 16 / 18 | | Fluxo óptico MISO / SCK / MOSI / CS | 32 / 33 / 25 / 26 |
+
+## Fluxo óptico (J4): opcional
+
+O **J4** é o conector do sensor de fluxo óptico **PMW3901** (SPI). A placa e o firmware
+funcionam **com e sem** o módulo:
+
+- sem o módulo, o J4 fica vazio e o drone voa como sempre;
+- com o módulo, o firmware o encontra sozinho no boot (lê o ID do chip) e passa a frear a
+  deriva quando o manche está solto. A página do celular mostra o estado no quadro **Fluxo**;
+- se o módulo parar de responder em voo (fio solto), o firmware percebe em menos de 1 s e
+  segue sem ele.
+
+Pinos do J4 (da esquerda para a direita, visto de cima): **3V3, MISO, SCK, MOSI, CS, GND**.
+O módulo vai embaixo do drone, com a lente para baixo. Ligue e desligue só com o drone
+**desligado**. Teste e ajuste: `docs/PLANO_DE_MONTAGEM.md`, fase 12.
 
 ## Arquivos para usar já
 

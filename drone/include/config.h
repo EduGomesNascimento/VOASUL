@@ -141,3 +141,28 @@
 #define AVOID_FRONT_SLOW_M     0.90f  // onde o recuo comeca
 #define AVOID_MAX_TILT_DEG     12.0f
 #define AVOID_IR_TILT_DEG      8.0f
+
+// ---------------------------------------------------------------- FLUXO OPTICO (opcional)
+// PMW3901 no J4. Sem o modulo nada disto roda (o firmware detecta no boot).
+// O fluxo so tem escala (m/s) com o sonar de baixo lendo a altura.
+#define FLOW_MIN_HEIGHT_M      0.08f  // abaixo disso o PMW3901 fica fora de foco
+#define FLOW_MAX_HEIGHT_M      2.50f
+#define FLOW_MIN_SQUAL         20     // qualidade minima da imagem (chao liso demais = 0)
+#define FLOW_OUTLIER_COUNTS    120    // salto maior que isto num quadro e erro de leitura
+#define FLOW_RAD_PER_COUNT     0.0205f // 42 graus de campo / 35 pixels (mesmo valor da Bitcraze)
+#define FLOW_LPF_HZ            6.0f
+
+// Montagem do modulo (lente para baixo). Confira com o teste do PLANO_DE_MONTAGEM:
+// empurrando o drone para a FRENTE com a mao, "vf" tem de ficar positivo;
+// para a DIREITA, "vr" positivo. Se nao, troque o sinal aqui.
+// Modulo girado 90 graus: FLOW_SWAP_XY 1.
+#define FLOW_SWAP_XY           0
+#define FLOW_SIGN_FWD         -1      // frente = -dy (como no Crazyflie)
+#define FLOW_SIGN_RIGHT        1      // direita = +dx
+
+// Freio da deriva: inclinacao contra a velocidade lida.
+#define FLOW_KP_DEG_PER_MPS    8.0f   // graus por m/s
+#define FLOW_KI_DEG_PER_M      3.0f   // graus por m de deriva acumulada
+#define FLOW_I_LIMIT_DEG       4.0f
+#define FLOW_MAX_TILT_DEG      8.0f   // teto da correcao (o piloto sempre manda mais)
+#define FLOW_RAMP_DPS          60.0f  // quao depressa a correcao entra e sai

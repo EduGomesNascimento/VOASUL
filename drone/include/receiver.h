@@ -32,6 +32,9 @@ struct Telemetry {
   bool  armed, altHold, avoid, usingSonar;
   float m[4];
   uint16_t loopHz;
+  uint8_t flow;          // FlowStatus: 0 ausente, 1 sem leitura, 2 lendo, 3 segurando
+  float flowVf, flowVr;  // m/s (frente, direita)
+  uint8_t flowSq;        // qualidade da imagem
   const char *status;
 };
 

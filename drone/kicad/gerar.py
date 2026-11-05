@@ -223,7 +223,7 @@ def pegada(tipo):
         return fp_lib('Diode_SMD', 'D_SMA')
     if tipo == 'CONN4':
         return fp_lib('Connector_PinHeader_2.54mm', 'PinHeader_1x04_P2.54mm_Vertical', furo=1.0, oval_perp=True)
-    if tipo == 'CONN6':
+    if tipo in ('CONN6', 'CONN6F'):
         return fp_lib('Connector_PinHeader_2.54mm', 'PinHeader_1x06_P2.54mm_Vertical', furo=1.0, oval_perp=True)
     raise ValueError(tipo)
 

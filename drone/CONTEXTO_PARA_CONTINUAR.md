@@ -30,8 +30,12 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 ## Pinagem NOVA (placa de face única)
 
 Motores FR/RR/RL/FL = GPIO 17/4/23/19 · I²C1 (BMP280) 21/22 · **I²C2 (BMI160, Wire1) 16/18** ·
-sonar baixo TRIG/ECHO 26/25 · sonar frente TRIG/ECHO 27/14 · IR esq/dir 36/39 · bateria 35 · LED 2.
+sonar baixo TRIG/ECHO 14/27 · sonar frente TRIG/ECHO 13/12 · IR esq/dir 36/39 · bateria 35 · LED 2 ·
+**fluxo óptico PMW3901 (opcional, J4) MISO/SCK/MOSI/CS 32/33/25/26**.
 Já está em `include/board_esp32.h`; o firmware ganhou `platI2C2Begin()` e `BMI160::setBus()`.
+Fluxo óptico: `include/opticalflow.h` (driver + estimador + freio). Detecta o módulo no boot
+(ID 0x49 e 0xB6); sem ele o drone voa igual. Telemetria `fl` (0 ausente, 1 sem leitura,
+2 lendo, 3 segurando), `vf`/`vr` (m/s), `sq` (qualidade). Testes: `cd test && make`.
 
 ## Como a placa é gerada (não editar o .kicad_pcb à mão)
 

@@ -124,14 +124,16 @@ void Receiver::sendTelemetry(const Telemetry &t) {
   _lastTeleMs = now;
   if (gWs.clientCount() == 0) return;
 
-  char buf[320];
+  char buf[400];
   snprintf(buf, sizeof(buf),
     "{\"r\":%.1f,\"p\":%.1f,\"y\":%.0f,\"alt\":%.2f,\"vz\":%.2f,"
     "\"g\":%.2f,\"f\":%.2f,\"il\":%d,\"ir\":%d,\"vb\":%.2f,"
-    "\"armed\":%d,\"snr\":%d,\"hz\":%u,\"st\":\"%s\"}",
+    "\"armed\":%d,\"snr\":%d,\"hz\":%u,"
+    "\"fl\":%u,\"vf\":%.2f,\"vr\":%.2f,\"sq\":%u,\"st\":\"%s\"}",
     t.roll, t.pitch, t.yaw, t.altitude, t.verticalSpeed,
     t.ground, t.front, t.irL ? 1 : 0, t.irR ? 1 : 0, t.vbat,
-    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz, t.status);
+    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz,
+    t.flow, t.flowVf, t.flowVr, t.flowSq, t.status);
 
   gWs.broadcast(buf);
 }

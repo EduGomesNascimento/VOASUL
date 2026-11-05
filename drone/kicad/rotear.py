@@ -271,7 +271,7 @@ class Roteador:
         return ok
 
     # --- rede inteira
-    def rotear_rede(self, rede, com_jumper, so_potencia=False):
+    def rotear_rede(self, rede, com_jumper, so_potencia=False, ignorar=()):
         """liga os pinos da rede. GND tem duas fases:
           1) GND de POTENCIA (bateria, capacitor, fonte dos MOSFETs, entrada do MT3608 e um
              pino GND do ESP32): so cobre da placa -- a corrente dos motores passa aqui;
@@ -292,6 +292,7 @@ class Roteador:
         ligados = set()
         if so_potencia:
             faltam = [k for k in faltam if nome(pads[k]) in potencia]
+        faltam = [k for k in faltam if nome(pads[k]) not in ignorar]   # ficam para 'rede:adiado'
         # pino que ja encosta no cobre da rede (fase anterior) conta como ligado
         for k in list(faltam):
             m = np.zeros((g.n, g.n), bool)
@@ -469,10 +470,13 @@ def rodar(geo, ordem, com_jumper=True):
         f = dict(tipo='seg', **{k: t[k] for k in ('x1', 'y1', 'x2', 'y2', 'w')})
         rt.objs.append((t['rede'], f))
     falhas = []
+    adiar = geo.get('adiar', {})
     for rede in ordem:
         t0 = time.time()
         so_pot = rede.endswith(':potencia')
-        ok, _, _, fal = rt.rotear_rede(rede.split(':')[0], com_jumper, so_potencia=so_pot)
+        base = rede.split(':')[0]
+        ignorar = set() if rede.endswith(':adiado') else set(adiar.get(base, []))
+        ok, _, _, fal = rt.rotear_rede(base, com_jumper, so_potencia=so_pot, ignorar=ignorar)
         print(f'   {rede:10s} {"ok" if ok else "FALHOU " + str(fal)} ({time.time() - t0:.0f} s, jumpers ate agora: {len(rt.jumpers)})', flush=True)
         for f in fal:
             falhas.append((rede, f))

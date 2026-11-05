@@ -1,3 +1,4 @@
 .pio/
 test/tests
+test/flowhw_bin
 cad/__pycache__/

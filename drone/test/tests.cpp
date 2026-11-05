@@ -7,6 +7,7 @@
 #include "motors.h"
 #include "altitude.h"
 #include "avoidance.h"
+#include "opticalflow.h"
 #include "sha1.h"
 #include "websocket.h"
 #include "config.h"
@@ -263,6 +264,91 @@ int main() {
     roll = 0; pitch = -10;
     av.apply(rf, roll, pitch, DT);
     near("desligado nao altera o comando", pitch, -10.0f, 1e-4f);
+  }
+
+
+  printf("\n--- Fluxo optico (PMW3901, opcional) ---\n");
+  {
+    // Quadro com movimento, como o sensor entrega: byte de movimento 0xB0.
+    auto frame = [](int16_t dx, int16_t dy, uint8_t sq = 80) {
+      FlowFrame f; f.dx = dx; f.dy = dy; f.squal = sq;
+      f.motion = (dx || dy) ? 0xB0 : 0x30;
+      return f;
+    };
+    const float dt = 0.01f, h = 1.0f;
+    const float k = FLOW_RAD_PER_COUNT / dt;   // rad/s por contagem
+
+    PMW3901 drv;
+    check("sem o modulo: begin() diz ausente", !drv.begin() && !drv.present);
+    FlowFrame lixo;
+    check("sem o modulo: read() nao entrega quadro", !drv.read(lixo));
+
+    FlowEstimator e;
+    // Andando para a frente sem girar: contagens no eixo "frente" do sensor.
+    const int16_t fw = (int16_t)(FLOW_SIGN_FWD * 2);
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(fw, 0) : frame(0, fw), dt, 0, 0, h, true);
+    check("frente: leitura valida", e.valid);
+    near("frente: vFwd = h * contagens * escala", e.vFwd, h * 2 * k, 0.01f);
+    near("frente: vRight = 0", e.vRight, 0, 0.01f);
+
+    e.reset();
+    const int16_t rt = (int16_t)(FLOW_SIGN_RIGHT * 1);
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(0, rt) : frame(rt, 0), dt, 0, 0, 0.5f, true);
+    near("direita: vRight = h * contagens * escala", e.vRight, 0.5f * k, 0.01f);
+
+    // Parado, so inclinando o nariz para cima: a imagem corre como se andasse
+    // para a frente. Descontando o giroscopio, a velocidade tem de dar zero.
+    e.reset();
+    const float pitchRate = 2 * k * 57.29578f;      // graus/s que geram 2 contagens
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(fw, 0) : frame(0, fw), dt, 0, pitchRate, h, true);
+    near("so girando o pitch: vFwd = 0", e.vFwd, 0, 0.01f);
+    // Rolar para a direita parece andar para a ESQUERDA (contagem negativa).
+    e.reset();
+    const float rollRate = 1 * k * 57.29578f;
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(0, (int16_t)-rt) : frame((int16_t)-rt, 0), dt, rollRate, 0, h, true);
+    near("so girando o roll: vRight = 0", e.vRight, 0, 0.01f);
+
+    e.reset();
+    e.update(frame(0, fw), dt, 0, 0, 0.05f, true);
+    check("baixo demais (5 cm): invalido", !e.valid);
+    e.update(frame(0, fw), dt, 0, 0, 1.0f, false);
+    check("sem sonar: invalido", !e.valid);
+    e.update(frame(0, fw, 5), dt, 0, 0, 1.0f, true);
+    check("chao sem textura (squal 5): invalido", !e.valid);
+    FlowFrame ff; ff.motion = 0xFF; ff.dx = -1; ff.dy = -1; ff.squal = 0xFF;
+    e.update(ff, dt, 0, 0, 1.0f, true);
+    check("tudo 0xFF (fio solto): invalido", !e.valid);
+    e.update(frame(0, 500), dt, 0, 0, 1.0f, true);
+    check("salto absurdo num quadro: invalido", !e.valid);
+    e.update(frame(0, 0), dt, 0, 0, 1.0f, true);
+    check("parado com boa textura: valido", e.valid);
+    near("parado: vFwd = 0", e.vFwd, 0, 1e-4f);
+
+    // Freio
+    FlowHold fh;
+    e.reset();
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(fw, 0) : frame(0, fw), dt, 0, 0, 0.2f, true);
+    for (int i = 0; i < 400; i++) fh.update(e, true, 1.0f / 400);
+    check("indo p/ frente -> freio com nariz p/ CIMA (pitch +)", fh.pitchBias > 1.0f && fh.holding);
+    check("correcao nunca passa do teto", fh.pitchBias <= FLOW_MAX_TILT_DEG + 1e-3f);
+    fh.reset(); e.reset();
+    for (int i = 0; i < 50; i++)
+      e.update(FLOW_SWAP_XY ? frame(0, rt) : frame(rt, 0), dt, 0, 0, 0.2f, true);
+    for (int i = 0; i < 400; i++) fh.update(e, true, 1.0f / 400);
+    check("indo p/ direita -> freio inclinando p/ ESQUERDA (roll -)", fh.rollBias < -1.0f);
+    // Manche mexido (engage = false): a correcao sai em rampa ate zero.
+    for (int i = 0; i < 400; i++) fh.update(e, false, 1.0f / 400);
+    near("manche mexido: correcao volta a zero", fh.rollBias, 0, 1e-3f);
+    // Leitura invalida com o manche solto: tambem nao corrige.
+    FlowEstimator vazio;
+    fh.reset();
+    for (int i = 0; i < 400; i++) fh.update(vazio, true, 1.0f / 400);
+    check("sem modulo/leitura: nenhuma correcao", fh.pitchBias == 0 && fh.rollBias == 0 && !fh.holding);
   }
 
   printf("\n--- Fiacao do driver de motor ---\n");

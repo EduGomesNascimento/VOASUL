@@ -54,14 +54,21 @@ ESP_REDES = {
     'VP': 'IR_E',                # IO36 (so entrada)
     'VN': 'IR_D',                # IO39 (so entrada)
     'IO35': 'VBAT_ADC',          # ADC1 (o ADC2 nao funciona com Wi-Fi)
-    'IO25': 'ECHO_B', 'IO26': 'TRIG_B', 'IO27': 'TRIG_F', 'IO14': 'ECHO_F',
+    # (IO34 fica livre: o J3 esta logo abaixo dele)
+    # fluxo optico PMW3901 (opcional, SPI): 4 pinos vizinhos -> J4 sem cruzamento
+    'IO32': 'FLOW_MISO', 'IO33': 'FLOW_SCK', 'IO25': 'FLOW_MOSI', 'IO26': 'FLOW_CS',
+    # sonares, dos dois lados do GND do ESP32 (pino 14), que serve o 2k do ECHO da frente.
+    # IO12 e pino de strap (tem de estar em 0 no boot): como ECHO ele fica preso ao
+    # GND pelo 2k do divisor, entao o boot e sempre certo.
+    'IO27': 'ECHO_B', 'IO14': 'TRIG_B', 'IO12': 'ECHO_F', 'IO13': 'TRIG_F',
 }
 GPIO = {  # para o board_esp32.h
     'PIN_MOTOR_FR': 17, 'PIN_MOTOR_RR': 4, 'PIN_MOTOR_RL': 23, 'PIN_MOTOR_FL': 19,
     'PIN_I2C_SDA': 21, 'PIN_I2C_SCL': 22, 'PIN_I2C2_SDA': 16, 'PIN_I2C2_SCL': 18,
-    'PIN_SONAR_DOWN_TRIG': 26, 'PIN_SONAR_DOWN_ECHO': 25,
-    'PIN_SONAR_FRONT_TRIG': 27, 'PIN_SONAR_FRONT_ECHO': 14,
+    'PIN_SONAR_DOWN_TRIG': 14, 'PIN_SONAR_DOWN_ECHO': 27,
+    'PIN_SONAR_FRONT_TRIG': 13, 'PIN_SONAR_FRONT_ECHO': 12,
     'PIN_IR_LEFT': 36, 'PIN_IR_RIGHT': 39, 'PIN_VBAT': 35, 'PIN_STATUS_LED': 2,
+    'PIN_FLOW_MISO': 32, 'PIN_FLOW_SCK': 33, 'PIN_FLOW_MOSI': 25, 'PIN_FLOW_CS': 26,
 }
 
 
@@ -112,22 +119,31 @@ peca('U2', 'MT3608 5,0V', 'MT3608', 0.0, 31.0,
 peca('C2', '470uF 10V', 'CP_D6', 31.5, -9.5, rot=90, pinos={'1': '+5V', '2': 'GND'})
 
 # ---- sensores externos (tras): conectores na ordem dos pinos do ESP32
+# de cima (visto de cima), da esquerda p/ a direita: J3 (IR) | divisor da bateria |
+# J4 (fluxo optico) | sonar (resistores + J2)
 peca('J3', 'IR (FC-51 x2)', 'CONN4', -20.5, -17.0, rot=90,
      pinos={'1': '+3V3', '2': 'IR_E', '3': 'IR_D', '4': 'GND'},
      nota='1 VCC(3V3) 2 OUT esq 3 OUT dir 4 GND')
 # divisor da bateria (IO34): 10k/10k, em pe
 # (encostado no anel de VBAT: so o sinal fino VBAT_ADC atravessa a placa)
-peca('R9', '10k', 'R_PE', -12.0, -39.3, rot=90, pinos={'1': 'VBAT', '2': 'VBAT_ADC'})
-peca('R10', '10k', 'R_PE', -12.0, -33.6, rot=90, pinos={'1': 'VBAT_ADC', '2': 'GND'})
-# ordem dos pinos escolhida para nao cruzar: cada divisor fica do lado de um GND
-peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', -6.35, -36.5, rot=90,
-     pinos={'1': 'GND', '2': 'ECHO_B5', '3': 'TRIG_B', '4': 'TRIG_F', '5': 'ECHO_F5', '6': '+5V'},
-     nota='1 GND 2 ECHO baixo 3 TRIG baixo 4 TRIG frente 5 ECHO frente 6 VCC(5V)')
-# divisores do ECHO (5 V -> 3,3 V): 1k em serie, 2k para o GND, em pe
-peca('R13', '2k', 'R_PE', -7.0, -20.0, rot=-90, pinos={'1': 'ECHO_B', '2': 'GND'})
-peca('R11', '1k', 'R_PE', -3.2, -20.0, rot=-90, pinos={'1': 'ECHO_B', '2': 'ECHO_B5'})
-peca('R12', '1k', 'R_PE', 6.2, -20.0, rot=-90, pinos={'1': 'ECHO_F', '2': 'ECHO_F5'})
-peca('R14', '2k', 'R_PE', 10.2, -20.0, rot=-90, pinos={'1': 'ECHO_F', '2': 'GND'})
+peca('R9', '10k', 'R_PE', -14.5, -39.3, rot=90, pinos={'1': 'VBAT', '2': 'VBAT_ADC'})
+peca('R10', '10k', 'R_PE', -14.5, -33.6, rot=90, pinos={'1': 'VBAT_ADC', '2': 'GND'})
+# fluxo optico PMW3901: OPCIONAL. Sem o modulo o drone voa igual; o firmware
+# descobre sozinho no boot se ele esta ligado (le o ID do chip).
+peca('J4', 'FLUXO (PMW3901)', 'CONN6F', -10.5, -24.0, rot=90,
+     pinos={'1': '+3V3', '2': 'FLOW_MISO', '3': 'FLOW_SCK', '4': 'FLOW_MOSI', '5': 'FLOW_CS', '6': 'GND'},
+     nota='1 VCC(3V3) 2 MISO 3 SCK 4 MOSI 5 CS 6 GND | ligue com o drone DESLIGADO')
+# sonar a direita do J4. Divisores do ECHO (5 V -> 3,3 V): 1k em serie, 2k para o GND, em pe.
+#  - ECHO baixo: R13 (2k) pega o GND do J4.6, logo acima dele; R11 (1k) desce para o J2.
+#  - ECHO frente: R14 (2k) pega o GND do pino 14 do ESP32; R12 (1k) desce para o J2.
+peca('R13', '2k', 'R_PE', 2.2, -29.54, rot=90, pinos={'1': 'ECHO_B', '2': 'GND'})
+peca('R11', '1k', 'R_PE', 6.0, -29.54, rot=-90, pinos={'1': 'ECHO_B', '2': 'ECHO_B5'})
+peca('R14', '2k', 'R_PE', 10.16, -20.54, rot=90, pinos={'1': 'ECHO_F', '2': 'GND'})
+peca('R12', '1k', 'R_PE', 12.6, -29.54, rot=-90, pinos={'1': 'ECHO_F', '2': 'ECHO_F5'})
+# ordem dos pinos = ordem das trilhas que chegam (nada cruza)
+peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', 3.46, -37.0, rot=90,
+     pinos={'1': 'GND', '2': 'ECHO_B5', '3': 'TRIG_B', '4': 'ECHO_F5', '5': 'TRIG_F', '6': '+5V'},
+     nota='1 GND 2 ECHO baixo 3 TRIG baixo 4 ECHO frente 5 TRIG frente 6 VCC(5V)')
 
 # ---- 4 canais de motor, na ponta de cada diagonal
 # de fora p/ dentro: anel VBAT | ilhas do motor, C, diodo | MOSFET | resistores

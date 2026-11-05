@@ -13,6 +13,7 @@
 #include "avoidance.h"
 #include "receiver.h"
 #include "battery.h"
+#include "opticalflow.h"
 
 // ============================================================================
 //  Divisao de trabalho entre os dois nucleos
@@ -39,6 +40,9 @@ static AltitudeEstimator altEst;
 static Avoidance         avoid;
 static Receiver          rx;
 static Battery           batt;
+static PMW3901           flow;       // opcional: ausente = voa sem ele
+static FlowEstimator     flowEst;
+static FlowHold          flowHold;
 
 static PID pidRateRoll, pidRatePitch, pidRateYaw;
 static PID pidAltVz;
@@ -144,6 +148,15 @@ static void flightInit() {
 
   range.begin();
 
+  // Fluxo optico (opcional). Ausente nao e erro: o drone voa igual, so sem o
+  // freio de deriva. O resultado aparece no Serial e na telemetria.
+  if (flow.begin()) {
+    Serial.println("[PMW3901] presente - freio de deriva ligado");
+  } else {
+    Serial.printf("[PMW3901] ausente (id 0x%02X/0x%02X) - voando sem fluxo optico\n",
+                  flow.chipId, flow.chipIdInv);
+  }
+
   pidRateRoll.init(PID_RATE_ROLL_KP,  PID_RATE_ROLL_KI,  PID_RATE_ROLL_KD,
                    PID_I_LIMIT, PID_OUT_LIMIT, PID_D_LPF_HZ);
   pidRatePitch.init(PID_RATE_PITCH_KP, PID_RATE_PITCH_KI, PID_RATE_PITCH_KD,
@@ -186,6 +199,17 @@ static void runControl(const ControlInput &cmd, float dt) {
 
   const bool landing = (state == ST_LANDING);
   if (landing) { rollSp = 0; pitchSp = 0; yawRateSp = 0; }
+
+  // ---- fluxo optico: freia a deriva com o manche solto ----
+  // So corrige quando o piloto nao esta pedindo movimento e o desvio de
+  // obstaculos nao esta empurrando (senao os dois brigariam).
+  {
+    const bool sticksFree = fabsf(cmd.roll) < 0.08f && fabsf(cmd.pitch) < 0.08f;
+    const bool avoidQuiet = fabsf(avoid.frontBias) < 0.5f && fabsf(avoid.sideBias) < 0.5f;
+    flowHold.update(flowEst, (sticksFree || landing) && avoidQuiet, dt);
+    rollSp  += flowHold.rollBias;
+    pitchSp += flowHold.pitchBias;
+  }
 
   // ---- desvio de obstaculos ----
   avoid.setEnabled(cmd.avoid && !landing);
@@ -259,6 +283,7 @@ static void resetControllers() {
   pidRatePitch.reset();
   pidRateYaw.reset();
   pidAltVz.reset();
+  flowHold.reset();
   altHoldPrev = false;
 }
 
@@ -304,6 +329,24 @@ static void flightStep() {
   range.update(baro.temperature, ahrs.tiltCos, tiltDeg);
 
   if (baroOk && millis() - baroMs >= 40) { baroMs = millis(); baro.read(); }
+
+  // Fluxo optico a 100 Hz (a cada 4 passos). Sem o modulo nao custa nada.
+  static uint8_t flowDiv = 0;
+  static uint32_t flowUs = 0;
+  if (flow.present && ++flowDiv >= 4) {
+    flowDiv = 0;
+    const uint32_t t = micros();
+    const float fdt = flowUs ? (t - flowUs) * 1e-6f : 0.0f;
+    flowUs = t;
+    FlowFrame fr;
+    if (flow.read(fr)) {
+      flowEst.update(fr, fdt, ahrs.rollRate, ahrs.pitchRate,
+                     range.groundDistance, range.groundValid);
+    } else {
+      flowEst.reset();
+      Serial.println("[PMW3901] parou de responder - seguindo sem fluxo optico");
+    }
+  }
 
   altEst.update(range.groundDistance, range.groundValid,
                 baroOk ? baro.altitude : 0.0f, ahrs.earthAccZ, dt);
@@ -415,6 +458,12 @@ static void flightStep() {
     sharedTele.usingSonar = altEst.usingSonar;
     for (uint8_t i = 0; i < 4; i++) sharedTele.m[i] = motors.out[i];
     sharedTele.loopHz = loopHz;
+    sharedTele.flow = !flow.present ? FLOW_ABSENT
+                    : flowHold.holding ? FLOW_HOLDING
+                    : flowEst.valid ? FLOW_READING : FLOW_IDLE;
+    sharedTele.flowVf = flowEst.vFwd;
+    sharedTele.flowVr = flowEst.vRight;
+    sharedTele.flowSq = flowEst.squal;
     teleReady = true;
     platUnlock(shareMux);
   }

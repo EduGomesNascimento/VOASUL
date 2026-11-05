@@ -39,7 +39,8 @@ NOMES = {
     'GY_BMI160': dict(zip('1234567', ['VIN', '3V3', 'GND', 'SCL', 'SDA', 'CS', 'SAO'])),
     'GY_BMP280': dict(zip('123456', ['VCC', 'GND', 'SCL', 'SDA', 'CSB', 'SDO'])),
     'CONN4': dict(zip('1234', ['VCC', 'OUT_E', 'OUT_D', 'GND'])),
-    'CONN6': dict(zip('123456', ['GND', 'ECHO_B', 'TRIG_B', 'TRIG_F', 'ECHO_F', 'VCC'])),
+    'CONN6': dict(zip('123456', ['GND', 'ECHO_B', 'TRIG_B', 'ECHO_F', 'TRIG_F', 'VCC'])),
+    'CONN6F': dict(zip('123456', ['VCC', 'MISO', 'SCK', 'MOSI', 'CS', 'GND'])),
 }
 FOOTPRINT = {
     'R_PE': 'Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical',
@@ -52,6 +53,7 @@ FOOTPRINT = {
     'MT3608': 'drone:MT3608_modulo', 'GY_BMI160': 'drone:GY_BMI160', 'GY_BMP280': 'drone:GY_BMP280',
     'CONN4': 'Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical',
     'CONN6': 'Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical',
+    'CONN6F': 'Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical',
     'ESP32_DEVKIT': 'drone:ESP32_DevKitC_38p',
 }
 
@@ -113,7 +115,7 @@ def simbolo_lib(nome, pinos, larg=10.16):
 BLOCOS = [
     ('ALIMENTACAO', ['J1', 'C1', 'U2', 'C2', 'R9', 'R10'], 25, 40),
     ('CONTROLE (ESP32) E SENSORES DE BORDO', ['U1', 'U3', 'U4'], 140, 40),
-    ('SONAR E IR', ['J2', 'R11', 'R13', 'R12', 'R14', 'J3'], 300, 40),
+    ('SONAR, IR E FLUXO OPTICO', ['J2', 'R11', 'R13', 'R12', 'R14', 'J3', 'J4'], 300, 40),
     ('MOTOR FR', ['M1', 'C3', 'D1', 'Q1', 'R1', 'R5'], 25, 175),
     ('MOTOR RR', ['M2', 'C4', 'D2', 'Q2', 'R2', 'R6'], 120, 175),
     ('MOTOR RL', ['M3', 'C5', 'D3', 'Q3', 'R3', 'R7'], 215, 175),

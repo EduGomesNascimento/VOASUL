@@ -19,13 +19,18 @@ from matplotlib.patches import Circle, FancyBboxPatch, Polygon
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 D = json.load(open(os.path.join(AQUI, 'saidas', 'montagem.json')))
+NJ = len(D['jumpers'])
+NJ_GND = sum(1 for j in D['jumpers'] if j['rede'] == 'GND')
+_c = os.path.join(AQUI, 'saidas', 'conferencia.txt')     # escrito pela etapa 'saidas'
+CONF = open(_c).read().strip() if os.path.exists(_c) else 'ver CONFERENCIA.md'
 A4 = (210, 297)
 MM = 1 / 25.4
 VERDE, LARANJA, CINZA, TINTA, AZUL = '#0f6b4f', '#c4501a', '#9aa39d', '#17201b', '#1d5fa8'
 
 PINOS = {  # nome de cada pino nos conectores e modulos (para escrever na folha)
-    'J2': ['GND', 'ECHO B', 'TRIG B', 'TRIG F', 'ECHO F', '5V'],
+    'J2': ['GND', 'ECHO B', 'TRIG B', 'ECHO F', 'TRIG F', '5V'],
     'J3': ['3V3', 'IR E', 'IR D', 'GND'],
+    'J4': ['3V3', 'MISO', 'SCK', 'MOSI', 'CS', 'GND'],
     'U2': {'1': 'IN+', '2': 'IN-', '3': 'OUT+', '4': 'OUT-'},
     'U3': ['VIN', '3V3', 'GND', 'SCL', 'SDA', 'CS', 'SAO'],
     'U4': ['VCC', 'GND', 'SCL', 'SDA', 'CSB', 'SDO'],
@@ -103,7 +108,7 @@ def pagina_cima(pdf):
             pad(ax, p, VERDE if pino1 else '#55605a', cheio=pino1, lw=0.5)
     # rotulos com ajuste fino
     desl = {'U1': (0, 6.5), 'U2': (0, 0), 'U3': (0, 4.8), 'U4': (0, 4.2), 'J1': (0, -4.2), 'J2': (6, -5.2),
-            'J3': (0, 4.2), 'C1': (0, -6.0), 'C2': (1.5, -6.2)}
+            'J3': (0, 4.2), 'J4': (6, -5.2), 'C1': (0, -6.0), 'C2': (1.5, -6.2)}
     for pc in D['pecas']:
         if pc['lado'] != 'F':
             continue
@@ -129,7 +134,7 @@ def pagina_cima(pdf):
             continue
         for p in pc['pads']:
             n = nomes[p['n']] if isinstance(nomes, dict) else nomes[int(p['n']) - 1]
-            off = -2.6 if pc['ref'] in ('J2', 'U3', 'U4') else 2.6
+            off = -2.6 if pc['ref'] in ('J2', 'J4', 'U3', 'U4') else 2.6
             if pc['ref'] == 'U2':
                 off = -3.2 if p['y'] > pc['y'] else 3.2
             ax.text(p['x'], p['y'] + off, n, ha='center', va='center', fontsize=3.6, color=VERDE, rotation=0,
@@ -253,7 +258,7 @@ def pagina_lista(pdf):
         ('1', 'Q1–Q4', 'MOSFET AO3400A (SOT-23)', 'embaixo; G-S-D como na pág. 2'),
         ('2', 'D1–D4', 'Diodo SS34', 'embaixo; faixa (K) para fora'),
         ('3', 'C3–C6', '100 nF 0805', 'embaixo; sem polaridade'),
-        ('4', '1–14', 'Jumpers (fio rígido)', '10 de GND (fio grosso), 4 de sinal'),
+        ('4', f'1–{NJ}', 'Jumpers (fio rígido)', f'{NJ_GND} de GND (fio grosso), {NJ - NJ_GND} de sinal'),
         ('5', 'U4', 'GY-BMP280-3.3', 'barra macho baixa, embaixo do ESP32'),
         ('6', 'U3', 'GY-BMI160', 'barra macho baixa, embaixo do ESP32; VIN solto'),
         ('7', 'R1–R4', '100 Ω (porta)', 'em pé; 100–220 Ω servem'),
@@ -261,7 +266,7 @@ def pagina_lista(pdf):
         ('7', 'R11, R12', '1 kΩ (ECHO)', 'em pé'),
         ('7', 'R13, R14', '2 kΩ (ECHO)', 'em pé; 1k8 ou 2k2 também servem'),
         ('8', 'U1', 'Barras fêmea 2×19 do ESP32', 'solde com o ESP32 encaixado, para alinhar'),
-        ('9', 'J2, J3', 'Barra macho 1×6 e 1×4', 'sonar (J2) e IR (J3)'),
+        ('9', 'J2, J3, J4', 'Barra macho 1×6, 1×4 e 1×6', 'sonar (J2), IR (J3), fluxo óptico (J4, opcional)'),
         ('10', 'C1', '1000 µF 10–16 V', 'POLARIDADE: listra = negativo, + na ilha marcada'),
         ('10', 'C2', '470 µF 10–16 V', 'POLARIDADE'),
         ('11', 'U2', 'MT3608 em 4 pernas de fio', 'confira IN+/IN-/OUT+/OUT-; 5,0 V antes do ESP32'),
@@ -279,11 +284,13 @@ def pagina_lista(pdf):
     fig.text(0.08, y - 0.02, 'O que NÃO está na folha de cobre (e você precisa fazer):', fontsize=10, weight='bold',
              color=LARANJA, family='DejaVu Sans')
     extra = [
-        '14 jumpers por cima: sem eles a placa NÃO funciona (pág. 1 e jumpers.txt).',
+        f'{NJ} jumpers por cima: sem eles a placa NÃO funciona (pág. 1 e jumpers.txt).',
         'Fios para fora da placa: bateria (J1), 4 motores (M1–M4), cabos do sonar (J2) e do IR (J3).',
+        'J4 (fluxo óptico PMW3901) é OPCIONAL: solde a barra mesmo sem o módulo; o drone voa igual.',
+        '   Ligue/desligue o módulo só com o drone DESLIGADO. O firmware descobre sozinho no boot.',
         'Os módulos (ESP32, MT3608, BMI160, BMP280) fazem parte do circuito: o GND do pino 26 do ESP32',
         '   chega pelo próprio ESP32. Teste de continuidade do GND dos sensores: só com o ESP32 encaixado.',
-        'Conferido no KiCad: esquema × placa sem diferenças (29 redes, 116 pinos) e DRC sem erros.',
+        f'Conferido no KiCad: esquema × placa sem diferenças ({CONF}) e DRC sem erros.',
     ]
     for k, t in enumerate(extra):
         fig.text(0.08, y - 0.05 - 0.024 * k, ('• ' if not t.startswith('   ') else '  ') + t.strip(), fontsize=8.2,

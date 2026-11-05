@@ -58,6 +58,7 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
   <div><b>IR</b><span id="ti">-</span></div>
   <div><b>Bateria</b><span id="tb">-</span></div>
   <div><b>Loop</b><span id="tl">-</span></div>
+  <div><b>Fluxo</b><span id="tq">-</span></div>
 </div>
 <div id="msg">Decole com o drone no chao e nivelado. Solte o manche para o modo estavel.</div>
 
@@ -165,6 +166,12 @@ function show(t){
   $('tb').textContent=t.vb.toFixed(2)+' V';
   $('tb').className=t.vb<3.35?'bad':t.vb<3.55?'warn':'ok';
   $('tl').textContent=t.hz+' Hz';
+  // fluxo optico (PMW3901, opcional): 0 ausente, 1 sem leitura, 2 lendo, 3 segurando
+  const fl=t.fl|0;
+  $('tq').textContent=fl==0?'sem módulo':fl==1?'sem leitura':
+    (fl==3?'segura ':'')+t.vf.toFixed(1)+' / '+t.vr.toFixed(1);
+  $('tq').className=fl==3?'ok':fl==1?'warn':'';
+  $('tq').title='qualidade '+(t.sq|0);
   if(t.st) msg(t.st);
   if(!t.armed && S.arm){   // o drone desarmou sozinho (failsafe/bateria)
     S.arm=0;

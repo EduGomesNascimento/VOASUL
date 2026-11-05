@@ -34,10 +34,15 @@
 #define MOTOR_PWM_BITS     10
 
 // ---------------------------------------------------------------- ULTRASSOM
-#define PIN_SONAR_DOWN_TRIG   26
-#define PIN_SONAR_DOWN_ECHO   25   // via divisor 1k/2k (5 V -> 3,3 V)
-#define PIN_SONAR_FRONT_TRIG  27
-#define PIN_SONAR_FRONT_ECHO  14   // via divisor 1k/2k (5 V -> 3,3 V)
+// Os quatro pinos ficam dos dois lados do GND do ESP32 (pino 14 da fileira de
+// tras), na ordem do conector J2.
+// O 14 solta PWM no boot: num TRIG isso so dispara o sonar uma vez, inofensivo.
+// O 12 e pino de strap (tem de estar em 0 no boot). Como ECHO ele fica preso ao
+// GND pelo 2k do divisor, entao o ESP32 sempre liga certo.
+#define PIN_SONAR_DOWN_TRIG   14
+#define PIN_SONAR_DOWN_ECHO   27   // via divisor 1k/2k (5 V -> 3,3 V)
+#define PIN_SONAR_FRONT_TRIG  13
+#define PIN_SONAR_FRONT_ECHO  12   // via divisor 1k/2k (5 V -> 3,3 V)
 
 // ---------------------------------------------------------------- IR
 #define PIN_IR_LEFT        36
@@ -48,6 +53,14 @@
 #define PIN_VBAT           35
 #define VBAT_ADC_FULLSCALE_MV  3300.0f
 #define VBAT_ADC_MAX           4095.0f
+
+// ---------------------------------------------------------------- FLUXO OPTICO
+// PMW3901 no conector J4 (OPCIONAL). Quatro pinos vizinhos na fileira de tras,
+// para as trilhas sairem sem cruzar.
+#define PIN_FLOW_MISO      32
+#define PIN_FLOW_SCK       33
+#define PIN_FLOW_MOSI      25
+#define PIN_FLOW_CS        26
 
 // ---------------------------------------------------------------- LED
 #define PIN_STATUS_LED            2

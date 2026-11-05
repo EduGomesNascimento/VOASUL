@@ -145,7 +145,7 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 | 5 | **Resistores em pé** | Confira o valor com o multímetro **antes** de soldar. | Medir na placa: 100 Ω, 10k, 1k, 2k nos lugares certos. |
 | 6 | **Capacitores 100 nF** | Sem polaridade. | — |
 | 7 | **Barras fêmea do ESP32** | Solde com o **ESP32 encaixado**, para alinhar. Um pino de cada ponta primeiro, confira se ficou reto e só depois o resto. | ESP32 entra e sai sem forçar. |
-| 8 | **Conectores J2 (sonar) e J3 (IR)** | — | — |
+| 8 | **Conectores J2 (sonar), J3 (IR) e J4 (fluxo óptico)** | Solde o J4 mesmo sem ter o módulo: ele é opcional e o drone voa sem. | — |
 | 9 | **Eletrolíticos C1 e C2** | **Polaridade!** Listra = negativo, vai na ilha de GND. Ao contrário, ele estoura. | — |
 | 10 | **MT3608** em 4 pernas de fio rígido (~5 mm de altura) | Confira IN+/IN−/OUT+/OUT− na serigrafia do módulo **e** na placa. | — |
 | 11 | **Rabicho da bateria** (Molex) | **+ (vermelho) na ilha quadrada**, a de fora. | — |
@@ -300,11 +300,33 @@ perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Repita c
 
 ---
 
-## Fase 12: extras (sonar da frente, IR, luva de gestos)
+## Fase 12: extras (sonar da frente, IR, fluxo óptico, luva de gestos)
 
 Um de cada vez, **cada um com o seu teste antes de voar**:
 
 - **Sonar da frente / IR:** peso volta a ser problema. Pese e refaça a conta de empuxo/peso.
+- **Fluxo óptico PMW3901 (opcional, no J4):** segura o drone parado quando você solta o
+  manche (ou faz "pare" na luva). Sem ele o drone voa igual, só vai à deriva devagar.
+  1. **Drone desligado:** ligue o módulo no J4 (3V3, MISO, SCK, MOSI, CS, GND, na ordem da
+     serigrafia). Lente **para baixo**, no centro do frame, sem nada na frente. Nunca ligue
+     nem desligue o módulo com a bateria conectada.
+  2. Ligue o drone e olhe o Serial (ou a página): tem de aparecer
+     `[PMW3901] presente`. Sem o módulo aparece `ausente` e o quadro **Fluxo** da página
+     mostra "sem módulo". Os dois casos são normais.
+  3. **Teste dos sinais, sem hélice, motores desarmados:** segure o drone a ~30 cm de um
+     chão com textura (piso, tapete; vidro e piso liso não servem). O quadro **Fluxo** mostra
+     duas velocidades: `frente / direita` (m/s).
+     - Empurre o drone **para a frente**, sem girar: o primeiro número fica **positivo**.
+     - Empurre **para a direita**: o segundo fica **positivo**.
+     - Só **incline** o drone no lugar: os dois ficam perto de zero (o firmware desconta a
+       inclinação pelo giroscópio).
+     Se um sinal estiver trocado, mude `FLOW_SIGN_FWD` / `FLOW_SIGN_RIGHT` em
+     `include/config.h`; se frente e direita estiverem trocadas, `FLOW_SWAP_XY 1`.
+  4. Abaixo de 8 cm (no chão, decolando) e acima de 2,5 m ele não corrige: o quadro mostra
+     "sem leitura". É esperado.
+  5. **Voo amarrado:** solte o manche a ~50 cm. O quadro mostra "segura" e o drone deve
+     parar de derivar. Se oscilar para frente e para trás, baixe `FLOW_KP_DEG_PER_MPS`
+     (8 → 5). Se ainda derivar, suba (8 → 11).
 - **Luva:** ver `docs/LUVA_DE_GESTOS.md`. Primeiro com o drone **sem hélice** na bancada,
   conferindo que cada gesto aparece certo na telemetria. Só depois em voo amarrado.
 

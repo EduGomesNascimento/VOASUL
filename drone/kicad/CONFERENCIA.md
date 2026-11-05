@@ -39,11 +39,15 @@
 | 5 V | MT3608 → pino 5V do ESP32 (o regulador do DevKit faz o 3V3) + 470 µF + sonares | ✅ ajuste 5,0 V antes de encaixar o ESP32 |
 | Divisor da bateria | 10k/10k → IO35 (ADC1, funciona com Wi-Fi): 4,2 V → 2,1 V | ✅ |
 | ECHO dos sonares | 1k série + 2k ao GND: 5 V → 3,33 V | ✅ |
+| 2k do ECHO da frente | vai ao GND pelo pino 14 do ESP32 (GND interno do DevKit, como o pino 26). Só sinal fraco | ✅ |
+| Fluxo óptico J4 (PMW3901, opcional) | SPI em IO32 (MISO), IO33 (SCK), IO25 (MOSI), IO26 (CS); 3V3 e GND no conector. Nenhum é pino de strap | ✅ |
+| J4 vazio | o firmware lê o ID do chip (0x49) **e** o inverso (0xB6): com o MISO flutuando nunca batem os dois, então "ausente" é certo | ✅ testado com sensor simulado |
 | IR FC-51 | alimentado em 3,3 V, saída com pull-up do próprio módulo, entra no IO36/IO39 (só entrada) | ✅ |
 | I²C | **dois barramentos**: BMP280 em IO21/22, BMI160 em IO16/18 (assim nada cruza embaixo do ESP32) | ✅ firmware atualizado |
 | Endereços | BMI160 0x69 (SAO no 3V3), BMP280 0x76 (SDO no GND) | ✅ batem com o firmware |
-| Pinos de boot | nenhum pino de strap usado (0, 2, 5, 12, 15 livres) | ✅ |
-| IO14 (ECHO frente) | solta PWM no boot; o ECHO está em 0 V através do 1k: 3,3 mA, inofensivo | ✅ |
+| Pinos de boot | só o 12 é usado (ECHO da frente, preso em 0 pelo 2k, ver abaixo); 0, 2, 5 e 15 livres | ✅ |
+| IO14 (TRIG baixo) | solta PWM no boot: o sonar de baixo dispara uma vez, inofensivo | ✅ |
+| IO12 (ECHO frente) | pino de strap: tem de estar em 0 no boot. O 2k do divisor o prende ao GND, e o ECHO do sonar parado é 0 V | ✅ |
 | IO16/IO17 | livres no **WROOM-32/32U**. No WROVER (com PSRAM) eles são da memória e **não servem** | ⚠ confirme que é WROOM |
 | Antena | área sem cobre embaixo da antena do WROOM | ✅ |
 
@@ -51,11 +55,12 @@
 
 | Função | GPIO | Função | GPIO |
 |---|---|---|---|
-| Motor FR | 17 | Sonar baixo TRIG / ECHO | 26 / 25 |
-| Motor RR | 4 | Sonar frente TRIG / ECHO | 27 / 14 |
+| Motor FR | 17 | Sonar baixo TRIG / ECHO | 14 / 27 |
+| Motor RR | 4 | Sonar frente TRIG / ECHO | 13 / 12 |
 | Motor RL | 23 | IR esquerdo / direito | 36 / 39 |
 | Motor FL | 19 | Bateria | 35 |
 | I²C 1 (BMP280) SDA / SCL | 21 / 22 | I²C 2 (BMI160) SDA / SCL | 16 / 18 |
+| Fluxo óptico MISO / SCK | 32 / 33 | Fluxo óptico MOSI / CS | 25 / 26 |
 
 ---
 
