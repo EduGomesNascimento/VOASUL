@@ -23,9 +23,11 @@ CX, CY = 100.0, 100.0
 ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
+         # sonar antes dos motores (o jumper do M_RR nao cai no corredor dele), numa
+         # ordem em que um nao fecha o caminho do outro
+         ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
          ['M_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
-         ['SDA', 'SCL', 'TRIG_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', 'ECHO_B', 'ECHO_F',
-          'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+         ['SDA', 'SCL', 'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
           'SDA2', 'SCL2', '+3V3:adiado', 'GND'])
 
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
@@ -108,7 +110,8 @@ def exportar():
                grupos_internos=[['U1.14', 'U1.20', 'U1.26'], ['U2.2', 'U2.4']],
                # pinos ligados so DEPOIS dos sinais (rede:adiado): o 3V3 do J4 nao pode
                # dar a volta no ESP32 e fechar o caminho de todo mundo; entra por jumper
-               adiar={'+3V3': ['J4.1']})
+               # e o 5V do J2 entra depois do sonar (senao desce em diagonal no corredor dele)
+               adiar={'+3V3': ['J4.1'], '+5V': ['J2.6']})
     json.dump(geo, open(GEO, 'w'), indent=1)
     print('geometria:', len(pads), 'pinos,', len(redes), 'redes ->', GEO)
 

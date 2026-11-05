@@ -130,16 +130,16 @@ peca('R9', '10k', 'R_PE', -14.5, -39.3, rot=90, pinos={'1': 'VBAT', '2': 'VBAT_A
 peca('R10', '10k', 'R_PE', -14.5, -33.6, rot=90, pinos={'1': 'VBAT_ADC', '2': 'GND'})
 # fluxo optico PMW3901: OPCIONAL. Sem o modulo o drone voa igual; o firmware
 # descobre sozinho no boot se ele esta ligado (le o ID do chip).
-peca('J4', 'FLUXO (PMW3901)', 'CONN6F', -10.5, -24.0, rot=90,
+peca('J4', 'FLUXO (PMW3901)', 'CONN6F', -11.1, -24.0, rot=90,
      pinos={'1': '+3V3', '2': 'FLOW_MISO', '3': 'FLOW_SCK', '4': 'FLOW_MOSI', '5': 'FLOW_CS', '6': 'GND'},
      nota='1 VCC(3V3) 2 MISO 3 SCK 4 MOSI 5 CS 6 GND | ligue com o drone DESLIGADO')
 # sonar a direita do J4. Divisores do ECHO (5 V -> 3,3 V): 1k em serie, 2k para o GND, em pe.
 #  - ECHO baixo: R13 (2k) pega o GND do J4.6, logo acima dele; R11 (1k) desce para o J2.
-#  - ECHO frente: R14 (2k) pega o GND do pino 14 do ESP32; R12 (1k) desce para o J2.
-peca('R13', '2k', 'R_PE', 2.2, -29.54, rot=90, pinos={'1': 'ECHO_B', '2': 'GND'})
-peca('R11', '1k', 'R_PE', 6.0, -29.54, rot=-90, pinos={'1': 'ECHO_B', '2': 'ECHO_B5'})
-peca('R14', '2k', 'R_PE', 10.16, -20.54, rot=90, pinos={'1': 'ECHO_F', '2': 'GND'})
-peca('R12', '1k', 'R_PE', 12.6, -29.54, rot=-90, pinos={'1': 'ECHO_F', '2': 'ECHO_F5'})
+#  - ECHO frente: R14 (2k) pega o GND do pino 14 do ESP32; R12 (1k), logo abaixo, desce para o J2.
+peca('R13', '2k', 'R_PE', 1.6, -29.54, rot=90, pinos={'1': 'ECHO_B', '2': 'GND'})
+peca('R11', '1k', 'R_PE', 5.4, -29.54, rot=-90, pinos={'1': 'ECHO_B', '2': 'ECHO_B5'})
+peca('R14', '2k', 'R_PE', 11.6, -20.54, rot=90, pinos={'1': 'ECHO_F', '2': 'GND'})
+peca('R12', '1k', 'R_PE', 11.6, -24.5, rot=-90, pinos={'1': 'ECHO_F', '2': 'ECHO_F5'})
 # ordem dos pinos = ordem das trilhas que chegam (nada cruza)
 peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', 3.46, -37.0, rot=90,
      pinos={'1': 'GND', '2': 'ECHO_B5', '3': 'TRIG_B', '4': 'ECHO_F5', '5': 'TRIG_F', '6': '+5V'},
