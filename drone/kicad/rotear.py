@@ -27,7 +27,7 @@ import numpy as np
 RES = 0.2
 MARGEM = 0.15          # folga extra por causa da grade
 CUSTO_JUMPER = 30.0    # mm equivalentes
-JUMPER_COMPR = (5.0, 8.0, 11.0, 15.0, 20.0)
+JUMPER_COMPR = (5.0, 8.0, 11.0, 15.0, 20.0, 25.0)
 JUMPER_DIRS = 16
 
 
@@ -223,7 +223,7 @@ class Roteador:
                     k = pai[k]
                 return caminho[::-1], c
             exp += 1
-            if exp > (700000 if permitir_jumper else 250000):
+            if exp > (1500000 if permitir_jumper else 250000):
                 return None, None
             for di, dj, dc in viz:
                 ii, jj = i + di, j + dj
