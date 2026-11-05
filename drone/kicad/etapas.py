@@ -23,12 +23,15 @@ CX, CY = 100.0, 100.0
 ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
-         # sonar antes dos motores (o jumper do M_RR nao cai no corredor dele), numa
-         # ordem em que um nao fecha o caminho do outro
+         # o sinal do motor RR desce pelo lado direito, onde tambem passa o sonar: vai antes
+         ['M_RR'] +
+         # sonar numa ordem em que um nao fecha o caminho do outro
          ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
-         ['M_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
+         ['M_FR', 'M_RL', 'M_FL'] +
          ['SDA', 'SCL', 'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2', '+3V3:adiado', 'GND'])
+          'SDA2', 'SCL2',
+          # GND antes do 3V3 do J4: o 3V3 cortaria o canto de tras-esquerda (Q3, R7, J3, R10) ao meio
+          'GND', '+3V3:adiado'])
 
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
