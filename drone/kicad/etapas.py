@@ -27,9 +27,12 @@ ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['M_RR'] +
          # sonar numa ordem em que um nao fecha o caminho do outro
          ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
-         ['M_FR', 'M_RL', 'M_FL'] +
+         ['M_FR', 'M_FL'] +
          ['SDA', 'SCL', 'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2', 'GND'])
+          'SDA2', 'SCL2', 'GND',
+          # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
+          # por cima dele: se for antes, fecha o GND do ESP32 num bolso. Vai depois (jumper se precisar)
+          'M_RL'])
 
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
