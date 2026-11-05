@@ -18,10 +18,10 @@
 | Verificação | Resultado |
 |---|---|
 | Esquema e placa vêm da mesma lista (`projeto.py`) | ✅ |
-| Netlist exportada pelo KiCad do esquema × redes da placa | ✅ **29 redes, 116 pinos, 0 diferenças** |
-| DRC da placa caseira (`drc.txt`) | ✅ **0 erros**, exceto 1 aviso esperado (abaixo) |
-| DRC da placa profissional (`pro/drc_pro.txt`) | ✅ **0 erros**, exceto o mesmo aviso |
-| Aviso esperado | "U1 pino 26 (GND) sem ligação": ele chega ao GND **por dentro do próprio DevKit** (os 3 pinos GND do ESP32 são ligados no plano de terra dele). Só sinais fracos (sensores) passam por ali; a corrente dos motores volta por cobre da placa. |
+| Netlist exportada pelo KiCad do esquema × redes da placa | ✅ **33 redes, 126 pinos, 0 diferenças** (conferido sozinho em `gerar.py saidas`) |
+| DRC da placa caseira (`drc.txt`) | ✅ **0 erros, 0 pinos desligados** |
+| DRC da placa profissional (`pro/drc_pro.txt`) | ✅ **0 erros, 0 pinos desligados** |
+| GND | fecha todo pelo cobre e pelos jumpers. Ele atravessa as ilhas dos pinos GND 14, 20 e 26 do ESP32 (cobre da placa, não o módulo): o teste de continuidade funciona sem o ESP32 encaixado. |
 | Folga mínima entre cobres | 0,8 mm (pino, trilha, ilha) |
 | Trilha mais fina | 0,8 mm, só nos 3 últimos mm antes de um pino de passo 2,54 |
 
@@ -39,7 +39,7 @@
 | 5 V | MT3608 → pino 5V do ESP32 (o regulador do DevKit faz o 3V3) + 470 µF + sonares | ✅ ajuste 5,0 V antes de encaixar o ESP32 |
 | Divisor da bateria | 10k/10k → IO35 (ADC1, funciona com Wi-Fi): 4,2 V → 2,1 V | ✅ |
 | ECHO dos sonares | 1k série + 2k ao GND: 5 V → 3,33 V | ✅ |
-| 2k do ECHO da frente | vai ao GND pelo pino 14 do ESP32 (GND interno do DevKit, como o pino 26). Só sinal fraco | ✅ |
+| 2k do ECHO da frente | vai ao GND pela ilha do pino 14 do ESP32 | ✅ |
 | Fluxo óptico J4 (PMW3901, opcional) | SPI em IO32 (MISO), IO33 (SCK), IO25 (MOSI), IO26 (CS); 3V3 e GND no conector. Nenhum é pino de strap | ✅ |
 | J4 vazio | o firmware lê o ID do chip (0x49) **e** o inverso (0xB6): com o MISO flutuando nunca batem os dois, então "ausente" é certo | ✅ testado com sensor simulado |
 | IR FC-51 | alimentado em 3,3 V, saída com pull-up do próprio módulo, entra no IO36/IO39 (só entrada) | ✅ |
@@ -78,9 +78,11 @@
 
 ---
 
-## 5. Jumpers (fios por cima): 14 no total
+## 5. Jumpers (fios por cima): 11 no total
 
-10 de GND e 4 de sinal (portas dos motores FR e RR). Lista com coordenadas: `saidas/jumpers.txt`;
+6 de GND, 1 de 3V3 (para o J4) e 4 de sinal de motor (FR, RR e 2 no RL). Três deles (GND do pino 14 ao
+centro de trás, GND do centro ao canto do motor RL, e o 3V3 do J4) foram posicionados à mão em
+`projeto.JUMPERS_FIXOS`. Lista com coordenadas: `saidas/jumpers.txt`;
 desenho: `saidas/montagem_cima.pdf` (linhas finas entre dois furos).
 
 A placa é de face única. Onde duas trilhas precisariam se cruzar, um fio rígido passa por cima,

@@ -1,13 +1,9 @@
-** Drc report for drone_pro.kicad_pcb **
-** Created on 2026-11-03 23:11:35 **
+** Drc report for /home/user/voasul/drone/kicad/pro/drone_pro.kicad_pcb **
+** Created on 2026-11-05 07:15:46 **
 
 ** Found 0 DRC violations **
 
-** Found 1 unconnected pads **
-[unconnected_items]: Missing connection between items
-    Local override; Severity: error
-    @(148.3000 mm, 100.0000 mm): Zone [GND] on F.Cu
-    @(92.3800 mm, 87.3000 mm): PTH pad 26 [GND] of U1
+** Found 0 unconnected pads **
 
 ** Found 0 Footprint errors **
 

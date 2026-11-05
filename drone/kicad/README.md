@@ -53,7 +53,8 @@ funcionam **com e sem** o módulo:
 - se o módulo parar de responder em voo (fio solto), o firmware percebe em menos de 1 s e
   segue sem ele.
 
-Pinos do J4 (da esquerda para a direita, visto de cima): **3V3, MISO, SCK, MOSI, CS, GND**.
+O J4 é uma barra **2×3** logo abaixo do ESP32. Visto de cima: fileira de cima **MISO, SCK, MOSI**;
+fileira de baixo **3V3, GND, CS** (o quadrado verde da folha de montagem é o 3V3).
 O módulo vai embaixo do drone, com a lente para baixo. Ligue e desligue só com o drone
 **desligado**. Teste e ajuste: `docs/PLANO_DE_MONTAGEM.md`, fase 12.
 
@@ -63,7 +64,7 @@ O módulo vai embaixo do drone, com a lente para baixo. Ligue e desligue só com
 |---|---|
 | Transferência térmica (imprimir 1:1, laser) | `saidas/transferencia_B_Cu.pdf` |
 | Montagem por cima / por baixo | `saidas/montagem_cima.pdf`, `saidas/montagem_baixo_vista_por_baixo.pdf` |
-| Lista de jumpers | `saidas/jumpers.txt` (14: 10 de GND, 4 de sinal) |
+| Lista de jumpers | `saidas/jumpers.txt` (11: 6 de GND, 1 de 3V3, 4 de sinal de motor) |
 | Teste de continuidade | `saidas/redes.txt` |
 | Esquema | `saidas/esquema.pdf` |
 | Mandar fazer na fábrica | `pro/drone_pro_gerber.zip` (+ `pro/drone_pro.kicad_pcb`) |
@@ -71,7 +72,7 @@ O módulo vai embaixo do drone, com a lente para baixo. Ligue e desligue só com
 
 ## Regerar tudo
 
-Tudo de uma vez: `./gerar_tudo.sh` (leva uns 15 minutos por causa do roteador). Passo a passo:
+Tudo de uma vez: `./gerar_tudo.sh` (leva uns 30–40 minutos por causa do roteador). Passo a passo:
 
 ```bash
 python3 gerar.py placa        # peças e redes (Python do KiCad: /usr/bin/python3)

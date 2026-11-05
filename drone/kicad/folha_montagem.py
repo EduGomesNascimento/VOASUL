@@ -30,7 +30,7 @@ VERDE, LARANJA, CINZA, TINTA, AZUL = '#0f6b4f', '#c4501a', '#9aa39d', '#17201b',
 PINOS = {  # nome de cada pino nos conectores e modulos (para escrever na folha)
     'J2': ['GND', 'ECHO B', 'TRIG B', 'ECHO F', 'TRIG F', '5V'],
     'J3': ['3V3', 'IR E', 'IR D', 'GND'],
-    'J4': ['3V3', 'MISO', 'SCK', 'MOSI', 'CS', 'GND'],
+    'J4': {'1': '3V3', '2': 'MISO', '3': 'GND', '4': 'SCK', '5': 'CS', '6': 'MOSI'},   # 2x3
     'U2': {'1': 'IN+', '2': 'IN-', '3': 'OUT+', '4': 'OUT-'},
     'U3': ['VIN', '3V3', 'GND', 'SCL', 'SDA', 'CS', 'SAO'],
     'U4': ['VCC', 'GND', 'SCL', 'SDA', 'CSB', 'SDO'],
@@ -107,8 +107,8 @@ def pagina_cima(pdf):
             pino1 = p['n'] == '1' and pc['ref'][0] in 'JUC' and pc['ref'] not in ('U1',)
             pad(ax, p, VERDE if pino1 else '#55605a', cheio=pino1, lw=0.5)
     # rotulos com ajuste fino
-    desl = {'U1': (0, 6.5), 'U2': (0, 0), 'U3': (0, 4.8), 'U4': (0, 4.2), 'J1': (0, -4.2), 'J2': (6, -5.2),
-            'J3': (0, 4.2), 'J4': (6, -5.2), 'C1': (0, -6.0), 'C2': (1.5, -6.2)}
+    desl = {'U1': (0, 6.5), 'U2': (0, 0), 'U3': (0, 4.8), 'U4': (0, 4.2), 'J1': (0, -4.2), 'J2': (6.35, -7.6),
+            'J3': (0, 4.2), 'J4': (-3.2, 1.3), 'C1': (0, -6.0), 'C2': (1.5, -6.2)}
     for pc in D['pecas']:
         if pc['lado'] != 'F':
             continue
@@ -126,6 +126,9 @@ def pagina_cima(pdf):
         if pc['ref'] in ('U3', 'U4'):
             rotulo(ax, pc, dx, dy, cor=AZUL, tam=5.6)
             continue
+        if pc['ref'] == 'J4':                        # sem espaco: so a referencia (o resto na lista)
+            rotulo(ax, pc, dx, dy, valor=False, tam=6.2)
+            continue
         rotulo(ax, pc, dx, dy, tam=5.6 if pc['ref'][0] in 'RC' else 6.2)
     # nomes de pinos
     for pc in D['pecas']:
@@ -134,9 +137,15 @@ def pagina_cima(pdf):
             continue
         for p in pc['pads']:
             n = nomes[p['n']] if isinstance(nomes, dict) else nomes[int(p['n']) - 1]
-            off = -2.6 if pc['ref'] in ('J2', 'J4', 'U3', 'U4') else 2.6
+            off = -2.6 if pc['ref'] in ('J2', 'U3', 'U4') else 2.6
+            if pc['ref'] == 'J4':                    # 2x3: nome dentro do lado de cada fileira
+                off = 1.9 if p['y'] > pc['y'] + 1 else -1.9
             if pc['ref'] == 'U2':
                 off = -3.2 if p['y'] > pc['y'] else 3.2
+            if pc['ref'] == 'J2':                    # 6 nomes compridos lado a lado: em pe
+                ax.text(p['x'], p['y'] - 1.8, n, ha='center', va='top', fontsize=3.6, color=VERDE,
+                        rotation=90, weight='bold')
+                continue
             ax.text(p['x'], p['y'] + off, n, ha='center', va='center', fontsize=3.6, color=VERDE, rotation=0,
                     weight='bold')
     # polaridade
@@ -258,7 +267,7 @@ def pagina_lista(pdf):
         ('1', 'Q1–Q4', 'MOSFET AO3400A (SOT-23)', 'embaixo; G-S-D como na pág. 2'),
         ('2', 'D1–D4', 'Diodo SS34', 'embaixo; faixa (K) para fora'),
         ('3', 'C3–C6', '100 nF 0805', 'embaixo; sem polaridade'),
-        ('4', f'1–{NJ}', 'Jumpers (fio rígido)', f'{NJ_GND} de GND (fio grosso), {NJ - NJ_GND} de sinal'),
+        ('4', f'1–{NJ}', 'Jumpers (fio rígido)', f'{NJ_GND} de GND (fio grosso), {NJ - NJ_GND} de sinal/3V3 (fino)'),
         ('5', 'U4', 'GY-BMP280-3.3', 'barra macho baixa, embaixo do ESP32'),
         ('6', 'U3', 'GY-BMI160', 'barra macho baixa, embaixo do ESP32; VIN solto'),
         ('7', 'R1–R4', '100 Ω (porta)', 'em pé; 100–220 Ω servem'),
@@ -266,7 +275,7 @@ def pagina_lista(pdf):
         ('7', 'R11, R12', '1 kΩ (ECHO)', 'em pé'),
         ('7', 'R13, R14', '2 kΩ (ECHO)', 'em pé; 1k8 ou 2k2 também servem'),
         ('8', 'U1', 'Barras fêmea 2×19 do ESP32', 'solde com o ESP32 encaixado, para alinhar'),
-        ('9', 'J2, J3, J4', 'Barra macho 1×6, 1×4 e 1×6', 'sonar (J2), IR (J3), fluxo óptico (J4, opcional)'),
+        ('9', 'J2, J3, J4', 'Barra macho 1×6, 1×4 e 2×3', 'sonar (J2), IR (J3), fluxo óptico (J4, opcional)'),
         ('10', 'C1', '1000 µF 10–16 V', 'POLARIDADE: listra = negativo, + na ilha marcada'),
         ('10', 'C2', '470 µF 10–16 V', 'POLARIDADE'),
         ('11', 'U2', 'MT3608 em 4 pernas de fio', 'confira IN+/IN-/OUT+/OUT-; 5,0 V antes do ESP32'),
@@ -288,8 +297,8 @@ def pagina_lista(pdf):
         'Fios para fora da placa: bateria (J1), 4 motores (M1–M4), cabos do sonar (J2) e do IR (J3).',
         'J4 (fluxo óptico PMW3901) é OPCIONAL: solde a barra mesmo sem o módulo; o drone voa igual.',
         '   Ligue/desligue o módulo só com o drone DESLIGADO. O firmware descobre sozinho no boot.',
-        'Os módulos (ESP32, MT3608, BMI160, BMP280) fazem parte do circuito: o GND do pino 26 do ESP32',
-        '   chega pelo próprio ESP32. Teste de continuidade do GND dos sensores: só com o ESP32 encaixado.',
+        'Todo o GND fecha pelo cobre e pelos jumpers: o teste de continuidade funciona sem o ESP32.',
+        '   O GND atravessa as ilhas dos pinos GND 14, 20 e 26 do ESP32 (é cobre da placa, não o módulo).',
         f'Conferido no KiCad: esquema × placa sem diferenças ({CONF}) e DRC sem erros.',
     ]
     for k, t in enumerate(extra):
