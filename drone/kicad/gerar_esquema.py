@@ -40,7 +40,7 @@ NOMES = {
     'GY_BMP280': dict(zip('123456', ['VCC', 'GND', 'SCL', 'SDA', 'CSB', 'SDO'])),
     'CONN4': dict(zip('1234', ['VCC', 'OUT_E', 'OUT_D', 'GND'])),
     'CONN6': dict(zip('123456', ['GND', 'ECHO_B', 'TRIG_B', 'ECHO_F', 'TRIG_F', 'VCC'])),
-    'CONN6F': dict(zip('123456', ['VCC', 'MISO', 'SCK', 'MOSI', 'CS', 'GND'])),
+    'CONN2x3': dict(zip('123456', ['VCC', 'MISO', 'GND', 'SCK', 'CS', 'MOSI'])),
 }
 FOOTPRINT = {
     'R_PE': 'Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical',
@@ -53,7 +53,7 @@ FOOTPRINT = {
     'MT3608': 'drone:MT3608_modulo', 'GY_BMI160': 'drone:GY_BMI160', 'GY_BMP280': 'drone:GY_BMP280',
     'CONN4': 'Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical',
     'CONN6': 'Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical',
-    'CONN6F': 'Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical',
+    'CONN2x3': 'Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical',
     'ESP32_DEVKIT': 'drone:ESP32_DevKitC_38p',
 }
 

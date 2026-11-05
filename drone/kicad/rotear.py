@@ -133,6 +133,9 @@ class Roteador:
         for p in self.pads:
             self.objs.append((p['rede'], p))
         self.jumpers = []                            # (rede, x1, y1, x2, y2)
+        for j in geo.get('jumpers_fixos', []):       # jumpers posicionados a mao
+            self.jumpers.append((j['rede'], j['x1'], j['y1'], j['x2'], j['y2']))
+        self.grupos_fios = [set(gr) for gr in geo.get('grupos_fios', [])]
         self.trilhas = []                            # (rede, x1, y1, x2, y2, w)
 
     # --- mascaras para a rede atual
@@ -284,6 +287,8 @@ class Roteador:
         nome = lambda p: p['ref'] + '.' + p['num']
         potencia = set(self.geo.get('gnd_potencia', [])) if rede == 'GND' else set()
         grupos = [set(gr) for gr in self.geo.get('grupos_internos', [])] if rede == 'GND' else []
+        # fios (jumpers fixos): valem sempre, inclusive na fase de potencia
+        fios = [gr for gr in self.grupos_fios if any(nome(p) in gr for p in pads)]
         arvore = np.zeros((g.n, g.n), bool)
         for (r, f) in self.objs:
             if r == rede and f['tipo'] == 'seg':
@@ -313,9 +318,9 @@ class Roteador:
         jl = self.jumper_livre_fn()
         fase_potencia = bool(potencia) and not (ligados & potencia == potencia & {nome(p) for p in pads})
 
-        def atalho_grupos():
+        def atalho_grupos(so_fios=False):
             # pino de grupo interno ligado -> o grupo todo esta ligado (por dentro do modulo)
-            for gr in grupos:
+            for gr in (fios if so_fios else grupos + fios):
                 if gr & ligados:
                     for k in list(faltam):
                         if nome(pads[k]) in gr:
@@ -324,12 +329,22 @@ class Roteador:
                             ligados.add(nome(pads[k]))
         if not fase_potencia:
             atalho_grupos()
+        atalho_grupos(so_fios=True)
+        repetir = {}                                 # pino de potencia que falhou -> tentativas
         while faltam:
             cand = faltam
             if fase_potencia:
                 cand = [k for k in faltam if nome(pads[k]) in potencia]
+                # quem falhou espera os outros pinos da fase antes de tentar de novo
+                cand = [k for k in cand if k not in repetir] or cand
                 if not cand:
                     fase_potencia = False
+                    # quem falhou na potencia tenta de novo agora, com a arvore maior
+                    for k in list(repetir):
+                        if repetir[k] == 1 and nome(pads[k]) in falhas:
+                            falhas.remove(nome(pads[k]))
+                            faltam.append(k)
+                            repetir[k] = 2
                     atalho_grupos()
                     continue
             ai, aj_ = np.nonzero(arvore)
@@ -356,6 +371,13 @@ class Roteador:
             faltam.remove(k)
             if cam is None:
                 falhas.append(nome(p))               # segue com os outros pinos
+                if fase_potencia and k not in repetir:
+                    # tenta de novo no fim da fase (outro pino pode abrir o caminho)
+                    repetir[k] = 1
+                    falhas.remove(nome(p))
+                    faltam.append(k)
+                elif fase_potencia and repetir.get(k) == 1:
+                    pass                             # ja repetiu na fase; volta depois dela
                 continue
             segs, jumps = self.caminho_para_segmentos(cam, ok_larga, ok_fina, w)
             for s in segs:
@@ -374,8 +396,7 @@ class Roteador:
                 novos_j.append(jp)
             g.marcar(arvore, p, 0.0)
             ligados.add(nome(p))
-            if not fase_potencia:
-                atalho_grupos()
+            atalho_grupos(so_fios=fase_potencia)
         return (not falhas), novas, novos_j, falhas
 
     def caminho_para_segmentos(self, cam, ok_larga, ok_fina, w):

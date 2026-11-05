@@ -29,9 +29,7 @@ ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
          ['M_FR', 'M_RL', 'M_FL'] +
          ['SDA', 'SCL', 'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2',
-          # GND antes do 3V3 do J4: o 3V3 cortaria o canto de tras-esquerda (Q3, R7, J3, R10) ao meio
-          'GND', '+3V3:adiado'])
+          'SDA2', 'SCL2', 'GND'])
 
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
@@ -97,6 +95,14 @@ def exportar():
     for yb in sorted({round(y, 2) for _, y in u1}):
         xs = [x for x, y in u1 if abs(y - yb) < 0.1]
         sem_jumper.append(dict(x=(min(xs) + max(xs)) / 2, y=yb, w=max(xs) - min(xs), h=2.54))
+    # jumpers fixos (projeto.JUMPERS_FIXOS): cada ponta vira um 'pino' da rede, e as
+    # duas pontas formam um grupo ligado pelo fio (o roteador so liga as pontas)
+    grupos_fios = []
+    for ref, rede, a, b_ in P.JUMPERS_FIXOS:
+        for n, (x, y) in (('1', a), ('2', b_)):
+            pads.append(dict(ref=ref, num=n, rede=rede, x=x, y=y, w=P.JUMPER_ILHA, h=P.JUMPER_ILHA,
+                             rot=0, tipo='circ'))
+        grupos_fios.append([ref + '.1', ref + '.2'])
     larg = {}
     for nome, (w, redes) in P.CLASSES.items():
         for r in redes:
@@ -108,13 +114,17 @@ def exportar():
                jumper_ilha=P.JUMPER_ILHA, pads=pads, sem_cobre=sem_cobre,
                sem_jumper=sem_jumper, fixas=anel(), ordem=ordem,
                # GND por onde passa a corrente dos motores: so cobre da placa
-               gnd_potencia=['J1.2', 'C1.2', 'U2.2', 'U1.20'] + [f'Q{n}.2' for n in range(1, 5)],
+               gnd_potencia=['J1.2', 'C1.2', 'U2.2', 'U1.20'] + [f'Q{n}.2' for n in range(1, 5)] +
+               # o motor RL volta pelos jumpers fixos de GND
+               [f'{r}.{n}' for r, rede, _, _ in P.JUMPERS_FIXOS if rede == 'GND' for n in '12'],
                # pinos ligados por dentro do proprio modulo
                grupos_internos=[['U1.14', 'U1.20', 'U1.26'], ['U2.2', 'U2.4']],
-               # pinos ligados so DEPOIS dos sinais (rede:adiado): o 3V3 do J4 nao pode
-               # dar a volta no ESP32 e fechar o caminho de todo mundo; entra por jumper
-               # e o 5V do J2 entra depois do sonar (senao desce em diagonal no corredor dele)
-               adiar={'+3V3': ['J4.1'], '+5V': ['J2.6']})
+               grupos_fios=grupos_fios,
+               jumpers_fixos=[dict(rede=rede, x1=a[0], y1=a[1], x2=b_[0], y2=b_[1])
+                              for _, rede, a, b_ in P.JUMPERS_FIXOS],
+               # pinos ligados so DEPOIS (rede:adiado): o 5V do J2 entra depois do sonar
+               # (senao desce em diagonal no corredor dele)
+               adiar={'+5V': ['J2.6']})
     json.dump(geo, open(GEO, 'w'), indent=1)
     print('geometria:', len(pads), 'pinos,', len(redes), 'redes ->', GEO)
 
