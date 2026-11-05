@@ -88,7 +88,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <a href="#bancada"><span>05</span>Bancada</a>
   </nav>
   <h1>Drone VoaSul: o que falta</h1>
-  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 04/11/2026.</p>
+  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 05/11/2026.</p>
 
   <div class="numeros">
     <div class="num"><b>19</b><span>itens para comprar</span></div>
@@ -102,8 +102,8 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <h3>Já está pronto</h3>
       <ul class="l">
         <li>Esquema e placa no KiCad, conferidos (0 diferenças, DRC limpo)</li>
-        <li>PDF de transferência 1:1 da placa caseira e lista de jumpers</li>
-        <li>Versão profissional com Gerber para mandar fazer</li>
+        <li>Placa nova com o conector do fluxo óptico (J4), conferida (0 erros, 0 pinos soltos)</li>
+        <li>Gerber pronto para a JLCPCB (<code>kicad/pro/drone_VoaSul_JLCPCB.zip</code>) e guia do pedido</li>
         <li>Firmware com a pinagem nova da placa</li>
         <li>Molde 1:1 do frame em compensado</li>
         <li>Plano de montagem com teste em cada fase</li>
@@ -117,7 +117,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
         <li>Comprar 19 itens (aba Comprar)</li>
         <li>Confirmar o modelo e a medida do ESP32</li>
         <li>Compilar e gravar o firmware no ESP32 (nunca foi testado nele)</li>
-        <li>Fabricar e soldar a placa</li>
+        <li>Pedir a placa na JLCPCB e soldar</li>
         <li>Montar o frame e pesar</li>
         <li>Testar empuxo, voar amarrado, voar livre</li>
         <li>Medir o alcance para o relatório</li>
@@ -158,10 +158,9 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <tr><td class="ck"><span class="box"></span></td><td><b>Velcro de bateria 10×130 mm</b></td><td class="q">5</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/4001316238579.html">anúncio</a></td><td class="r">11,26</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Frame:</b> PLA (~32 g, escola) <em>ou</em> compensado 3 mm</td><td class="q">1</td><td><span class="tag br">Brasil</span> escola / madeireira</td><td class="r">5–20</td></tr>
 
-      <tr class="sub"><td></td><td colspan="4">Fabricar a placa</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Placa de cobre face única 10×15</b> <em>FR-4</em></td><td class="q">5</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007937964904.html">anúncio</a></td><td class="r">23,84</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Papel de transferência</b> <em>A4, impressora laser</em></td><td class="q">20 fl.</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005012043692516.html">anúncio</a></td><td class="r">21,90</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Palha de aço + álcool isopropílico 99%</b></td><td class="q">1 + 1</td><td><span class="tag br">Brasil</span> mercado e farmácia</td><td class="r">25–35</td></tr>
+      <tr class="sub"><td></td><td colspan="4">Placa (feita na JLCPCB: sem placa de cobre, papel, percloreto, brocas e jumpers)</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Placa do drone na JLCPCB</b> <em>2 camadas, 97×97 mm, 1,6 mm; guia em kicad/pro/PEDIDO_JLCPCB.md</em></td><td class="q">5</td><td><span class="tag ali">China</span> jlcpcb.com</td><td class="r">~11 + frete e imposto</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Álcool isopropílico 99%</b> <em>limpar o fluxo da solda</em></td><td class="q">1</td><td><span class="tag br">Brasil</span> MB3 / farmácia</td><td class="r">9,00</td></tr>
 
       <tr class="sub"><td></td><td colspan="4">Luva de gestos <em>(pode ficar para depois do primeiro voo)</em></td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>MPU-6050 (GY-521)</b></td><td class="q">4</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007169577953.html">anúncio</a></td><td class="r">27,96</td></tr>
@@ -201,8 +200,8 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
   <div class="passos">
     <div class="passo"><span class="box"></span><span class="n">1</span><div><b>Gravar o firmware só no USB</b><p>PlatformIO, ambiente ESP32. Primeira vez compilando para o ESP32.</p></div><div class="ate">a rede DRONE-PICO aparece e 192.168.4.1 abre</div></div>
     <div class="passo"><span class="box"></span><span class="n">2</span><div><b>Sensores na protoboard</b><p>BMP280 em 21/22, BMI160 em 16/18 (barramentos separados).</p></div><div class="ate">acha 0x76 e 0x69; inclinar mexe o ângulo certo</div></div>
-    <div class="passo"><span class="box"></span><span class="n">3</span><div><b>Fabricar a placa</b><p>Imprimir em 100%, lixar, passar o ferro 3–5 min, corroer morno, furar.</p></div><div class="ate">sem curto VBAT↔GND, 5V↔GND, 3V3↔GND</div></div>
-    <div class="passo"><span class="box"></span><span class="n">4</span><div><b>Soldar, em ordem</b><p>SMD → 11 jumpers → BMI/BMP → resistores → barras do ESP → conectores → eletrolíticos → MT3608 → fios.</p></div><div class="ate">continuidade de cada rede (redes.txt)</div></div>
+    <div class="passo"><span class="box"></span><span class="n">3</span><div><b>Pedir a placa na JLCPCB</b><p>Subir o zip do Gerber, conferir a pré-visualização e as especificações do guia. Quando chegar: olhar com lupa.</p></div><div class="ate">sem curto VBAT↔GND, 5V↔GND, 3V3↔GND</div></div>
+    <div class="passo"><span class="box"></span><span class="n">4</span><div><b>Soldar, em ordem</b><p>SMD (embaixo) → BMI/BMP → resistores → barras do ESP → conectores → eletrolíticos → MT3608 → fios.</p></div><div class="ate">continuidade de cada rede (redes.txt)</div></div>
     <div class="passo"><span class="box"></span><span class="n">5</span><div><b>Primeiro liga, sem ESP e sem motor</b><p>Bateria passando pelo fusível. Ajustar o trimpot do MT3608.</p></div><div class="ate">5,0 V estáveis e fusível inteiro</div></div>
     <div class="passo"><span class="box"></span><span class="n">6</span><div><b>Liga com ESP, sem hélice</b><p>Testar um motor por vez; medir a corrente de partida (relatório de Potência).</p></div><div class="ate">cada motor gira no sentido certo; failsafe para em &lt; 1 s</div></div>
     <div class="passo"><span class="box"></span><span class="n">7</span><div><b>Montar o frame e pesar</b><p>PLA ou compensado (molde 1:1 em <code>cad/</code>). Bateria no centro.</p></div><div class="ate">peso ≤ 126 g e centro de gravidade no meio</div></div>
@@ -226,11 +225,11 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <a href="#bancada"><span>05</span>Bancada</a>
   </nav>
   <h1>Decidir e confirmar</h1>
-  <p class="sub">Coisas que só você consegue ver ou escolher. As três primeiras travam a fabricação da placa.</p>
+  <p class="sub">Coisas que só você consegue ver ou escolher. As duas primeiras confirmam a placa antes do pedido.</p>
 
   <div class="decisao"><div><b>1. Qual é o ESP32?</b><p>Conectorzinho dourado redondo no módulo = WROOM-32U (usa a antena externa). Antena em zigue-zague desenhada = WROOM-32. Se for WROVER, os pinos 16/17 não servem.</p></div><div class="rec">Você marcou que tem a antena: provavelmente é o 32U. Confirme olhando.</div></div>
   <div class="decisao"><div><b>2. Distância entre as fileiras do ESP32</b><p>Meça de centro a centro dos pinos, com régua.</p></div><div class="rec">Tem que dar 25,4 mm. Se der 22,9 mm, me avise antes de fabricar.</div></div>
-  <div class="decisao"><div><b>3. Placa caseira ou profissional?</b><p>Caseira: face única, 11 jumpers, sai na hora. Profissional: furo metalizado e sem jumpers, Gerber pronto (<code>kicad/pro/</code>), chega em 1–3 semanas.</p></div><div class="rec">Faça a caseira agora e peça a profissional junto com a compra da AliExpress.</div></div>
+  <div class="decisao"><div><b>3. Placa caseira ou profissional?</b><p>Decidido: <b>JLCPCB</b>, com furo metalizado e sem jumpers. Frete econômico leva de 2 a 4 semanas; DHL, cerca de 1 semana, mas custa mais.</p></div><div class="rec">Se a placa precisa chegar até 13/11, escolha o DHL no checkout.</div></div>
   <div class="decisao"><div><b>4. Frame de PLA ou de compensado?</b><p>PLA: ~28 g, a escola cobra por grama. Compensado 3 mm: ~12 g, molde 1:1 pronto.</p></div><div class="rec">Compensado: mais leve, a relação empuxo/peso sobe de 1,43 para ~1,6.</div></div>
   <div class="decisao"><div><b>5. Versão profissional compacta (Ø ~66 mm)?</b><p>Placa bem menor, mas pede peças SMD e outro frame.</p></div><div class="rec">Depois do primeiro voo, se o empuxo ficar no limite.</div></div>
   <div class="decisao"><div><b>6. Fluxo óptico agora ou depois?</b><p>Deixa o "pare" firme e o "volte" preciso. R$ 32.</p></div><div class="rec">Depois: o drone voa sem ele.</div></div>
@@ -256,12 +255,12 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <tbody>
       <tr><td class="ck"><span class="box"></span></td><td><b>Multímetro com bip</b> <em>robótica</em></td><td>curto, continuidade, tensão, corrente de partida</td><td class="q">3–6, 11</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Fusível 4 A + porta-fusível</b> <em>do DAMP</em></td><td>primeiro liga de toda placa nova</td><td class="q">5, 6</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Lupa com luz</b> <em>escola</em></td><td>conferir toner e soldas do SOT-23</td><td class="q">3, 4</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Lupa com luz</b> <em>escola</em></td><td>conferir a placa que chegou e as soldas do SOT-23</td><td class="q">3, 4</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Balança</b> <em>robótica ou casa</em></td><td>peso e teste de empuxo</td><td class="q">7, 8</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Régua de aço</b></td><td>escala da impressão, fileiras do ESP32</td><td class="q">0, 3, 7</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Ferro, estanho, fluxo, malha, pinça</b> <em>robótica</em></td><td>soldagem</td><td class="q">4</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Micro retífica + brocas 0,9 / 1,0 / 1,3 mm</b> <em>robótica</em></td><td>furar a placa (e 10 mm no frame de madeira)</td><td class="q">3, 7</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Óculos de proteção</b></td><td>percloreto e hélice</td><td class="q">3, 8–10</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Furadeira + broca 10 mm</b> <em>robótica</em></td><td>furo dos motores no frame de madeira (a placa já vem furada)</td><td class="q">7</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Óculos de proteção</b></td><td>hélice e corte dos terminais</td><td class="q">4, 8–10</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Linha de pesca</b></td><td>voo amarrado</td><td class="q">9</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Saco anti-chamas</b> <em>(comprar)</em></td><td>carregar a LiPo com segurança</td><td class="q">todas</td></tr>
     </tbody>
@@ -274,13 +273,13 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <li>Hélice na bancada antes da etapa 8</li>
       <li>Carregar LiPo sem estar olhando</li>
       <li>Bateria abaixo de 3,3 V ou estufada</li>
-      <li>Percloreto no ralo</li>
+      <li>Ligar a placa nova sem antes medir curto</li>
     </ul></div>
     <div class="caixa ok"><h3>Sempre</h3><ul class="l">
       <li>Fusível no primeiro liga de placa nova</li>
       <li>MT3608 em 5,0 V antes de encaixar o ESP32</li>
       <li>Conferir a polaridade dos eletrolíticos</li>
-      <li>Jumpers soldados antes dos módulos</li>
+      <li>BMI160 e BMP280 soldados antes das barras do ESP32</li>
       <li>Checklist pré-voo (bateria ≥ 4,1 V, hélices certas)</li>
     </ul></div>
   </div>

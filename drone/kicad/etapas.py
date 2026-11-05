@@ -403,7 +403,14 @@ def profissional():
     with zipfile.ZipFile(z, 'w', zipfile.ZIP_DEFLATED) as zf:
         for f in sorted(os.listdir(gdir)):
             zf.write(os.path.join(gdir, f), f)
-    print('profissional:', destino, '|', z, '|', sorted(os.listdir(gdir)))
+    # zip enxuto para a JLCPCB: so cobre, mascara, serigrafia, contorno e furos
+    jlc = os.path.join(pasta, 'drone_VoaSul_JLCPCB.zip')
+    precisa = ('.gtl', '.gbl', '.gts', '.gbs', '.gto', '.gbo', '.gm1', '-PTH.drl', '-NPTH.drl')
+    with zipfile.ZipFile(jlc, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for f in sorted(os.listdir(gdir)):
+            if f.endswith(precisa):
+                zf.write(os.path.join(gdir, f), f)
+    print('profissional:', destino, '|', z, '|', jlc, '|', sorted(os.listdir(gdir)))
 
 
 def cena3d():
