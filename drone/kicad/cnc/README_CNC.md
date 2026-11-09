@@ -1,7 +1,7 @@
 # Fresar a placa na CNC
 
-Os arquivos desta pasta fresam a **placa caseira de face única** (a mesma da folha de transferência,
-com os 11 jumpers) numa CNC de PCB com GRBL, como a CNC 3018 e parecidas. Programa para mandar o
+Os arquivos desta pasta fresam a **placa de face única na versão de usinagem** (`../usinagem/`): a
+mesma placa caseira, com os 11 jumpers, mas com ilhas de 1,9–2,0 mm e sem o texto no cobre. numa CNC de PCB com GRBL, como a CNC 3018 e parecidas. Programa para mandar o
 G-code: Candle, UGS ou bCNC. São gerados por `../cnc.py` a partir da placa do KiCad, e os valores
 de ferramenta ficam no topo do script.
 
@@ -65,4 +65,5 @@ Conferido por geometria: a fresa nunca entra mais de 0,01 mm em cobre nenhum, s�
 - **Pó de FR-4 (fibra de vidro) faz mal:** aspire durante o corte e use máscara. A fenolite (FR-2)
   é mais segura e mais macia.
 - Óculos de proteção: a fresa em V de 0,1 mm quebra fácil e a ponta voa.
-- O texto "VoaSul | Drones" do cobre não é fresado: fica um retângulo de cobre liso no lugar.
+- **Vai mandar para outra pessoa fresar?** Mande `../usinagem/VoaSul_usinagem_face_unica.zip`
+  (Gerber + furos + LEIA-ME); ele usa o CAM dele.

@@ -94,7 +94,9 @@ Lista de compras com marcação (já tenho / comprei / falta / repensar):
 
 ## Fase 3: fabricar a placa (transferência térmica, face única)
 
-> **Na CNC (recomendado agora):** em vez da transferência, siga `kicad/cnc/README_CNC.md`
+> **Na CNC (recomendado agora):** se outra pessoa vai fresar, mande
+> `kicad/usinagem/VoaSul_usinagem_face_unica.zip` (Gerber e furos dentro das regras dela, com LEIA-ME).
+> Se for você, em vez da transferência, siga `kicad/cnc/README_CNC.md`
 > (isolamento com fresa em V, furos e contorno; ~1h40 de máquina). Os testes de saída desta fase
 > valem igual.
 >

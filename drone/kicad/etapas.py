@@ -459,3 +459,102 @@ def cena3d():
     json.dump(dict(raio=P.DISCO_D / 2, pecas=pecas, trilhas=trilhas, vias=vias, pads=pads),
               open(out, 'w'))
     print('cena 3D:', len(pecas), 'pecas,', len(trilhas), 'trilhas ->', out)
+
+
+# ------------------------------------------------------------------ USINAGEM (CNC)
+# Regras da CNC de quem vai fresar (mudou? ajuste aqui e rode 'gerar.py usinagem')
+CNC_FOLGA, CNC_TRILHA, CNC_FURO, CNC_ILHA = 0.5, 0.6, 0.8, 1.8
+
+
+def usinagem():
+    """Versao para FRESAR na CNC: a mesma placa caseira (trilhas, folgas e jumpers iguais), com
+    as ilhas aumentadas para a ilha minima da CNC e sem o texto fino no cobre.
+    Serve de face unica (cobre so embaixo + jumpers de fio) ou de dupla face (os 11 jumpers
+    viram trilhas na face de cima, entre os furos das vias).
+    Saida: usinagem/drone_usinagem.kicad_pcb + gerber/ + 2 zips + drc_usinagem.txt"""
+    import shutil
+    import subprocess
+    import zipfile
+    pasta = os.path.join(AQUI, 'usinagem')
+    os.makedirs(pasta, exist_ok=True)
+    destino = os.path.join(pasta, 'drone_usinagem.kicad_pcb')
+    b = pcbnew.LoadBoard(PCB)
+    # ilhas: lado menor >= CNC_ILHA e anel de cobre >= (CNC_ILHA - CNC_FURO) / 2 em volta do furo
+    # (furo 1,0 -> ilha 2,0; furo 0,9 -> ilha 1,9; oval 1,7 x 3,0 -> 2,0 x 3,0)
+    anel = (CNC_ILHA - CNC_FURO) / 2
+    n_ilhas = 0
+    for fp in b.GetFootprints():
+        for p in fp.Pads():
+            if p.GetDrillSize().x <= 0:
+                continue
+            s = p.GetSize()
+            w, h = pcbnew.ToMM(s.x), pcbnew.ToMM(s.y)
+            furo = max(pcbnew.ToMM(p.GetDrillSize().x), CNC_FURO)
+            minimo = round(max(CNC_ILHA, furo + 2 * anel), 3)
+            if min(w, h) < minimo - 1e-6:
+                if p.GetShape() == pcbnew.PAD_SHAPE_CIRCLE or abs(w - h) < 0.01:
+                    w = h = minimo
+                elif w < h:
+                    w = minimo
+                else:
+                    h = minimo
+                p.SetSize(pcbnew.VECTOR2I(MM(w), MM(h)))
+                n_ilhas += 1
+            if pcbnew.ToMM(p.GetDrillSize().x) < CNC_FURO:
+                p.SetDrillSize(pcbnew.VECTOR2I(MM(CNC_FURO), MM(CNC_FURO)))
+    # texto no cobre (traco de 0,23 mm) e desenhos de apoio da folha de transferencia
+    for d in list(b.GetDrawings()):
+        if d.GetLayer() == pcbnew.Dwgs_User or (d.GetClass() == 'PCB_TEXT' and d.IsOnCopperLayer()):
+            b.Remove(d)
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+    pcbnew.SaveBoard(destino, b)
+    for ext in ('.kicad_pro', '.kicad_dru'):
+        shutil.copy(PCB.replace('.kicad_pcb', ext), destino.replace('.kicad_pcb', ext))
+    pro_json = destino.replace('.kicad_pcb', '.kicad_pro')
+    with open(pro_json) as f:
+        pj = json.load(f)
+    ds = pj['board']['design_settings']
+    ds['rules'].update(min_clearance=CNC_FOLGA, min_track_width=CNC_TRILHA,
+                       min_through_hole_diameter=CNC_FURO, min_via_diameter=CNC_ILHA,
+                       min_via_annular_width=(CNC_ILHA - CNC_FURO) / 2, min_hole_clearance=0.25,
+                       min_hole_to_hole=0.25)
+    for c in pj.get('net_settings', {}).get('classes', []):
+        c['clearance'] = CNC_FOLGA
+    ds.setdefault('rule_severities', {}).update(silk_over_copper='ignore', silk_overlap='ignore',
+                                                lib_footprint_issues='ignore', lib_footprint_mismatch='ignore')
+    with open(pro_json, 'w') as f:
+        json.dump(pj, f, indent=2)
+    drc = os.path.join(pasta, 'drc_usinagem.txt')
+    subprocess.run([sys.executable, '-c',
+                    'import pcbnew; pcbnew.WriteDRCReport(pcbnew.LoadBoard(%r), %r, '
+                    'pcbnew.EDA_UNITS_MILLIMETRES, True)' % (destino, drc)],
+                   check=True, capture_output=True)
+    gdir = os.path.join(pasta, 'gerber')
+    shutil.rmtree(gdir, ignore_errors=True)
+    os.makedirs(gdir)
+    subprocess.run(['kicad-cli', 'pcb', 'export', 'gerbers', '--layers', 'F.Cu,B.Cu,Edge.Cuts',
+                    '--no-x2', '-o', gdir + '/', destino], check=True, capture_output=True)
+    # furacao num arquivo so (na CNC nenhum furo e metalizado) + mapa em PDF
+    subprocess.run(['kicad-cli', 'pcb', 'export', 'drill', '--format', 'excellon',
+                    '--generate-map', '--map-format', 'pdf', '-o', gdir + '/', destino],
+                   check=True, capture_output=True)
+    # previa de cada face em PDF (vista de cima, como no KiCad; preto = cobre)
+    for cam, nome in (('B.Cu', 'previa_cobre_de_baixo.pdf'), ('F.Cu', 'previa_cobre_de_cima_jumpers.pdf')):
+        subprocess.run(['kicad-cli', 'pcb', 'export', 'pdf', '--layers', cam + ',Edge.Cuts', '--black-and-white',
+                        '--ibt', '-o', os.path.join(gdir, nome), destino], check=True, capture_output=True)
+    shutil.copy(os.path.join(AQUI, 'saidas', 'jumpers.txt'), os.path.join(gdir, 'jumpers.txt'))
+    arqs = sorted(os.listdir(gdir))
+    for nome, quer in (('VoaSul_usinagem_face_unica.zip', ('-B_Cu.gbl', '-Edge_Cuts.gm1', '.drl', '-drl_map.pdf',
+                                                           'previa_cobre_de_baixo.pdf', 'jumpers.txt')),
+                       ('VoaSul_usinagem_dupla_face.zip', ('-F_Cu.gtl', '-B_Cu.gbl', '-Edge_Cuts.gm1', '.drl',
+                                                           '-drl_map.pdf', 'previa_cobre_de_baixo.pdf',
+                                                           'previa_cobre_de_cima_jumpers.pdf'))):
+        with zipfile.ZipFile(os.path.join(pasta, nome), 'w', zipfile.ZIP_DEFLATED) as zf:
+            for f in arqs:
+                if f.endswith(quer):
+                    zf.write(os.path.join(gdir, f), f)
+            leia = os.path.join(pasta, 'LEIA-ME.md')
+            if os.path.exists(leia):
+                zf.write(leia, 'LEIA-ME.md')
+    print('usinagem:', destino, '|', n_ilhas, 'ilhas aumentadas |', arqs)
+    print(open(drc).read().split('** End')[0].strip().splitlines()[-6:])

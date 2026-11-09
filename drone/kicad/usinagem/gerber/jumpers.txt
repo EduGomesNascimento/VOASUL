@@ -1,0 +1,16 @@
+# Jumpers: fio rigido por CIMA da placa (lado dos componentes), soldado embaixo.
+# Coordenadas em mm a partir do CENTRO do disco; X para a direita, Y para a FRENTE.
+# Solde todos ANTES dos modulos (ESP32, BMI160, BMP280).
+
+ n  rede            de (x, y)        para (x, y)  compr.  fio
+ 1  +3V3     ( -17.7,  -20.8)   (  -8.6,  -23.0)    9.4   qualquer fio rigido fino
+ 2  GND      (  16.9,   -7.9)   (  30.7,   -2.1)   15.0   20-22 AWG (GND: pode levar corrente de motor)
+ 3  GND      ( -13.9,   22.5)   (  -6.5,   25.5)    8.0   20-22 AWG (GND: pode levar corrente de motor)
+ 4  GND      (  -4.9,   25.5)   (  20.1,   25.5)   25.0   20-22 AWG (GND: pode levar corrente de motor)
+ 5  GND      (  -6.5,    4.7)   (  -0.7,   -9.1)   15.0   20-22 AWG (GND: pode levar corrente de motor)
+ 6  GND      (  -6.5,  -31.5)   ( -19.5,  -26.5)   13.9   20-22 AWG (GND: pode levar corrente de motor)
+ 7  GND      (  10.2,  -17.0)   (  -5.5,  -25.6)   17.9   20-22 AWG (GND: pode levar corrente de motor)
+ 8  M_FR     (  25.5,   18.3)   (  10.5,   18.3)   15.0   qualquer fio rigido fino
+ 9  M_RL     ( -28.5,   15.9)   ( -20.5,   15.9)    8.0   qualquer fio rigido fino
+10  M_RL     ( -30.9,   -6.7)   ( -30.9,   13.3)   20.0   qualquer fio rigido fino
+11  M_RR     (  25.1,   -7.5)   (  25.1,  -15.5)    8.0   qualquer fio rigido fino

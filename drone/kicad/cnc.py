@@ -1,4 +1,4 @@
-"""G-code para fresar a placa CASEIRA (face unica) numa CNC de PCB (GRBL: CNC 3018 e parecidas).
+"""G-code para fresar a placa de FACE UNICA (versao de usinagem) numa CNC de PCB (GRBL: CNC 3018 e parecidas).
 
 Saidas em cnc/:
   1_isolamento_vbit.nc       isolamento das trilhas (fresa em V)
@@ -23,7 +23,10 @@ from shapely.geometry import LineString, MultiLineString, Point, Polygon, box
 from shapely.ops import linemerge, unary_union
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-PCB = os.path.join(AQUI, 'drone.kicad_pcb')
+# placa de usinagem (gerar.py usinagem): ilhas maiores e sem texto no cobre; se nao existir, a caseira
+PCB = os.path.join(AQUI, 'usinagem', 'drone_usinagem.kicad_pcb')
+if not os.path.exists(PCB):
+    PCB = os.path.join(AQUI, 'drone.kicad_pcb')
 OUT = os.path.join(AQUI, 'cnc')
 CX, CY = 100.0, 100.0                 # centro do disco na folha do KiCad
 
