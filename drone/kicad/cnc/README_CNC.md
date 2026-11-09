@@ -1,8 +1,9 @@
 # Fresar a placa na CNC
 
 Os arquivos desta pasta fresam a **placa de face única na versão de usinagem** (`../usinagem/`): a
-mesma placa caseira, com os 11 jumpers, mas com ilhas de 1,9–2,0 mm e sem o texto no cobre. numa CNC de PCB com GRBL, como a CNC 3018 e parecidas. Programa para mandar o
-G-code: Candle, UGS ou bCNC. São gerados por `../cnc.py` a partir da placa do KiCad, e os valores
+mesma placa caseira, com os 11 jumpers, mas com ilhas de 1,9–2,0 mm e sem o texto no cobre. São
+para CNC de PCB com GRBL, como a CNC 3018 e parecidas. Programa para mandar o G-code: Candle, UGS
+ou bCNC. São gerados por `../cnc.py` a partir da placa do KiCad, e os valores
 de ferramenta ficam no topo do script.
 
 Conferido por geometria: a fresa nunca entra mais de 0,01 mm em cobre nenhum, só encosta na borda.
