@@ -1,6 +1,7 @@
 # Pedido da placa na JLCPCB
 
-Arquivo para subir: **`drone_VoaSul_JLCPCB.zip`** (nesta pasta). É a versão profissional da mesma
+Arquivo para subir: **`drone_VoaSul_JLCPCB.zip`** (nesta pasta). Para o Claude do navegador montar o
+carrinho sozinho, use **`PROMPT_CARRINHO_JLCPCB.md`**. É a versão profissional da mesma
 placa, conferida: DRC com 0 erros e 0 pinos desligados, esquema × placa com 0 diferenças.
 
 - Furo metalizado e cobre nas duas faces.
@@ -57,12 +58,14 @@ Números da placa, para conferir:
 | Imposto | Pelas regras de 2026, o frete entra na base do imposto. Até US$ 50 em loja certificada no Remessa Conforme: ICMS de 17–20%. Fora disso: imposto de importação + ICMS. Com DHL, a DHL cobra o imposto na entrega. |
 
 Não achei dados oficiais da JLCPCB sobre o Brasil (frete, prazo, se o imposto já vem pago), por
-isso use o valor que aparece no checkout com o seu endereço. **Se a placa precisa chegar até
-13/11, só o DHL tem chance.**
+isso use o valor que aparece no checkout com o seu endereço. Produção de 1 a 2 dias + DHL de 3 a 5
+dias úteis: pedindo hoje (09/11), chega por volta de 14 a 18/11. **Para 13/11 não dá mais tempo.**
 
-## Peças para soldar na placa
+## Lista de materiais (BOM)
 
-As mesmas da placa caseira. Confira se você tem todas antes de a placa chegar.
+A BOM completa está em **`../saidas/BOM.csv`** (gerada da placa por `bom.py`): quantidade,
+referências, valor, descrição, pegada, se é SMD ou de furo, lado e observação. Abre no Excel ou no
+Google Planilhas. Resumo:
 
 | Qtd | Peça | Ref. | Observação |
 |---|---|---|---|
@@ -82,7 +85,24 @@ As mesmas da placa caseira. Confira se você tem todas antes de a placa chegar.
 | 1 | Barra macho 1×6 | J2 | sonar |
 | 1 | Barra macho 1×4 | J3 | IR |
 | 1 | Barra macho 2×3 | J4 | fluxo óptico (dá para usar dois pedaços de 1×3 lado a lado) |
-| — | Rabicho Molex da bateria + fios dos 4 motores | J1, M1–M4 | — |
+| 2 | Barra fêmea 1×19 | — | para o ESP32 (corte de barras 1×40) |
+| 1 | Rabicho Molex 51005 macho com fio 24 AWG | J1 | + na ilha quadrada |
+| 4 | Motor coreless 1020 (2 CW + 2 CCW), com fio | M1–M4 | + na ilha quadrada |
+
+## Montagem das peças SMD pela JLCPCB (opcional)
+
+As 12 peças SMD (4 AO3400A, 4 SS34 e 4 capacitores 0805) ficam na **face de baixo**, e a JLCPCB
+pode soldá-las. São peças *Basic*, sem taxa de peça extra. Os arquivos estão em `montagem_jlc/`:
+
+| Arquivo | O que é |
+|---|---|
+| `BOM_JLCPCB.csv` | as 3 peças com o código LCSC: C20917 (AO3400A), C8678 (SS34), C49678 (100 nF 0805) |
+| `CPL_JLCPCB.csv` | posição e giro de cada uma (face de baixo) |
+
+Configuração: *Economic*, *Bottom Side*, 2 placas montadas. **Confira a tela de posicionamento**:
+giro de peça na face de baixo é o erro mais comum. A versão B do prompt faz isso e para para você
+olhar. Vale a pena se você não quiser soldar SOT-23 à mão. Custa uma taxa fixa a mais e deixa o
+pedido alguns dias mais lento.
 
 ## O que deixou de ser necessário com a placa da JLCPCB
 
