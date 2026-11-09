@@ -94,6 +94,10 @@ Lista de compras com marcação (já tenho / comprei / falta / repensar):
 
 ## Fase 3: fabricar a placa (transferência térmica, face única)
 
+> **Na CNC (recomendado agora):** em vez da transferência, siga `kicad/cnc/README_CNC.md`
+> (isolamento com fresa em V, furos e contorno; ~1h40 de máquina). Os testes de saída desta fase
+> valem igual.
+>
 > **Placa da JLCPCB:** pule esta fase. A placa chega pronta, com furo metalizado, máscara e
 > serigrafia; os jumpers já viraram trilhas na face de cima. Ao chegar: confira com lupa e meça
 > que não há curto entre VBAT↔GND, 5V↔GND e 3V3↔GND. Pedido: `kicad/pro/PEDIDO_JLCPCB.md`.
@@ -144,7 +148,7 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 |---|---|---|---|
 | 1 | **MOSFETs Q1–Q4** (SOT-23, lado do cobre) | Fluxo na ilha, prenda um pino, alinhe, solde os outros. Pino 1 = porta. | Sem ponte entre os 3 pinos (bip). |
 | 2 | **Diodos D1–D4** (SS34, lado do cobre) | **Faixa (catodo) para o lado de fora**, no anel de VBAT. | Diodo do multímetro: ~0,2 V num sentido, OL no outro. |
-| 3 | **Jumpers** (fio rígido por cima). **Placa da JLCPCB: não tem, pule.** | Só os que o desenho mostra, retos e encostados na placa. | Bip de ponta a ponta. |
+| 3 | **Jumpers** (fio rígido por cima). Placa caseira ou da CNC: 11 jumpers. **Placa da JLCPCB: não tem, pule.** | Só os que o desenho mostra, retos e encostados na placa. | Bip de ponta a ponta. |
 | 4 | **BMI160 e BMP280**, embaixo do ESP32 | Barra macho com o **plástico na placa**; corte a sobra dos pinos rente. Altura total < 7 mm. | Nada encosta no ESP32 encaixado. |
 | 5 | **Resistores em pé** | Confira o valor com o multímetro **antes** de soldar. | Medir na placa: 100 Ω, 10k, 1k, 2k nos lugares certos. |
 | 6 | **Capacitores 100 nF** | Sem polaridade. | — |

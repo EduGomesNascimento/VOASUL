@@ -1,5 +1,8 @@
 # Pedido da placa na JLCPCB
 
+> Vai fresar na CNC da escola? Use `../cnc/README_CNC.md` (placa de face única). Este guia é
+> para a versão profissional, feita na China.
+
 Arquivo para subir: **`drone_VoaSul_JLCPCB.zip`** (nesta pasta). Para o Claude do navegador montar o
 carrinho sozinho, use **`PROMPT_CARRINHO_JLCPCB.md`**. É a versão profissional da mesma
 placa, conferida: DRC com 0 erros e 0 pinos desligados, esquema × placa com 0 diferenças.
