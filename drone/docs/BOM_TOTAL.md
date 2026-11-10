@@ -6,11 +6,11 @@ Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular
 
 | | R$ |
 |---|---|
-| Drone + estação terra (comum às duas energias) | R$ 100,60 |
+| Drone + estação terra (comum às duas energias) | R$ 89,00 |
 | + Energia A: bateria | R$ 90,91 |
 | + Energia B: cabo do chão | R$ 9,00 |
-| **Total com bateria** | **R$ 191,51** |
-| **Total com cabo** | **R$ 109,60** |
+| **Total com bateria** | **R$ 179,91** |
+| **Total com cabo** | **R$ 98,00** |
 
 Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 sai ~R$ 26 mais caro na MB3.
 
@@ -43,7 +43,7 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 |---|---|---|---|---|---|
 | 4 | Motor coreless 1020 (2 CW + 2 CCW) | M1-M4 | ✅ tem |  | — |
 | 2 | Helice 75 mm furo 1 mm (2 CW + 2 CCW por jogo) (Gemfan; ML 3 x R$ 19) | motores | 🛒 comprar | AliExpress | R$ 18,28 |
-| 1 | Conector Molex 51005 macho + femea com fio (10 pares; serve para bateria e cabo) | J1 | 🛒 comprar | AliExpress | R$ 11,60 |
+| 1 | Conector Molex 51005 macho + femea com fio (5 pares) (1 na placa, 1 no carregador, 3 de reserva) | J1, carregador | ✅ tem |  | — |
 | 1 | Fio de silicone 24 AWG vermelho e preto, 2 m (ML R$ 19) | motores, J1 | 🛒 comprar | AliExpress | R$ 7,22 |
 | 1 | Fita dupla face de espuma (MB3 R$ 15,90) | placa no frame | 🛒 comprar | AliExpress | R$ 9,61 |
 | 1 | Frame: compensado 3 mm (molde 1:1 pronto) (~R$ 10; PLA a escola cobra por grama) | frame | 🛒 comprar | madeireira | R$ 10,00 |

@@ -18,7 +18,7 @@ Drone: placa,Fenolite 15x20 face simples (da 2 discos),1,placa,comprar,MB3,19.0,
 Drone: placa,Fio rigido para os 11 jumpers,1,jumpers,tem,,0,0,0,de cabo de rede
 Drone: voo,Motor coreless 1020 (2 CW + 2 CCW),4,M1-M4,tem,,0,0,0,
 Drone: voo,Helice 75 mm furo 1 mm (2 CW + 2 CCW por jogo),2,motores,comprar,AliExpress,9.14,2,18.28,Gemfan; ML 3 x R$ 19
-Drone: voo,Conector Molex 51005 macho + femea com fio,1,J1,comprar,AliExpress,11.6,1,11.6,10 pares; serve para bateria e cabo
+Drone: voo,Conector Molex 51005 macho + femea com fio (5 pares),1,"J1, carregador",tem,,0,0,0,"1 na placa, 1 no carregador, 3 de reserva"
 Drone: voo,"Fio de silicone 24 AWG vermelho e preto, 2 m",1,"motores, J1",comprar,AliExpress,7.22,1,7.22,ML R$ 19
 Drone: voo,Fita dupla face de espuma,1,placa no frame,comprar,AliExpress,9.61,1,9.61,"MB3 R$ 15,90"
 Drone: voo,Frame: compensado 3 mm (molde 1:1 pronto),1,frame,comprar,madeireira,10.0,1,10.0,~R$ 10; PLA a escola cobra por grama
