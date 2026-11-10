@@ -6,6 +6,9 @@
 
 #include <WiFi.h>
 #include <WiFiUdp.h>
+#if PLATFORM_ESP32
+  #include <esp_now.h>
+#endif
 
 static WiFiServer      *gHttp = nullptr;
 static WebSocketServer  gWs;
@@ -15,6 +18,28 @@ static Receiver        *gSelf = nullptr;
 static void onWsText(const char *line) {
   if (gSelf) gSelf->handlePacket(line);
 }
+
+// ---- luva (ESP-NOW): o callback roda na tarefa do WiFi; so copia o pacote ----
+static plat_lock_t   gLuvaMux;
+static char          gLuvaBuf[96];
+static volatile bool gLuvaNovo = false;
+
+#if PLATFORM_ESP32
+static void luvaRecebe(const uint8_t *data, int len) {
+  const int n = (int)strlen(LUVA_ID);
+  if (len <= n || len >= (int)sizeof(gLuvaBuf) || memcmp(data, LUVA_ID, n) != 0) return;
+  platLock(gLuvaMux);
+  memcpy(gLuvaBuf, data + n, len - n);
+  gLuvaBuf[len - n] = '\0';
+  gLuvaNovo = true;
+  platUnlock(gLuvaMux);
+}
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+static void onEspNow(const esp_now_recv_info_t *, const uint8_t *data, int len) { luvaRecebe(data, len); }
+#else
+static void onEspNow(const uint8_t *, const uint8_t *data, int len) { luvaRecebe(data, len); }
+#endif
+#endif
 
 void Receiver::begin() {
   gSelf = this;
@@ -30,6 +55,15 @@ void Receiver::begin() {
   gWs.onText(onWsText);
 
   gUdp.begin(UDP_PORT);
+
+  platLockInit(gLuvaMux);
+#if PLATFORM_ESP32
+  if (esp_now_init() == ESP_OK && esp_now_register_recv_cb(onEspNow) == ESP_OK) {
+    Serial.printf("[LUVA] ESP-NOW ouvindo no canal %d\n", WIFI_CHANNEL);
+  } else {
+    Serial.println("[LUVA] ESP-NOW nao iniciou: so o celular controla");
+  }
+#endif
 }
 
 // Serve a pagina de pilotagem. Um cliente por chamada: nao ha motivo para
@@ -71,8 +105,14 @@ void Receiver::serveHttp() {
   c.stop();
 }
 
-void Receiver::handlePacket(const char *line) {
+bool Receiver::gloveActive() const {
+  return _lastGloveMs != 0 && (millis() - _lastGloveMs) < LUVA_TIMEOUT_MS;
+}
+
+void Receiver::handlePacket(const char *line, bool fromGlove) {
   if (line[0] != 'C' || line[1] != ',') return;
+  // Dois controles ao mesmo tempo brigariam: enquanto a luva manda, o celular so assiste.
+  if (!fromGlove && gloveActive()) return;
 
   float v[4] = {0, 0, 0, 0};
   const char *p = line + 2;
@@ -93,6 +133,8 @@ void Receiver::handlePacket(const char *line) {
   cmd.arm      = flags & 1;
   cmd.altHold  = flags & 2;
   cmd.avoid    = flags & 4;
+  cmd.land     = flags & 8;
+  if (fromGlove) _lastGloveMs = millis();
 
   // So marca o link como vivo depois de um pacote inteiro e valido: lixo na
   // rede nao pode segurar o failsafe.
@@ -102,6 +144,15 @@ void Receiver::handlePacket(const char *line) {
 void Receiver::poll() {
   serveHttp();
   gWs.poll();
+
+  if (gLuvaNovo) {
+    char linha[sizeof(gLuvaBuf)];
+    platLock(gLuvaMux);
+    memcpy(linha, gLuvaBuf, sizeof(linha));
+    gLuvaNovo = false;
+    platUnlock(gLuvaMux);
+    handlePacket(linha, true);
+  }
 
   const int sz = gUdp.parsePacket();
   if (sz > 0) {
@@ -128,11 +179,11 @@ void Receiver::sendTelemetry(const Telemetry &t) {
   snprintf(buf, sizeof(buf),
     "{\"r\":%.1f,\"p\":%.1f,\"y\":%.0f,\"alt\":%.2f,\"vz\":%.2f,"
     "\"g\":%.2f,\"f\":%.2f,\"il\":%d,\"ir\":%d,\"vb\":%.2f,"
-    "\"armed\":%d,\"snr\":%d,\"hz\":%u,"
+    "\"armed\":%d,\"snr\":%d,\"hz\":%u,\"lv\":%d,"
     "\"fl\":%u,\"vf\":%.2f,\"vr\":%.2f,\"sq\":%u,\"st\":\"%s\"}",
     t.roll, t.pitch, t.yaw, t.altitude, t.verticalSpeed,
     t.ground, t.front, t.irL ? 1 : 0, t.irR ? 1 : 0, t.vbat,
-    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz,
+    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz, gloveActive() ? 1 : 0,
     t.flow, t.flowVf, t.flowVr, t.flowSq, t.status);
 
   gWs.broadcast(buf);

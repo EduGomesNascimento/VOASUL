@@ -27,6 +27,16 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 - MT3608 → 5,0 V (VIN do ESP32 e sonares). BMI160 + BMP280 **embaixo do ESP32**.
 - Estação de terra / luva: **XIAO ESP32-S3 Sense** (ESP-NOW). Celular continua via Wi-Fi AP.
 
+## Escopo atual (10/11/2026): o mais simples possível
+
+- Motores coreless 1020 com os MOSFETs da placa (nada de ESC/brushless).
+- Energia em aberto: bateria LiPo 1S **ou** cabo do chão, os dois pelo J1.
+- Sensores: só BMI160 + BMP280. Sonar, IR e fluxo óptico ficam de fora (conectores podem ficar vazios).
+- Controle: **luva simples** (`luva/`: XIAO ESP32-S3 + 1 MPU-6050, ESP-NOW no canal 1, prefixo
+  `VS1:`) e o celular. Enquanto a luva manda, o celular só assiste. Bit 8 do pacote = pousar.
+- Firmwares compilam no PlatformIO: `pio run -e esp32dev` (drone) e `cd luva && pio run` (luva).
+- Placa: fresada na CNC de um amigo (`drone/kicad/usinagem/`, regras 0,5/0,6/0,8/1,8); JLCPCB opcional.
+
 ## Pinagem NOVA (placa de face única)
 
 Motores FR/RR/RL/FL = GPIO 17/4/23/19 · I²C1 (BMP280) 21/22 · **I²C2 (BMI160, Wire1) 16/18** ·

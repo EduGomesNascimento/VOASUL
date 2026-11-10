@@ -13,13 +13,17 @@
 //   C,<roll>,<pitch>,<yaw>,<throttle>,<flags>
 //     roll/pitch/yaw : -1.0 .. 1.0
 //     throttle       :  0.0 .. 1.0
-//     flags (bitmask): 1=armar  2=alt-hold  4=desvio de obstaculos
+//     flags (bitmask): 1=armar  2=alt-hold  4=desvio de obstaculos  8=pousar
+//
+// Luva de gestos (ESP-NOW, so no ESP32): o mesmo pacote com o prefixo LUVA_ID.
+// Enquanto a luva estiver mandando, os pacotes do celular sao ignorados.
 
 struct ControlInput {
   float roll = 0, pitch = 0, yaw = 0, throttle = 0;
   bool  arm = false;
   bool  altHold = false;
   bool  avoid = true;
+  bool  land = false;            // pedido de pouso (luva: palma para cima)
   uint32_t lastPacketMs = 0;
 };
 
@@ -44,13 +48,15 @@ public:
   void poll();
   void sendTelemetry(const Telemetry &t);
   bool linkAlive() const;
+  bool gloveActive() const;      // a luva mandou pacote ha pouco: ela manda
 
   // Publico porque o callback do WebSocket e uma funcao livre, fora da classe.
-  void handlePacket(const char *line);
+  void handlePacket(const char *line, bool fromGlove = false);
 
   ControlInput cmd;
 
 private:
   uint32_t _lastTeleMs = 0;
+  uint32_t _lastGloveMs = 0;
   void serveHttp();
 };

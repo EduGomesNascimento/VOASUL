@@ -59,6 +59,7 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
   <div><b>Bateria</b><span id="tb">-</span></div>
   <div><b>Loop</b><span id="tl">-</span></div>
   <div><b>Fluxo</b><span id="tq">-</span></div>
+  <div><b>Luva</b><span id="tw">-</span></div>
 </div>
 <div id="msg">Decole com o drone no chao e nivelado. Solte o manche para o modo estavel.</div>
 
@@ -172,6 +173,8 @@ function show(t){
     (fl==3?'segura ':'')+t.vf.toFixed(1)+' / '+t.vr.toFixed(1);
   $('tq').className=fl==3?'ok':fl==1?'warn':'';
   $('tq').title='qualidade '+(t.sq|0);
+  $('tw').textContent=t.lv?'no controle':'—';
+  $('tw').className=t.lv?'ok':'';
   if(t.st) msg(t.st);
   if(!t.armed && S.arm){   // o drone desarmou sozinho (failsafe/bateria)
     S.arm=0;

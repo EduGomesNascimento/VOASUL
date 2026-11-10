@@ -312,6 +312,11 @@ perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Repita c
 
 ## Fase 12: extras (sonar da frente, IR, fluxo óptico, luva de gestos)
 
+> **Versão mínima (a que vale agora):** na placa, só os motores, a alimentação, o ESP32, o BMI160 e
+> o BMP280. Os conectores do sonar (J2), do IR (J3) e do fluxo óptico (J4) podem ficar soldados e
+> vazios: o firmware funciona sem eles. O controle é a **luva simples de 1 sensor**
+> (`luva/README.md`) e o celular. A energia (bateria ou cabo) continua em aberto.
+
 Um de cada vez, **cada um com o seu teste antes de voar**:
 
 - **Sonar da frente / IR:** peso volta a ser problema. Pese e refaça a conta de empuxo/peso.
@@ -337,7 +342,7 @@ Um de cada vez, **cada um com o seu teste antes de voar**:
   5. **Voo amarrado:** solte o manche a ~50 cm. O quadro mostra "segura" e o drone deve
      parar de derivar. Se oscilar para frente e para trás, baixe `FLOW_KP_DEG_PER_MPS`
      (8 → 5). Se ainda derivar, suba (8 → 11).
-- **Luva:** ver `docs/LUVA_DE_GESTOS.md`. Primeiro com o drone **sem hélice** na bancada,
+- **Luva:** versão simples em `luva/README.md` (a completa, com 4 sensores, em `docs/LUVA_DE_GESTOS.md`). Primeiro com o drone **sem hélice** na bancada,
   conferindo que cada gesto aparece certo na telemetria. Só depois em voo amarrado.
 
 ---

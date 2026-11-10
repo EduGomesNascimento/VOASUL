@@ -136,7 +136,7 @@ void platStartAP(const char *ssid, const char *pass) {
   // Antes do softAP, para o AP ja nascer anunciando so as taxas do 11b.
   esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11B);
 #endif
-  WiFi.softAP(ssid, pass);
+  WiFi.softAP(ssid, pass, WIFI_CHANNEL);   // canal fixo: a luva usa o mesmo
   // Potencia maxima. Isto ficava em 11 dBm "para reduzir ruido na
   // alimentacao", e eram 8,5 dB de enlace jogados fora -- no ar livre, 2,7x
   // menos alcance. O ruido se resolve com capacitor perto do ESP32 (ver

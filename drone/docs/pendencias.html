@@ -88,7 +88,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <a href="#bancada"><span>05</span>Bancada</a>
   </nav>
   <h1>Drone VoaSul: o que falta</h1>
-  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 09/11/2026.</p>
+  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 10/11/2026.</p>
 
   <div class="numeros">
     <div class="num"><b>19</b><span>itens para comprar</span></div>
@@ -114,14 +114,14 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <div class="caixa falta">
       <h3>Falta</h3>
       <ul class="l">
-        <li>Comprar 21 itens (aba Comprar)</li>
+        <li>Comprar 18 itens (aba Comprar)</li>
         <li>Confirmar o modelo e a medida do ESP32</li>
         <li>Compilar e gravar o firmware no ESP32 (nunca foi testado nele)</li>
         <li>Fresar a placa na CNC (ou pedir na JLCPCB) e soldar</li>
         <li>Montar o frame e pesar</li>
         <li>Testar empuxo, voar amarrado, voar livre</li>
         <li>Medir o alcance para o relatório</li>
-        <li>Construir a luva de gestos</li>
+        <li>Montar a luva simples (firmware pronto e compilado) e testar sem hélice</li>
       </ul>
     </div>
   </div>
@@ -164,12 +164,9 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <tr><td class="ck"><span class="box"></span></td><td><b>(Opcional) Placa na JLCPCB</b> <em>versão profissional; guia em kicad/pro/PEDIDO_JLCPCB.md</em></td><td class="q">5</td><td><span class="tag ali">China</span> jlcpcb.com</td><td class="r">~11 + frete e imposto</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Álcool isopropílico 99%</b> <em>limpar o fluxo da solda</em></td><td class="q">1</td><td><span class="tag br">Brasil</span> MB3 / farmácia</td><td class="r">9,00</td></tr>
 
-      <tr class="sub"><td></td><td colspan="4">Luva de gestos <em>(pode ficar para depois do primeiro voo)</em></td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>MPU-6050 (GY-521)</b></td><td class="q">4</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007169577953.html">anúncio</a></td><td class="r">27,96</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Fio de silicone 30 AWG</b></td><td class="q">5 m</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/4001283806251.html">anúncio</a></td><td class="r">7,22</td></tr>
+      <tr class="sub"><td></td><td colspan="4">Luva de gestos (versão simples: 1 sensor, energia por power bank USB; ver luva/README.md)</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>MPU-6050 (GY-521)</b> <em>luva simples: 1 sensor nas costas da mão</em></td><td class="q">1</td><td><span class="tag br">Brasil</span> já no carrinho do ML</td><td class="r">21,35</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Luva fina de algodão</b></td><td class="q">10 pares</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007539926600.html">anúncio</a></td><td class="r">6,69</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Chave liga/desliga SS12D00</b></td><td class="q">20</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005005633418066.html">anúncio</a></td><td class="r">6,14</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Motor de vibração 1027</b> <em>avisa no pulso</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005005586911986.html">anúncio</a></td><td class="r">1,67</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Sensor de fluxo óptico PMW3901</b> <em>"pare" e "volte" precisos</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005011822845593.html">anúncio</a></td><td class="r">31,99</td></tr>
 
       <tr class="sub"><td></td><td colspan="4">Recomendado</td></tr>
@@ -211,7 +208,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <div class="passo"><span class="box"></span><span class="n">9</span><div><b>Voo amarrado</b><p>Linha de pesca em dois braços opostos, até 30 cm de altura. Ajustar PID.</p></div><div class="ate">paira 30 s sem oscilar</div></div>
     <div class="passo"><span class="box"></span><span class="n">10</span><div><b>Primeiro voo livre</b><p>Lugar fechado e amplo, sem vento, 0,5 a 1 m de altura.</p></div><div class="ate">5 voos curtos sem susto</div></div>
     <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Anotar RSSI e perda de pacotes a cada 10 m (celular e luva).</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
-    <div class="passo"><span class="box"></span><span class="n">12</span><div><b>Luva de gestos</b><p>1 sensor → 4 sensores → reconhecer gestos → drone sem hélice → amarrado.</p></div><div class="ate">cada gesto vira o comando certo na telemetria</div></div>
+    <div class="passo"><span class="box"></span><span class="n">12</span><div><b>Luva de gestos</b><p>1 sensor no XIAO → conferir os gestos na serial → drone sem hélice (quadro "Luva" na página) → voo amarrado. Guia em <code>luva/README.md</code>.</p></div><div class="ate">cada gesto mexe os motores certos</div></div>
   </div>
 
   <div class="rodape"><span>Etapa 0 (antes de tudo): ver a aba Decidir</span><span>03 / 05</span></div>
@@ -235,6 +232,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
   <div class="decisao"><div><b>4. Frame de PLA ou de compensado?</b><p>PLA: ~28 g, a escola cobra por grama. Compensado 3 mm: ~12 g, molde 1:1 pronto.</p></div><div class="rec">Compensado: mais leve, a relação empuxo/peso sobe de 1,43 para ~1,6.</div></div>
   <div class="decisao"><div><b>5. Versão profissional compacta (Ø ~66 mm)?</b><p>Placa bem menor, mas pede peças SMD e outro frame.</p></div><div class="rec">Depois do primeiro voo, se o empuxo ficar no limite.</div></div>
   <div class="decisao"><div><b>6. Fluxo óptico agora ou depois?</b><p>Deixa o "pare" firme e o "volte" preciso. R$ 32.</p></div><div class="rec">Depois: o drone voa sem ele.</div></div>
+  <div class="decisao"><div><b>8. Energia: bateria ou cabo do chão?</b><p>Em aberto. A placa aceita os dois pelo J1: LiPo 1S com Molex, ou cabo de 20 AWG (2 m) de uma fonte de ~4,9 V no chão.</p></div><div class="rec">Decida no teste de empuxo (fase 8); nada na placa muda.</div></div>
   <div class="decisao"><div><b>7. XIAO da luva ou da câmera do DAMP?</b><p>O XIAO ESP32-S3 Sense é hoje a câmera do DAMP.</p></div><div class="rec">Se precisar dos dois ao mesmo tempo, um XIAO S3 sem câmera basta para a luva.</div></div>
 
   <div class="rodape"><span>Responda no chat que eu ajusto o projeto</span><span>04 / 05</span></div>

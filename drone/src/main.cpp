@@ -395,6 +395,9 @@ static void flightStep() {
       } else if (batt.critical) {
         landStartMs = millis();
         setState(ST_LANDING, "bateria critica - pousando sozinho");
+      } else if (cmd.land) {
+        landStartMs = millis();
+        setState(ST_LANDING, "pousando (pedido pela luva)");
       } else if (tiltDeg > 70.0f) {
         // Capotou. Manter os motores girando so quebra helice e queima motor.
         if (tiltBadMs == 0) tiltBadMs = millis();
