@@ -1,0 +1,40 @@
+grupo,item,qtd,onde,situacao,comprar_em,preco_unit,qtd_comprar,total,obs
+Drone: placa,ESP32 DevKitC 38 pinos (WROOM-32),1,U1,tem,,0,0,0,
+Drone: placa,"Giroscopio GY-BMI160 (placa roxa, 7 pinos)",1,U3,comprar,AliExpress,5.99,1,5.99,"MB3 R$ 31,90 se precisar ja; vale comprar 2 (1 reserva)"
+Drone: placa,"Barometro GY-BMP280-3.3 (placa roxa, 6 pinos)",1,U4,tem,,0,0,0,confirme que tem 6 pinos
+Drone: placa,Step-up MT3608,1,U2,tem,,0,0,0,"ajuste 5,0 V antes do ESP32"
+Drone: placa,MOSFET AO3400A (SOT-23),4,Q1-Q4,tem,,0,0,0,
+Drone: placa,Diodo SS34 (SMA),4,D1-D4,tem,,0,0,0,
+Drone: placa,Capacitor 100 nF 0805,4,C3-C6,tem,,0,0,0,
+Drone: placa,Eletrolitico 1000 uF 10-16 V (D8),1,C1,tem,,0,0,0,
+Drone: placa,"Eletrolitico 470 uF 10-16 V (D6,3)",1,C2,tem,,0,0,0,
+Drone: placa,Resistor 100 ohm,4,R1-R4,tem,,0,0,0,100-220 ohm servem
+Drone: placa,Resistor 10 k,6,R5-R10,tem,,0,0,0,8k2 + 2k em serie servem
+Drone: placa,Resistor 1 k,2,"R11, R12",opcional,,0,0,0,so com o sonar
+Drone: placa,Resistor 2 k,2,"R13, R14",opcional,,0,0,0,so com o sonar
+Drone: placa,Barra femea 1x40 (corta 2 x 19),1,U1,tem,,0,0,0,
+Drone: placa,Barra macho 1x40,1,"U3, U4, J2-J4",tem,,0,0,0,J2/J3/J4 opcionais na versao minima
+Drone: placa,Fenolite 15x20 face simples (da 2 discos),1,placa,comprar,MB3,19.0,1,19.0,fresada na CNC do amigo
+Drone: placa,Fio rigido para os 11 jumpers,1,jumpers,tem,,0,0,0,de cabo de rede
+Drone: voo,Motor coreless 1020 (2 CW + 2 CCW),4,M1-M4,tem,,0,0,0,
+Drone: voo,Helice 75 mm furo 1 mm (2 CW + 2 CCW por jogo),2,motores,comprar,AliExpress,9.14,2,18.28,Gemfan; ML 3 x R$ 19
+Drone: voo,Conector Molex 51005 macho + femea com fio,1,J1,comprar,AliExpress,11.6,1,11.6,10 pares; serve para bateria e cabo
+Drone: voo,"Fio de silicone 24 AWG vermelho e preto, 2 m",1,"motores, J1",comprar,AliExpress,7.22,1,7.22,ML R$ 19
+Drone: voo,Fita dupla face de espuma,1,placa no frame,comprar,AliExpress,9.61,1,9.61,"MB3 R$ 15,90"
+Drone: voo,Frame: compensado 3 mm (molde 1:1 pronto),1,frame,comprar,madeireira,10.0,1,10.0,~R$ 10; PLA a escola cobra por grama
+Energia A: bateria,LiPo 1S 530 mAh 30C Molex (Leao LB530LP1),1,J1,comprar,Mercado Livre,58.0,1,58.0,LiPo nao vale importar
+Energia A: bateria,Carregador USB LiPo 1S saida Molex 51005,1,,comprar,AliExpress,10.9,1,10.9,ML R$ 35
+Energia A: bateria,Velcro para a bateria,1,frame,comprar,AliExpress,11.26,1,11.26,"MB3 R$ 17,90"
+Energia A: bateria,Saco anti-chamas para LiPo,1,,comprar,AliExpress,10.75,1,10.75,"ou carregar num pote de vidro, sempre olhando"
+Energia B: cabo,"Fio paralelo 2 x 0,5 mm2 (~20 AWG), 3 m",1,J1,comprar,loja de material eletrico,9.0,1,9.0,"~R$ 3/m; queda de ~0,9 V a 7 A em 2 m"
+Energia B: cabo,"Fonte de bancada ajustavel (~4,9 V, 8 A)",1,,tem,,0,0,0,a da escola
+Luva,ESP32-C3 Super Mini,1,pulso,comprar,AliExpress,10.9,1,10.9,o C6 Super Mini tambem serve (~R$ 18)
+Luva,Giroscopio MPU-6050 (GY-521),1,costas da mao,comprar,AliExpress,6.99,1,6.99,"ML R$ 21,35 (ja no carrinho)"
+Luva,4 fios jumper femea-femea,4,sensor -> C3,tem,,0,0,0,robotica
+Luva,Luva fina,1,mao,tem,,0,0,0,qualquer uma que tiver
+Luva,Power bank com cabo USB-C,1,bolso,tem,,0,0,0,
+Bancada,"Multimetro, ferro, estanho, fluxo, malha, pinca, lupa",1,,tem,,0,0,0,robotica / escola
+Bancada,Fusivel 4 A + porta-fusivel,1,primeiro liga,tem,,0,0,0,do DAMP
+Bancada,Alcool isopropilico,1,limpar o fluxo,opcional,MB3,9.0,0,0.0,
+Depois (opcional),Fluxo optico PMW3901,1,J4,opcional,AliExpress,31.99,0,0.0,segura o drone parado
+Depois (opcional),Sonar HC-SR04 / IR FC-51,2,J2 / J3,tem,,0,0,0,ja tem; fora da versao minima
