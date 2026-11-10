@@ -37,8 +37,8 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
 
 <header>
   <span id="link"></span><span id="st">conectando</span>
-  <button id="alt">ALT HOLD</button>
-  <button id="avd" class="on">DESVIO</button>
+  <button id="alt" class="on">ALT HOLD</button>
+  <button id="pousar">POUSAR</button>
   <button id="arm">ARMAR</button>
 </header>
 
@@ -53,18 +53,13 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
   <div><b>Yaw</b><span id="ty">-</span></div>
   <div><b>Altura</b><span id="ta">-</span></div>
   <div><b>Vert</b><span id="tv">-</span></div>
-  <div><b>Solo</b><span id="tg">-</span></div>
-  <div><b>Frente</b><span id="tf">-</span></div>
-  <div><b>IR</b><span id="ti">-</span></div>
   <div><b>Bateria</b><span id="tb">-</span></div>
   <div><b>Loop</b><span id="tl">-</span></div>
-  <div><b>Fluxo</b><span id="tq">-</span></div>
-  <div><b>Luva</b><span id="tw">-</span></div>
 </div>
-<div id="msg">Decole com o drone no chao e nivelado. Solte o manche para o modo estavel.</div>
+<div id="msg">Arme com o drone no chao e nivelado. ALT HOLD: manche esquerdo no centro = mantem a altura, para cima = sobe. Soltou o direito = fica parado.</div>
 
 <script>
-const S={roll:0,pitch:0,yaw:0,thr:0,arm:0,alt:0,avd:1};
+const S={roll:0,pitch:0,yaw:0,thr:0.5,arm:0,alt:1,land:0,armT:0};
 let ws,alive=0;
 
 // ---- joysticks ----
@@ -77,7 +72,7 @@ function pad(cv,vert,onMove){
     ctx.setTransform(d,0,0,d,0,0);
     cx=cv.clientWidth/2; cy=cv.clientHeight/2;
     r=Math.min(cx,cy)*0.72; px=cx; py=cy;
-    if(vert) py=cy+r;   // throttle comeca no minimo
+    if(vert && !S.alt) py=cy+r;   // manual: throttle comeca no minimo; ALT HOLD: no centro
     draw();
   }
   function draw(){
@@ -99,9 +94,9 @@ function pad(cv,vert,onMove){
   }
   function release(){
     id=null;
-    // O throttle fica onde esta; os demais eixos voltam ao centro.
-    if(vert){ px=cx; onMove(0,-(py-cy)/r); }
-    else    { px=cx; py=cy; onMove(0,0); }
+    // Manual: o throttle fica onde esta. ALT HOLD: tudo volta ao centro (centro = mantem a altura).
+    if(vert && !S.alt){ px=cx; onMove(0,-(py-cy)/r); }
+    else              { px=cx; py=cy; onMove(0,0); }
     draw();
   }
   cv.addEventListener('pointerdown',e=>{id=e.pointerId;cv.setPointerCapture(id);set(e.offsetX,e.offsetY);});
@@ -109,22 +104,29 @@ function pad(cv,vert,onMove){
   cv.addEventListener('pointerup',release);
   cv.addEventListener('pointercancel',release);
   addEventListener('resize',size); setTimeout(size,0);
+  return { centro(){ px=cx; py=cy; onMove(0,0); draw(); },
+           minimo(){ px=cx; py=cy+r; onMove(0,-1); draw(); } };
 }
 
 // esquerda: Y = throttle (mantem posicao), X = yaw
-pad(document.getElementById('cL'),true,(x,y)=>{ S.yaw=x; S.thr=Math.max(0,Math.min(1,(y+1)/2)); });
+const padL=pad(document.getElementById('cL'),true,(x,y)=>{ S.yaw=x; S.thr=Math.max(0,Math.min(1,(y+1)/2)); });
 // direita: X = roll, Y = pitch
 pad(document.getElementById('cR'),false,(x,y)=>{ S.roll=x; S.pitch=y; });
 
 // ---- botoes ----
-function tog(id,key){
-  const b=document.getElementById(id);
-  b.onclick=()=>{ S[key]=S[key]?0:1; b.classList.toggle('on',!!S[key]); };
-}
-tog('alt','alt'); tog('avd','avd');
+document.getElementById('alt').onclick=function(){
+  if(S.arm){ msg('Troque o ALT HOLD com o drone desarmado.'); return; }
+  S.alt=S.alt?0:1; this.classList.toggle('on',!!S.alt);
+  if(S.alt) padL.centro(); else padL.minimo();
+};
+document.getElementById('pousar').onclick=function(){
+  if(!S.arm) return;
+  S.land=1; this.classList.add('on'); msg('Pousando sozinho...');
+};
 document.getElementById('arm').onclick=function(){
-  if(!S.arm && S.thr>0.05){ msg('Baixe o throttle antes de armar.'); return; }
-  S.arm=S.arm?0:1;
+  if(!S.arm && !S.alt && S.thr>0.05){ msg('Baixe o throttle antes de armar.'); return; }
+  S.arm=S.arm?0:1; S.armT=Date.now(); S.land=0;
+  document.getElementById('pousar').classList.remove('on');
   this.classList.toggle('on',!!S.arm);
   this.textContent=S.arm?'DESARMAR':'ARMAR';
 };
@@ -145,9 +147,11 @@ connect();
 // 50 Hz de comando: menos que isso e o failsafe de 400 ms comeca a disparar
 setInterval(()=>{
   if(!ws||ws.readyState!==1) return;
-  const f=(S.arm?1:0)|(S.alt?2:0)|(S.avd?4:0);
+  const f=(S.arm?1:0)|(S.alt?2:0)|(S.land?8:0);
+  // desarmado e no primeiro segundo depois de armar: throttle em zero (o drone exige para armar)
+  const thr=(!S.arm||Date.now()-S.armT<1000)?0:S.thr;
   ws.send('C,'+S.roll.toFixed(3)+','+S.pitch.toFixed(3)+','+S.yaw.toFixed(3)
-          +','+S.thr.toFixed(3)+','+f);
+          +','+thr.toFixed(3)+','+f);
 },20);
 
 const $=i=>document.getElementById(i);
@@ -159,25 +163,12 @@ function show(t){
   $('ta').textContent=t.alt.toFixed(2)+' m';
   $('ta').className=t.snr?'ok':'';
   $('tv').textContent=t.vz.toFixed(2)+' m/s';
-  $('tg').textContent=dist(t.g);
-  $('tf').textContent=dist(t.f);
-  $('tf').className=(t.f>0&&t.f<0.5)?'bad':(t.f>0&&t.f<0.9)?'warn':'';
-  $('ti').textContent=(t.il?'E':'-')+' '+(t.ir?'D':'-');
-  $('ti').className=(t.il||t.ir)?'warn':'';
   $('tb').textContent=t.vb.toFixed(2)+' V';
   $('tb').className=t.vb<3.35?'bad':t.vb<3.55?'warn':'ok';
   $('tl').textContent=t.hz+' Hz';
-  // fluxo optico (PMW3901, opcional): 0 ausente, 1 sem leitura, 2 lendo, 3 segurando
-  const fl=t.fl|0;
-  $('tq').textContent=fl==0?'sem módulo':fl==1?'sem leitura':
-    (fl==3?'segura ':'')+t.vf.toFixed(1)+' / '+t.vr.toFixed(1);
-  $('tq').className=fl==3?'ok':fl==1?'warn':'';
-  $('tq').title='qualidade '+(t.sq|0);
-  $('tw').textContent=t.lv?'no controle':'—';
-  $('tw').className=t.lv?'ok':'';
   if(t.st) msg(t.st);
-  if(!t.armed && S.arm){   // o drone desarmou sozinho (failsafe/bateria)
-    S.arm=0;
+  if(!t.armed && S.arm){   // o drone desarmou sozinho (pousou, failsafe, bateria)
+    S.arm=0; S.land=0; $('pousar').classList.remove('on');
     const b=$('arm'); b.classList.remove('on'); b.textContent='ARMAR';
   }
 }

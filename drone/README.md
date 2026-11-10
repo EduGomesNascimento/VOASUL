@@ -3,7 +3,7 @@
 > **Novo (nov/2026):** placa de face única no KiCad para o **ESP32 DevKit 38 pinos** em
 > [`kicad/`](kicad/README.md) (esquema, placa, PDF de transferência, versão profissional com
 > Gerber e visualizador 3D). Plano de montagem com testes: [`docs/PLANO_DE_MONTAGEM.md`](docs/PLANO_DE_MONTAGEM.md).
-> Luva de gestos: [`docs/LUVA_DE_GESTOS.md`](docs/LUVA_DE_GESTOS.md). Para retomar o trabalho:
+> Controle: app no celular (página do próprio drone). Lista de materiais: [`docs/BOM_TOTAL.md`](docs/BOM_TOTAL.md). Para retomar o trabalho:
 > [`CONTEXTO_PARA_CONTINUAR.md`](CONTEXTO_PARA_CONTINUAR.md).
 
 Firmware completo para um quadricóptero micro: Pico W, BMI160 (giroscópio +

@@ -88,7 +88,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <a href="#bancada"><span>05</span>Bancada</a>
   </nav>
   <h1>Drone VoaSul: o que falta</h1>
-  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo celular e por luva de gestos. Situação em 10/11/2026.</p>
+  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo app no celular (página servida pelo próprio drone). Situação em 10/11/2026.</p>
 
   <div class="numeros">
     <div class="num"><b>19</b><span>itens para comprar</span></div>
@@ -107,21 +107,20 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
         <li>Firmware com a pinagem nova da placa</li>
         <li>Molde 1:1 do frame em compensado</li>
         <li>Plano de montagem com teste em cada fase</li>
-        <li>Projeto da luva de gestos</li>
+        <li>App do celular: dois manches, ALT HOLD, POUSAR e telemetria</li>
         <li>Tudo no GitHub (VOASUL, pasta <code>drone/</code>)</li>
       </ul>
     </div>
     <div class="caixa falta">
       <h3>Falta</h3>
       <ul class="l">
-        <li>Comprar 19 itens (aba Comprar)</li>
+        <li>Comprar 16 itens (aba Comprar)</li>
         <li>Confirmar o modelo e a medida do ESP32</li>
         <li>Compilar e gravar o firmware no ESP32 (nunca foi testado nele)</li>
         <li>Fresar a placa na CNC (ou pedir na JLCPCB) e soldar</li>
         <li>Montar o frame e pesar</li>
         <li>Testar empuxo, voar amarrado, voar livre</li>
         <li>Medir o alcance para o relatório</li>
-        <li>Montar a luva simples (firmware pronto e compilado) e testar sem hélice</li>
       </ul>
     </div>
   </div>
@@ -163,11 +162,6 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <tr><td class="ck"><span class="box"></span></td><td><b>Fresas da CNC (se a escola não tiver)</b> <em>V 30° ponta 0,1 mm, brocas 0,9 / 1,0 / 1,3 mm, fresa de topo 1 mm</em></td><td class="q">1 kit</td><td><span class="tag ali">Ali</span> / escola</td><td class="r">30–60</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>(Opcional) Placa na JLCPCB</b> <em>versão profissional; guia em kicad/pro/PEDIDO_JLCPCB.md</em></td><td class="q">5</td><td><span class="tag ali">China</span> jlcpcb.com</td><td class="r">~11 + frete e imposto</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Álcool isopropílico 99%</b> <em>limpar o fluxo da solda</em></td><td class="q">1</td><td><span class="tag br">Brasil</span> MB3 / farmácia</td><td class="r">9,00</td></tr>
-
-      <tr class="sub"><td></td><td colspan="4">Luva de gestos (versão simples: ESP32-C3 Super Mini + 1 sensor, energia por power bank USB; ver luva/README.md)</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>ESP32-C3 Super Mini</b> <em>o ESP da luva (C6 Super Mini também serve)</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005006860780404.html">anúncio</a></td><td class="r">10,90</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>MPU-6050 (GY-521)</b> <em>1 sensor nas costas da mão</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007169577953.html">anúncio</a> (ou o do ML)</td><td class="r">6,99</td></tr>
-      <tr><td class="ck"><span class="box"></span></td><td><b>Luva fina de algodão</b></td><td class="q">10 pares</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005007539926600.html">anúncio</a></td><td class="r">6,69</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Sensor de fluxo óptico PMW3901</b> <em>"pare" e "volte" precisos</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005011822845593.html">anúncio</a></td><td class="r">31,99</td></tr>
 
       <tr class="sub"><td></td><td colspan="4">Recomendado</td></tr>
@@ -180,7 +174,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <div><b>R$ 100–145</b><span>comprado no Brasil</span></div>
     <div><b>R$ 310–440</b><span>total, conforme o imposto de importação</span></div>
   </div>
-  <p class="nota">Só o drone (sem luva e sem fluxo óptico): ~R$ 230–320. Pedido da AliExpress abaixo de US$ 50: o imposto (~45%) aparece no carrinho. Entrega de 2 a 5 semanas.</p>
+  <p class="nota">Versão mínima (drone + app no celular): ver docs/BOM_TOTAL.md. Pedido da AliExpress abaixo de US$ 50: o imposto (~45%) aparece no carrinho. Entrega de 2 a 5 semanas.</p>
 
   <div class="rodape"><span>Links clicáveis no PDF</span><span>02 / 05</span></div>
 </section>
@@ -208,8 +202,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <div class="passo"><span class="box"></span><span class="n">8</span><div><b>Teste de empuxo na balança</b><p>Drone preso de cabeça para baixo sobre um peso.</p></div><div class="ate">empuxo ÷ peso ≥ 1,4</div></div>
     <div class="passo"><span class="box"></span><span class="n">9</span><div><b>Voo amarrado</b><p>Linha de pesca em dois braços opostos, até 30 cm de altura. Ajustar PID.</p></div><div class="ate">paira 30 s sem oscilar</div></div>
     <div class="passo"><span class="box"></span><span class="n">10</span><div><b>Primeiro voo livre</b><p>Lugar fechado e amplo, sem vento, 0,5 a 1 m de altura.</p></div><div class="ate">5 voos curtos sem susto</div></div>
-    <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Anotar RSSI e perda de pacotes a cada 10 m (celular e luva).</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
-    <div class="passo"><span class="box"></span><span class="n">12</span><div><b>Luva de gestos</b><p>1 sensor no ESP32-C3 → conferir os gestos na serial → drone sem hélice (quadro "Luva" na página) → voo amarrado. Guia em <code>luva/README.md</code>.</p></div><div class="ate">cada gesto mexe os motores certos</div></div>
+    <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Anotar RSSI e perda de pacotes a cada 10 m (celular).</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
   </div>
 
   <div class="rodape"><span>Etapa 0 (antes de tudo): ver a aba Decidir</span><span>03 / 05</span></div>

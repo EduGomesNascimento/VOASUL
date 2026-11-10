@@ -232,9 +232,12 @@ static void runControl(const ControlInput &cmd, float dt) {
   float throttle;
 
   if (landing) {
-    // Descida controlada: com sonar, desce a 0,4 m/s; sem sonar, rampa cega.
+    // Descida controlada: com sonar ou barometro, desce a ~0,4 m/s pela velocidade vertical
+    // estimada; sem nenhum dos dois, rampa cega.
     if (range.groundValid || altEst.usingSonar) {
       throttle = hoverThrottle + pidAltVz.update(-0.40f, altEst.velocity, dt);
+    } else if (baroOk) {
+      throttle = hoverThrottle + pidAltVz.update(-0.35f, altEst.velocity, dt);
     } else {
       const float elapsed = (millis() - landStartMs) / 1000.0f;
       throttle = hoverThrottle * constrain(1.0f - elapsed / 4.0f, 0.0f, 1.0f);
@@ -397,7 +400,7 @@ static void flightStep() {
         setState(ST_LANDING, "bateria critica - pousando sozinho");
       } else if (cmd.land) {
         landStartMs = millis();
-        setState(ST_LANDING, "pousando (pedido pela luva)");
+        setState(ST_LANDING, "pousando (botao POUSAR)");
       } else if (tiltDeg > 70.0f) {
         // Capotou. Manter os motores girando so quebra helice e queima motor.
         if (tiltBadMs == 0) tiltBadMs = millis();
@@ -426,7 +429,7 @@ static void flightStep() {
         break;
       }
       if ((range.groundValid && range.groundDistance < 0.12f) ||
-          (millis() - landStartMs > 8000)) {
+          (millis() - landStartMs > (range.groundValid ? 8000u : 10000u))) {   // sem sonar: ate 3,5 m
         motors.setEnabled(false);
         setState(ST_DISARMED, "pousado - desarmado");
       }

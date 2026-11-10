@@ -14,7 +14,7 @@ Repositório **EduGomesNascimento/VOASUL**, pasta `drone/` (o site da VoaSul fic
 | `drone/kicad/pro/` | versão para fábrica de PCB (2 camadas, furo metalizado) + Gerber |
 | `drone/kicad/saidas/` | PDFs de transferência e montagem, esquema em PDF, visualizador 3D |
 | `drone/cad/` | frame impresso (`frame_redondo.py/.stl`), pés, hélice de bancada |
-| `drone/docs/` | `PLANO_DE_MONTAGEM.md` (fases com requisitos e testes), `LUVA_DE_GESTOS.md`, `ORCAMENTO.md` |
+| `drone/docs/` | `PLANO_DE_MONTAGEM.md` (fases com requisitos e testes), `BOM_TOTAL.md`, `ORCAMENTO.md` |
 | `drone/pcb/proteus/` | a placa antiga do Proteus (**não fabricar**: pegada do ESP32 espelhada) |
 
 Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh2TjpAySVM2ZgH
@@ -25,7 +25,6 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 - 4 motores coreless 1020, hélice 75 mm furo 1,0. AO3400A + SS34 + 100 nF 0805 por motor; 100 Ω na porta, 10k porta-GND.
 - Bateria LiPo **1S** 500–600 mAh (Molex 51005). **Nada de 2S** (queima os 1020).
 - MT3608 → 5,0 V (VIN do ESP32 e sonares). BMI160 + BMP280 **embaixo do ESP32**.
-- Estação de terra / luva: **XIAO ESP32-S3 Sense** (ESP-NOW). Celular continua via Wi-Fi AP.
 
 ## Escopo atual (10/11/2026): o mais simples possível
 
@@ -33,10 +32,10 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 - Energia em aberto: bateria LiPo 1S **ou** cabo do chão, os dois pelo J1.
 - Sensores: só BMI160 + BMP280. Sonar, IR e fluxo óptico ficam de fora (conectores podem ficar vazios).
 - Barato acima de tudo. Sensores do drone: GY-BMI160 (giroscópio) + GY-BMP280-3.3 (barômetro, já tem).
-- Controle: **luva simples** (`luva/`: **ESP32-C3 Super Mini** + 1 MPU-6050; perfis c3/c6/xiao no
-  platformio.ini; SDA 6, SCL 7, BOOT 9; ESP-NOW no canal 1, prefixo
-  `VS1:`) e o celular. Enquanto a luva manda, o celular só assiste. Bit 8 do pacote = pousar.
-- Firmwares compilam no PlatformIO: `pio run -e esp32dev` (drone) e `cd luva && pio run -e c3` (luva).
+- Controle: **só o app no celular** (página servida pelo drone em http://192.168.4.1): dois manches,
+  ALT HOLD (ligado por padrão; manche esquerdo volta ao centro = mantém a altura), POUSAR (bit 8 do
+  pacote) e telemetria. Sem luva e sem joystick (decisão de 10/11/2026).
+- Firmware compila no PlatformIO: `pio run -e esp32dev`. Testes: `cd test && make`.
 - Placa: fresada na CNC de um amigo (`drone/kicad/usinagem/`, regras 0,5/0,6/0,8/1,8); JLCPCB opcional.
 
 ## Pinagem NOVA (placa de face única)
@@ -65,6 +64,6 @@ no raio 45; plano de GND; SMD embaixo fora dos raios do frame. GND em duas fases
 1. Confirmar WROOM-32 × 32U e a distância de 25,4 mm entre as fileiras do ESP32.
 2. Firmware **nunca compilado para o ESP32** (só testes no PC). Compilar no PlatformIO local.
 3. Versão profissional **compacta** (Ø ~66 mm, 2 camadas, SMD), que exige regerar o frame (`frame_redondo.py --placa 66`).
-4. Luva de gestos: firmware da luva e do lado do drone (ESP-NOW), ver `docs/LUVA_DE_GESTOS.md`.
+4. (Fora do escopo) luva de gestos: só o projeto em `docs/LUVA_DE_GESTOS.md`.
 5. Modelo 3D do drone inteiro no Inventor (o usuário vai fazer com um Claude local).
 6. Comprar o que falta (21 itens na lista).

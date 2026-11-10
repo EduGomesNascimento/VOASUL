@@ -88,14 +88,7 @@
 #define WS_PORT            81
 #define UDP_PORT           4210
 #define FAILSAFE_TIMEOUT_MS 400           // sem comando -> pouso automatico
-// Canal fixo: a luva (ESP-NOW) tem que estar no mesmo canal do AP do drone.
-#define WIFI_CHANNEL       1
-
-// ---------------------------------------------------------------- LUVA
-// A luva (luva/, XIAO ESP32-S3) manda o mesmo pacote "C,..." do celular, por ESP-NOW,
-// com este prefixo. Enquanto ela estiver mandando, o celular so assiste (telemetria).
-#define LUVA_ID            "VS1:"
-#define LUVA_TIMEOUT_MS    300
+#define WIFI_CHANNEL       1              // canal do AP (fixo)
 
 // ---------------------------------------------------------------- COMANDOS
 #define MAX_ANGLE_DEG      25.0f

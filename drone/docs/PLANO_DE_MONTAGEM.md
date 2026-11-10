@@ -304,24 +304,24 @@ sobe no máximo 30 cm. Suba o acelerador devagar e observe:
 **Para começar:** fase 10 ok (ou o drone **no chão**, ligado, sem hélice: o rádio é o mesmo).
 
 **Como fazer:** a página mostra o RSSI. Ande se afastando, anotando **distância × RSSI ×
-perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Repita com o celular e com a luva (XIAO, ESP-NOW).
+perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Use o celular.
 
 **Para passar de fase:** a tabela pronta e o gráfico RSSI × distância.
 
 ---
 
-## Fase 12: extras (sonar da frente, IR, fluxo óptico, luva de gestos)
+## Fase 12: extras (sonar da frente, IR, fluxo óptico)
 
 > **Versão mínima (a que vale agora):** na placa, só os motores, a alimentação, o ESP32, o BMI160 e
 > o BMP280. Os conectores do sonar (J2), do IR (J3) e do fluxo óptico (J4) podem ficar soldados e
-> vazios: o firmware funciona sem eles. O controle é a **luva simples de 1 sensor**
-> (`luva/README.md`) e o celular. A energia (bateria ou cabo) continua em aberto.
+> vazios: o firmware funciona sem eles. O controle é **só o app no celular** (a página que o
+> drone serve em http://192.168.4.1). A energia (bateria ou cabo) continua em aberto.
 
 Um de cada vez, **cada um com o seu teste antes de voar**:
 
 - **Sonar da frente / IR:** peso volta a ser problema. Pese e refaça a conta de empuxo/peso.
 - **Fluxo óptico PMW3901 (opcional, no J4):** segura o drone parado quando você solta o
-  manche (ou faz "pare" na luva). Sem ele o drone voa igual, só vai à deriva devagar.
+  manche. Sem ele o drone voa igual, só vai à deriva devagar.
   1. **Drone desligado:** ligue o módulo no J4 (3V3, MISO, SCK, MOSI, CS, GND, na ordem da
      serigrafia). Lente **para baixo**, no centro do frame, sem nada na frente. Nunca ligue
      nem desligue o módulo com a bateria conectada.
@@ -342,8 +342,6 @@ Um de cada vez, **cada um com o seu teste antes de voar**:
   5. **Voo amarrado:** solte o manche a ~50 cm. O quadro mostra "segura" e o drone deve
      parar de derivar. Se oscilar para frente e para trás, baixe `FLOW_KP_DEG_PER_MPS`
      (8 → 5). Se ainda derivar, suba (8 → 11).
-- **Luva:** versão simples em `luva/README.md` (a completa, com 4 sensores, em `docs/LUVA_DE_GESTOS.md`). Primeiro com o drone **sem hélice** na bancada,
-  conferindo que cada gesto aparece certo na telemetria. Só depois em voo amarrado.
 
 ---
 

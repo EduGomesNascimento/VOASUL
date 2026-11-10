@@ -1,18 +1,18 @@
 # BOM total do drone VoaSul (versão mínima)
 
-Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico) e luva de 1 sensor com ESP32-C3 Super Mini. "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
+Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), controlado só pelo app no celular (a página que o próprio drone serve). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
 
 ## Quanto falta gastar
 
 | | R$ |
 |---|---|
-| Drone + luva (comum às duas energias) | R$ 99,59 |
+| Drone (comum às duas energias) | R$ 81,70 |
 | + Energia A: bateria | R$ 90,91 |
 | + Energia B: cabo do chão | R$ 9,00 |
-| **Total com bateria** | **R$ 190,50** |
-| **Total com cabo** | **R$ 108,59** |
+| **Total com bateria** | **R$ 172,61** |
+| **Total com cabo** | **R$ 90,70** |
 
-Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 e o MPU-6050 saem ~R$ 40 mais caros no Mercado Livre / MB3.
+Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 sai ~R$ 26 mais caro na MB3.
 
 
 ## Drone: placa
@@ -63,16 +63,6 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 |---|---|---|---|---|---|
 | 1 | Fio paralelo 2 x 0,5 mm2 (~20 AWG), 3 m (~R$ 3/m; queda de ~0,9 V a 7 A em 2 m) | J1 | 🛒 comprar | loja de material eletrico | R$ 9,00 |
 | 1 | Fonte de bancada ajustavel (~4,9 V, 8 A) (a da escola) |  | ✅ tem |  | — |
-
-## Luva
-
-| Qtd | Item | Onde vai | Situação | Comprar em | R$ |
-|---|---|---|---|---|---|
-| 1 | ESP32-C3 Super Mini (o C6 Super Mini tambem serve (~R$ 18)) | pulso | 🛒 comprar | AliExpress | R$ 10,90 |
-| 1 | Giroscopio MPU-6050 (GY-521) (ML R$ 21,35 (ja no carrinho)) | costas da mao | 🛒 comprar | AliExpress | R$ 6,99 |
-| 4 | 4 fios jumper femea-femea (robotica) | sensor -> C3 | ✅ tem |  | — |
-| 1 | Luva fina (qualquer uma que tiver) | mao | ✅ tem |  | — |
-| 1 | Power bank com cabo USB-C | bolso | ✅ tem |  | — |
 
 ## Bancada
 

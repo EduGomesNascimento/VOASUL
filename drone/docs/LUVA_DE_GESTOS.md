@@ -1,8 +1,7 @@
 # Luva de gestos: controlar o drone com a mão
 
-> **Versão que vale agora: a simples, com 1 sensor.** Firmware, ligações e gestos em
-> [`luva/README.md`](../../luva/README.md). Este documento é o projeto completo (4 sensores, gestos
-> de apontar e chamar), para depois.
+> **Fora do escopo (decisão de 10/11/2026):** o drone vai ser controlado só pelo app no celular.
+> Este documento fica como ideia para o futuro.
 
 **Ideia:** uma luva com giroscópios na palma e nos dedos lê a posição da mão e transforma gestos
 em comandos de voo. O **celular continua funcionando** como controle: os dois convivem.
