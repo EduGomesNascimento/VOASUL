@@ -88,7 +88,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <a href="#bancada"><span>05</span>Bancada</a>
   </nav>
   <h1>Drone VoaSul: o que falta</h1>
-  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) e controle pelo app no celular (página servida pelo próprio drone). Situação em 10/11/2026.</p>
+  <p class="sub">Quadricóptero com ESP32, placa redonda de face única (Ø97 mm) pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone). Situação em 10/11/2026.</p>
 
   <div class="numeros">
     <div class="num"><b>19</b><span>itens para comprar</span></div>
@@ -107,14 +107,14 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
         <li>Firmware com a pinagem nova da placa</li>
         <li>Molde 1:1 do frame em compensado</li>
         <li>Plano de montagem com teste em cada fase</li>
-        <li>App do celular: dois manches, ALT HOLD, POUSAR e telemetria</li>
+        <li>App do celular (dois manches, ALT HOLD, POUSAR, telemetria) e firmware da estação terra (ESP32-C3), compilados</li>
         <li>Tudo no GitHub (VOASUL, pasta <code>drone/</code>)</li>
       </ul>
     </div>
     <div class="caixa falta">
       <h3>Falta</h3>
       <ul class="l">
-        <li>Comprar 16 itens (aba Comprar)</li>
+        <li>Comprar 18 itens (aba Comprar)</li>
         <li>Confirmar o modelo e a medida do ESP32</li>
         <li>Compilar e gravar o firmware no ESP32 (nunca foi testado nele)</li>
         <li>Fresar a placa na CNC (ou pedir na JLCPCB) e soldar</li>
@@ -164,6 +164,9 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
       <tr><td class="ck"><span class="box"></span></td><td><b>Álcool isopropílico 99%</b> <em>limpar o fluxo da solda</em></td><td class="q">1</td><td><span class="tag br">Brasil</span> MB3 / farmácia</td><td class="r">9,00</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Sensor de fluxo óptico PMW3901</b> <em>"pare" e "volte" precisos</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005011822845593.html">anúncio</a></td><td class="r">31,99</td></tr>
 
+      <tr class="sub"><td></td><td colspan="4">Estação terra (ESP32-C3 na capinha do celular; ver docs/TERRA.md)</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>ESP32-C3 Super Mini</b> <em>de preferência a "Plus", com antena externa</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005006860780404.html">anúncio</a></td><td class="r">10,90</td></tr>
+      <tr><td class="ck"><span class="box"></span></td><td><b>Cabo USB-C ↔ USB-C curto (OTG)</b> <em>a terra é alimentada pelo celular</em></td><td class="q">1</td><td><span class="tag ali">Ali</span></td><td class="r">~8</td></tr>
       <tr class="sub"><td></td><td colspan="4">Recomendado</td></tr>
       <tr><td class="ck"><span class="box"></span></td><td><b>Saco anti-chamas para LiPo</b> <em>carregar e guardar a bateria</em></td><td class="q">1</td><td><span class="tag ali">Ali</span> <a href="https://pt.aliexpress.com/item/1005004478094343.html">anúncio</a></td><td class="r">10,75</td></tr>
     </tbody>
@@ -202,7 +205,7 @@ tr.tot td{font-weight:600;border-top:1.5px solid var(--tinta);border-bottom:none
     <div class="passo"><span class="box"></span><span class="n">8</span><div><b>Teste de empuxo na balança</b><p>Drone preso de cabeça para baixo sobre um peso.</p></div><div class="ate">empuxo ÷ peso ≥ 1,4</div></div>
     <div class="passo"><span class="box"></span><span class="n">9</span><div><b>Voo amarrado</b><p>Linha de pesca em dois braços opostos, até 30 cm de altura. Ajustar PID.</p></div><div class="ate">paira 30 s sem oscilar</div></div>
     <div class="passo"><span class="box"></span><span class="n">10</span><div><b>Primeiro voo livre</b><p>Lugar fechado e amplo, sem vento, 0,5 a 1 m de altura.</p></div><div class="ate">5 voos curtos sem susto</div></div>
-    <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Anotar RSSI e perda de pacotes a cada 10 m (celular).</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
+    <div class="passo"><span class="box"></span><span class="n">11</span><div><b>Teste de alcance</b><p>Comandos enviados × telemetria recebida a cada 10 m (Serial da terra): taxa de perda do ESP-NOW.</p></div><div class="ate">gráfico RSSI × distância para o professor</div></div>
   </div>
 
   <div class="rodape"><span>Etapa 0 (antes de tudo): ver a aba Decidir</span><span>03 / 05</span></div>

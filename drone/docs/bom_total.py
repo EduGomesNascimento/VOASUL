@@ -54,6 +54,12 @@ ITENS = [
     ('Energia B: cabo', 'Fio paralelo 2 x 0,5 mm2 (~20 AWG), 3 m', 1, 'J1', C,
      'loja de material eletrico', 9.00, 1, '~R$ 3/m; queda de ~0,9 V a 7 A em 2 m'),
     ('Energia B: cabo', 'Fonte de bancada ajustavel (~4,9 V, 8 A)', 1, '', T, '', 0, 0, 'a da escola'),
+    # ---------------------------------------------------------------- estacao terra
+    ('Estacao terra', 'ESP32-C3 Super Mini (de preferencia a Plus, com antena externa)', 1, 'capinha do celular', C,
+     'AliExpress', 10.90, 1, 'ver docs/TERRA.md'),
+    ('Estacao terra', 'Cabo USB-C <-> USB-C curto (OTG)', 1, 'celular -> C3', C,
+     'AliExpress', 8.00, 1, '~R$ 8; o C3 e alimentado pelo celular'),
+    ('Estacao terra', 'Fita dupla face ou velcro', 1, 'C3 na capinha', T, '', 0, 0, 'sobra da do frame'),
     # ---------------------------------------------------------------- bancada
     ('Bancada', 'Multimetro, ferro, estanho, fluxo, malha, pinca, lupa', 1, '', T, '', 0, 0, 'robotica / escola'),
     ('Bancada', 'Fusivel 4 A + porta-fusivel', 1, 'primeiro liga', T, '', 0, 0, 'do DAMP'),
@@ -76,18 +82,18 @@ def main():
 
     def soma(prefixos):
         return sum(l['total'] for l in linhas if l['grupo'].startswith(prefixos))
-    base = soma(('Drone',))
+    base = soma(('Drone', 'Estacao'))
     bat, cabo = soma(('Energia A',)), soma(('Energia B',))
 
     def r(v):
         return f'R$ {v:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
     md = ['# BOM total do drone VoaSul (versão mínima)', '',
-          'Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), controlado só pelo app no celular '
-          '(a página que o próprio drone serve). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 '
+          'Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da '
+          'estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 '
           '("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.', '',
           '## Quanto falta gastar', '',
           '| | R$ |', '|---|---|',
-          f'| Drone (comum às duas energias) | {r(base)} |',
+          f'| Drone + estação terra (comum às duas energias) | {r(base)} |',
           f'| + Energia A: bateria | {r(bat)} |',
           f'| + Energia B: cabo do chão | {r(cabo)} |',
           f'| **Total com bateria** | **{r(base + bat)}** |',

@@ -1,16 +1,16 @@
 # BOM total do drone VoaSul (versão mínima)
 
-Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), controlado só pelo app no celular (a página que o próprio drone serve). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
+Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
 
 ## Quanto falta gastar
 
 | | R$ |
 |---|---|
-| Drone (comum às duas energias) | R$ 81,70 |
+| Drone + estação terra (comum às duas energias) | R$ 100,60 |
 | + Energia A: bateria | R$ 90,91 |
 | + Energia B: cabo do chão | R$ 9,00 |
-| **Total com bateria** | **R$ 172,61** |
-| **Total com cabo** | **R$ 90,70** |
+| **Total com bateria** | **R$ 191,51** |
+| **Total com cabo** | **R$ 109,60** |
 
 Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 sai ~R$ 26 mais caro na MB3.
 
@@ -63,6 +63,14 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 |---|---|---|---|---|---|
 | 1 | Fio paralelo 2 x 0,5 mm2 (~20 AWG), 3 m (~R$ 3/m; queda de ~0,9 V a 7 A em 2 m) | J1 | 🛒 comprar | loja de material eletrico | R$ 9,00 |
 | 1 | Fonte de bancada ajustavel (~4,9 V, 8 A) (a da escola) |  | ✅ tem |  | — |
+
+## Estacao terra
+
+| Qtd | Item | Onde vai | Situação | Comprar em | R$ |
+|---|---|---|---|---|---|
+| 1 | ESP32-C3 Super Mini (de preferencia a Plus, com antena externa) (ver docs/TERRA.md) | capinha do celular | 🛒 comprar | AliExpress | R$ 10,90 |
+| 1 | Cabo USB-C <-> USB-C curto (OTG) (~R$ 8; o C3 e alimentado pelo celular) | celular -> C3 | 🛒 comprar | AliExpress | R$ 8,00 |
+| 1 | Fita dupla face ou velcro (sobra da do frame) | C3 na capinha | ✅ tem |  | — |
 
 ## Bancada
 

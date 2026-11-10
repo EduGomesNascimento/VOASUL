@@ -137,6 +137,7 @@ function connect(){
   ws=new WebSocket('ws://'+location.hostname+':81/');
   ws.onopen =()=>{ document.getElementById('st').textContent='conectado';
                    document.getElementById('link').classList.add('on'); };
+  // pela terra, o ponto verde so acende quando o DRONE responde (ver show)
   ws.onclose=()=>{ document.getElementById('st').textContent='reconectando';
                    document.getElementById('link').classList.remove('on');
                    S.arm=0; setTimeout(connect,700); };
@@ -156,7 +157,15 @@ setInterval(()=>{
 
 const $=i=>document.getElementById(i);
 function dist(v){ return v>0? v.toFixed(2)+' m' : '--'; }
+let viaTerra=0;
 function show(t){
+  // estacao terra: avisa se o drone esta respondendo (pelo ESP-NOW)
+  if('terra' in t){
+    viaTerra=1;
+    $('st').textContent=t.drone?'terra + drone ok':'terra ok, SEM SINAL DO DRONE';
+    $('link').classList.toggle('on',!!t.drone);
+    return;
+  }
   $('tr').textContent=t.r.toFixed(1)+'°';
   $('tp').textContent=t.p.toFixed(1)+'°';
   $('ty').textContent=t.y.toFixed(0)+'°';

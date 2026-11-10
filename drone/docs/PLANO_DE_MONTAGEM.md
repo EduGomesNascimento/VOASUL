@@ -304,7 +304,7 @@ sobe no máximo 30 cm. Suba o acelerador devagar e observe:
 **Para começar:** fase 10 ok (ou o drone **no chão**, ligado, sem hélice: o rádio é o mesmo).
 
 **Como fazer:** a página mostra o RSSI. Ande se afastando, anotando **distância × RSSI ×
-perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Use o celular.
+perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. O Serial da estação terra mostra comandos enviados × telemetria recebida (`docs/TERRA.md`).
 
 **Para passar de fase:** a tabela pronta e o gráfico RSSI × distância.
 
@@ -314,8 +314,9 @@ perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. Use o ce
 
 > **Versão mínima (a que vale agora):** na placa, só os motores, a alimentação, o ESP32, o BMI160 e
 > o BMP280. Os conectores do sonar (J2), do IR (J3) e do fluxo óptico (J4) podem ficar soldados e
-> vazios: o firmware funciona sem eles. O controle é **só o app no celular** (a página que o
-> drone serve em http://192.168.4.1). A energia (bateria ou cabo) continua em aberto.
+> vazios: o firmware funciona sem eles. O controle é o **app no celular através da estação terra**
+> (ESP32-C3 na capinha, ESP-NOW até o drone: `docs/TERRA.md`). A energia (bateria ou cabo) continua
+> em aberto.
 
 Um de cada vez, **cada um com o seu teste antes de voar**:
 

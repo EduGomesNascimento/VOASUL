@@ -6,6 +6,9 @@
 
 #include <WiFi.h>
 #include <WiFiUdp.h>
+#if PLATFORM_ESP32
+  #include <esp_now.h>
+#endif
 
 static WiFiServer      *gHttp = nullptr;
 static WebSocketServer  gWs;
@@ -15,6 +18,53 @@ static Receiver        *gSelf = nullptr;
 static void onWsText(const char *line) {
   if (gSelf) gSelf->handlePacket(line);
 }
+
+// ---- estacao terra (ESP-NOW): o callback roda na tarefa do WiFi; so copia o pacote ----
+static plat_lock_t   gRadioMux;
+static char          gRadioBuf[96];
+static volatile bool gRadioNovo = false;
+static uint8_t       gTerraMac[6];
+static bool          gTerraConhecida = false;
+
+#if PLATFORM_ESP32
+static void radioRecebe(const uint8_t *mac, const uint8_t *data, int len) {
+  const int n = (int)strlen(RADIO_ID);
+  if (len <= n || len >= (int)sizeof(gRadioBuf) || memcmp(data, RADIO_ID, n) != 0) return;
+  platLock(gRadioMux);
+  memcpy(gRadioBuf, data + n, len - n);
+  gRadioBuf[len - n] = '\0';
+  gRadioNovo = true;
+  if (mac) { memcpy(gTerraMac, mac, 6); }
+  platUnlock(gRadioMux);
+}
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+static void onEspNow(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+  radioRecebe(info ? info->src_addr : nullptr, data, len);
+}
+#else
+static void onEspNow(const uint8_t *mac, const uint8_t *data, int len) { radioRecebe(mac, data, len); }
+#endif
+
+// telemetria de volta para a terra que mandou o ultimo comando
+static void radioEnvia(const char *json) {
+  uint8_t mac[6];
+  platLock(gRadioMux);
+  memcpy(mac, gTerraMac, 6);
+  platUnlock(gRadioMux);
+  if (!gTerraConhecida || memcmp(mac, gTerraMac, 6) != 0) {
+    if (gTerraConhecida) esp_now_del_peer(gTerraMac);
+    esp_now_peer_info_t peer = {};
+    memcpy(peer.peer_addr, mac, 6);
+    peer.channel = WIFI_CHANNEL;
+    peer.ifidx = WIFI_IF_AP;          // o drone so tem o AP ligado
+    gTerraConhecida = esp_now_add_peer(&peer) == ESP_OK;
+    memcpy(gTerraMac, mac, 6);
+  }
+  char buf[260];
+  const int n = snprintf(buf, sizeof(buf), TELE_ID "%s", json);
+  if (n > 0 && n < (int)sizeof(buf)) esp_now_send(mac, (const uint8_t *)buf, n);
+}
+#endif
 
 void Receiver::begin() {
   gSelf = this;
@@ -30,6 +80,15 @@ void Receiver::begin() {
   gWs.onText(onWsText);
 
   gUdp.begin(UDP_PORT);
+
+  platLockInit(gRadioMux);
+#if PLATFORM_ESP32
+  if (esp_now_init() == ESP_OK && esp_now_register_recv_cb(onEspNow) == ESP_OK) {
+    Serial.printf("[TERRA] ESP-NOW ouvindo no canal %d\n", WIFI_CHANNEL);
+  } else {
+    Serial.println("[TERRA] ESP-NOW nao iniciou: so o celular direto no drone controla");
+  }
+#endif
 }
 
 // Serve a pagina de pilotagem. Um cliente por chamada: nao ha motivo para
@@ -71,8 +130,14 @@ void Receiver::serveHttp() {
   c.stop();
 }
 
-void Receiver::handlePacket(const char *line) {
+bool Receiver::radioActive() const {
+  return _lastRadioMs != 0 && (millis() - _lastRadioMs) < RADIO_TIMEOUT_MS;
+}
+
+void Receiver::handlePacket(const char *line, bool fromRadio) {
   if (line[0] != 'C' || line[1] != ',') return;
+  // Dois controles ao mesmo tempo brigariam: enquanto a terra manda, o celular direto so assiste.
+  if (!fromRadio && radioActive()) return;
 
   float v[4] = {0, 0, 0, 0};
   const char *p = line + 2;
@@ -94,6 +159,7 @@ void Receiver::handlePacket(const char *line) {
   cmd.altHold  = flags & 2;
   cmd.avoid    = flags & 4;
   cmd.land     = flags & 8;
+  if (fromRadio) _lastRadioMs = millis();
 
   // So marca o link como vivo depois de um pacote inteiro e valido: lixo na
   // rede nao pode segurar o failsafe.
@@ -103,6 +169,15 @@ void Receiver::handlePacket(const char *line) {
 void Receiver::poll() {
   serveHttp();
   gWs.poll();
+
+  if (gRadioNovo) {
+    char linha[sizeof(gRadioBuf)];
+    platLock(gRadioMux);
+    memcpy(linha, gRadioBuf, sizeof(linha));
+    gRadioNovo = false;
+    platUnlock(gRadioMux);
+    handlePacket(linha, true);
+  }
 
   const int sz = gUdp.parsePacket();
   if (sz > 0) {
@@ -123,18 +198,19 @@ void Receiver::sendTelemetry(const Telemetry &t) {
   const uint32_t now = millis();
   if (now - _lastTeleMs < 100) return;   // 10 Hz basta e nao rouba CPU
   _lastTeleMs = now;
-  if (gWs.clientCount() == 0) return;
+  const bool terra = radioActive();
+  if (gWs.clientCount() == 0 && !terra) return;
 
-  char buf[400];
+  // So o que a pagina mostra: cabe com folga num pacote ESP-NOW (250 bytes).
+  char buf[200];
   snprintf(buf, sizeof(buf),
-    "{\"r\":%.1f,\"p\":%.1f,\"y\":%.0f,\"alt\":%.2f,\"vz\":%.2f,"
-    "\"g\":%.2f,\"f\":%.2f,\"il\":%d,\"ir\":%d,\"vb\":%.2f,"
-    "\"armed\":%d,\"snr\":%d,\"hz\":%u,"
-    "\"fl\":%u,\"vf\":%.2f,\"vr\":%.2f,\"sq\":%u,\"st\":\"%s\"}",
-    t.roll, t.pitch, t.yaw, t.altitude, t.verticalSpeed,
-    t.ground, t.front, t.irL ? 1 : 0, t.irR ? 1 : 0, t.vbat,
-    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz,
-    t.flow, t.flowVf, t.flowVr, t.flowSq, t.status);
+    "{\"r\":%.1f,\"p\":%.1f,\"y\":%.0f,\"alt\":%.2f,\"vz\":%.2f,\"vb\":%.2f,"
+    "\"armed\":%d,\"snr\":%d,\"hz\":%u,\"st\":\"%.48s\"}",
+    t.roll, t.pitch, t.yaw, t.altitude, t.verticalSpeed, t.vbat,
+    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz, t.status);
 
-  gWs.broadcast(buf);
+  if (gWs.clientCount()) gWs.broadcast(buf);
+#if PLATFORM_ESP32
+  if (terra) radioEnvia(buf);
+#endif
 }

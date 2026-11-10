@@ -32,10 +32,13 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 - Energia em aberto: bateria LiPo 1S **ou** cabo do chão, os dois pelo J1.
 - Sensores: só BMI160 + BMP280. Sonar, IR e fluxo óptico ficam de fora (conectores podem ficar vazios).
 - Barato acima de tudo. Sensores do drone: GY-BMI160 (giroscópio) + GY-BMP280-3.3 (barômetro, já tem).
-- Controle: **só o app no celular** (página servida pelo drone em http://192.168.4.1): dois manches,
-  ALT HOLD (ligado por padrão; manche esquerdo volta ao centro = mantém a altura), POUSAR (bit 8 do
-  pacote) e telemetria. Sem luva e sem joystick (decisão de 10/11/2026).
-- Firmware compila no PlatformIO: `pio run -e esp32dev`. Testes: `cd test && make`.
+- Controle: **app no celular através da estação terra** (`docs/TERRA.md`): ESP32-C3 Super Mini na
+  capinha, alimentado pelo celular (USB-C OTG), cria a rede VOASUL-TERRA e serve a página; repassa os
+  comandos ao drone por ESP-NOW (canal 1, prefixo `VS1:`) e devolve a telemetria (`VT1:`). Página:
+  dois manches, ALT HOLD (ligado por padrão), POUSAR (bit 8) e telemetria. Sem luva e sem joystick.
+  O drone ainda tem a própria rede (VOASUL-DRONE) como reserva.
+- Firmware compila no PlatformIO: `pio run -e esp32dev` (drone) e `pio run -e terra` (terra, código
+  em `src/terra/`). Testes: `cd test && make`.
 - Placa: fresada na CNC de um amigo (`drone/kicad/usinagem/`, regras 0,5/0,6/0,8/1,8); JLCPCB opcional.
 
 ## Pinagem NOVA (placa de face única)

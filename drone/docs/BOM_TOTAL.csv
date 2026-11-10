@@ -28,6 +28,9 @@ Energia A: bateria,Velcro para a bateria,1,frame,comprar,AliExpress,11.26,1,11.2
 Energia A: bateria,Saco anti-chamas para LiPo,1,,comprar,AliExpress,10.75,1,10.75,"ou carregar num pote de vidro, sempre olhando"
 Energia B: cabo,"Fio paralelo 2 x 0,5 mm2 (~20 AWG), 3 m",1,J1,comprar,loja de material eletrico,9.0,1,9.0,"~R$ 3/m; queda de ~0,9 V a 7 A em 2 m"
 Energia B: cabo,"Fonte de bancada ajustavel (~4,9 V, 8 A)",1,,tem,,0,0,0,a da escola
+Estacao terra,"ESP32-C3 Super Mini (de preferencia a Plus, com antena externa)",1,capinha do celular,comprar,AliExpress,10.9,1,10.9,ver docs/TERRA.md
+Estacao terra,Cabo USB-C <-> USB-C curto (OTG),1,celular -> C3,comprar,AliExpress,8.0,1,8.0,~R$ 8; o C3 e alimentado pelo celular
+Estacao terra,Fita dupla face ou velcro,1,C3 na capinha,tem,,0,0,0,sobra da do frame
 Bancada,"Multimetro, ferro, estanho, fluxo, malha, pinca, lupa",1,,tem,,0,0,0,robotica / escola
 Bancada,Fusivel 4 A + porta-fusivel,1,primeiro liga,tem,,0,0,0,do DAMP
 Bancada,Alcool isopropilico,1,limpar o fluxo,opcional,MB3,9.0,0,0.0,

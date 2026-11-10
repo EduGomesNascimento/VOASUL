@@ -41,8 +41,12 @@
   static inline void platUnlock(plat_lock_t &m)   { portEXIT_CRITICAL(&m); }
 
   static inline bool platFastRead(uint8_t pin) {
+  #if defined(CONFIG_IDF_TARGET_ESP32)
     if (pin < 32) return (GPIO.in >> pin) & 0x1;
     return (GPIO.in1.val >> (pin - 32)) & 0x1;
+  #else
+    return digitalRead(pin);      // C3/S3/C6 (estacao terra): registradores diferentes
+  #endif
   }
 
 #else   // host

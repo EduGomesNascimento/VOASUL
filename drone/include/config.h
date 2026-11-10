@@ -74,7 +74,7 @@
 #define LOOP_PERIOD_US     (1000000UL / LOOP_HZ)
 
 // ---------------------------------------------------------------- RADIO
-#define WIFI_AP_SSID       "DRONE-PICO"
+#define WIFI_AP_SSID       "VOASUL-DRONE"   // rede do proprio drone (reserva; o normal e a terra)
 #define WIFI_AP_PASS       "voar1234"     // minimo 8 caracteres
 
 // So 802.11b no ESP32. O pacote de controle tem ~20 bytes a 50 Hz, entao a
@@ -88,7 +88,16 @@
 #define WS_PORT            81
 #define UDP_PORT           4210
 #define FAILSAFE_TIMEOUT_MS 400           // sem comando -> pouso automatico
-#define WIFI_CHANNEL       1              // canal do AP (fixo)
+#define WIFI_CHANNEL       1              // canal do AP e do ESP-NOW (fixo; a terra usa o mesmo)
+
+// ---------------------------------------------------------------- ESTACAO TERRA
+// ESP32-C3 na capinha do celular (src/terra/): o celular conecta no Wi-Fi da terra e a
+// terra fala com o drone por ESP-NOW. Comandos chegam com o prefixo RADIO_ID (o mesmo
+// pacote "C,..." do celular); a telemetria volta para a terra com o prefixo TELE_ID.
+// Enquanto a terra manda, o celular ligado direto no Wi-Fi do drone so assiste.
+#define RADIO_ID           "VS1:"
+#define TELE_ID            "VT1:"
+#define RADIO_TIMEOUT_MS   300
 
 // ---------------------------------------------------------------- COMANDOS
 #define MAX_ANGLE_DEG      25.0f

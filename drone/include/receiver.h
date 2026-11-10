@@ -14,6 +14,9 @@
 //     roll/pitch/yaw : -1.0 .. 1.0
 //     throttle       :  0.0 .. 1.0
 //     flags (bitmask): 1=armar  2=alt-hold  4=desvio de obstaculos  8=pousar
+//
+// Estacao terra (ESP-NOW, so no ESP32): o mesmo pacote com o prefixo RADIO_ID. Enquanto a
+// terra manda, os pacotes do celular ligado direto no drone sao ignorados.
 
 struct ControlInput {
   float roll = 0, pitch = 0, yaw = 0, throttle = 0;
@@ -45,13 +48,15 @@ public:
   void poll();
   void sendTelemetry(const Telemetry &t);
   bool linkAlive() const;
+  bool radioActive() const;      // a terra mandou pacote ha pouco: ela manda
 
   // Publico porque o callback do WebSocket e uma funcao livre, fora da classe.
-  void handlePacket(const char *line);
+  void handlePacket(const char *line, bool fromRadio = false);
 
   ControlInput cmd;
 
 private:
   uint32_t _lastTeleMs = 0;
+  uint32_t _lastRadioMs = 0;
   void serveHttp();
 };
