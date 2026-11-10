@@ -28,8 +28,18 @@ ITENS = [
     ('Drone: placa', 'Barra femea 1x40 (corta 2 x 19)', 1, 'U1', T, '', 0, 0, ''),
     ('Drone: placa', 'Barra macho 1x40', 1, 'U3, U4, J2-J4', T, '', 0, 0, 'J2/J3/J4 opcionais na versao minima'),
     ('Drone: placa', 'Fenolite 15x20 face simples (da 2 discos)', 1, 'placa', C,
-     'MB3', 19.00, 1, 'fresada na CNC do amigo'),
+     'MB3', 19.00, 1, 'placa + reserva'),
     ('Drone: placa', 'Fio rigido para os 11 jumpers', 1, 'jumpers', T, '', 0, 0, 'de cabo de rede'),
+    ('Placa: fabricar', 'Papel transfer amarelo para placa (A4)', 2, 'transferencia', C,
+     'Mercado Livre', 2.50, 2, '~R$ 2-3 a folha; couche/glossy serve com mais paciencia'),
+    ('Placa: fabricar', 'Percloreto de ferro em po, 250 g', 1, 'corrosao', C,
+     'Mercado Livre', 20.00, 1, '~; rende 500 ml, sobra para varias placas'),
+    ('Placa: fabricar', 'Caneta permanente para retoque', 1, 'trilha falhada', C,
+     'papelaria', 5.00, 1, '~; tipo retroprojetor'),
+    ('Placa: fabricar', 'Brocas 0,9 / 1,0 / 1,3 mm', 1, 'furos', C,
+     'AliExpress', 12.00, 1, '~; so se a escola/robotica nao tiver'),
+    ('Placa: fabricar', 'Micro retifica ou furadeira, ferro de passar, palha de aco, luvas, oculos, pote plastico', 1,
+     '', T, '', 0, 0, 'escola / casa'),
     # ---------------------------------------------------------------- drone: voo
     ('Drone: voo', 'Motor coreless 1020 (2 CW + 2 CCW)', 4, 'M1-M4', T, '', 0, 0, ''),
     ('Drone: voo', 'Helice 75 mm furo 1 mm (2 CW + 2 CCW por jogo)', 2, 'motores', C,
@@ -82,18 +92,18 @@ def main():
 
     def soma(prefixos):
         return sum(l['total'] for l in linhas if l['grupo'].startswith(prefixos))
-    base = soma(('Drone', 'Estacao'))
+    base = soma(('Drone', 'Estacao', 'Placa'))
     bat, cabo = soma(('Energia A',)), soma(('Energia B',))
 
     def r(v):
         return f'R$ {v:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
     md = ['# BOM total do drone VoaSul (versão mínima)', '',
           'Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da '
-          'estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 '
+          'estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). Placa feita em casa por transferência térmica + percloreto (Fase 3 do PLANO_DE_MONTAGEM.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 '
           '("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.', '',
           '## Quanto falta gastar', '',
           '| | R$ |', '|---|---|',
-          f'| Drone + estação terra (comum às duas energias) | {r(base)} |',
+          f'| Drone + estação terra + fabricar a placa (comum às duas energias) | {r(base)} |',
           f'| + Energia A: bateria | {r(bat)} |',
           f'| + Energia B: cabo do chão | {r(cabo)} |',
           f'| **Total com bateria** | **{r(base + bat)}** |',

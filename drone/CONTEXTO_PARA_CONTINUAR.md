@@ -39,7 +39,8 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
   O drone ainda tem a própria rede (VOASUL-DRONE) como reserva.
 - Firmware compila no PlatformIO: `pio run -e esp32dev` (drone) e `pio run -e terra` (terra, código
   em `src/terra/`). Testes: `cd test && make`.
-- Placa: fresada na CNC de um amigo (`drone/kicad/usinagem/`, regras 0,5/0,6/0,8/1,8); JLCPCB opcional.
+- Placa: feita em casa por transferência térmica (papel transfer) + percloreto (`kicad/saidas/folha_transferencia_A4.pdf`,
+  passo a passo na Fase 3 de `docs/PLANO_DE_MONTAGEM.md`). Alternativas: CNC (`drone/kicad/usinagem/`) ou JLCPCB.
 
 ## Pinagem NOVA (placa de face única)
 

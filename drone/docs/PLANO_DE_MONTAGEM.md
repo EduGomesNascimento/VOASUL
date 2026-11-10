@@ -94,11 +94,11 @@ Lista de compras com marcação (já tenho / comprei / falta / repensar):
 
 ## Fase 3: fabricar a placa (transferência térmica, face única)
 
-> **Na CNC (recomendado agora):** se outra pessoa vai fresar, mande
-> `kicad/usinagem/VoaSul_usinagem_face_unica.zip` (Gerber e furos dentro das regras dela, com LEIA-ME).
-> Se for você, em vez da transferência, siga `kicad/cnc/README_CNC.md`
-> (isolamento com fresa em V, furos e contorno; ~1h40 de máquina). Os testes de saída desta fase
-> valem igual.
+> **Forma escolhida: transferência térmica + percloreto (o passo a passo abaixo).**
+>
+> **Alternativa, na CNC:** se outra pessoa for fresar, mande
+> `kicad/usinagem/VoaSul_usinagem_face_unica.zip` (Gerber e furos dentro das regras dela, com LEIA-ME);
+> se for você, siga `kicad/cnc/README_CNC.md`. Os testes de saída desta fase valem igual.
 >
 > **Placa da JLCPCB:** pule esta fase. A placa chega pronta, com furo metalizado, máscara e
 > serigrafia; os jumpers já viraram trilhas na face de cima. Ao chegar: confira com lupa e meça
@@ -106,18 +106,20 @@ Lista de compras com marcação (já tenho / comprei / falta / repensar):
 
 **Para começar:** fases 0 e 2 ok (a pinagem foi confirmada). Acesso a uma impressora **laser**.
 
-**Material à mão:** disco de fenolite, palha de aço, detergente, álcool isopropílico, papel
-glossy, ferro de passar roupa (sem vapor), bacia com água, caneta de retoque, percloreto,
+**Material à mão:** disco de fenolite, palha de aço, detergente, álcool isopropílico, **papel
+transfer amarelo** (ou couchê/glossy, que funciona com mais paciência), ferro de passar roupa (sem vapor), bacia com água, caneta de retoque, percloreto,
 pote plástico com tampa, luvas, régua, furadeira/micro retífica, brocas 0,9 / 1,0 / 1,3 mm.
 
 **Como fazer:**
-1. **Imprima o PDF de transferência** (`kicad/saidas/transferencia_B_Cu.pdf`) em **100%**, sem
-   "ajustar à página". **Meça a régua de 100 mm impressa:** tem de dar 100 mm. Se der 98 ou 102, a escala está errada.
+1. **Imprima a folha de transferência** (`kicad/saidas/folha_transferencia_A4.pdf`: duas cópias,
+   para ter uma segunda tentativa) numa impressora **laser**, toner no máximo, sem modo econômico,
+   em **100%**, sem "ajustar à página". **Não espelhe:** o texto "VoaSul" sai ao contrário no papel, e está certo. **Meça a régua de 100 mm impressa:** tem de dar 100 mm. Se der 98 ou 102, a escala está errada.
 2. **Prepare o cobre:** palha de aço com detergente, em círculos, até ficar rosa-brilhante por
    igual. Depois álcool. **Não encoste o dedo** no cobre daí em diante (gordura da pele = falha).
 3. **Transfira:** toner virado para o cobre, prenda com fita. Ferro no máximo do algodão,
    **3 a 5 minutos** apertando e girando, insistindo nas bordas. Deixe esfriar 1 minuto.
-4. **Tire o papel:** de molho na água por 10 minutos, depois esfregue com o dedão até sair todo o papel branco.
+4. **Tire o papel:** com o papel transfer, molhe e ele solta sozinho em segundos. Com couchê, deixe de
+   molho na água por 10 a 20 minutos e esfregue com o dedão até sair todo o papel branco.
 5. **Confira com lupa, trilha por trilha.** Falha pequena: retoque com a caneta. Falha grande
    ou trilha borrada encostando em outra: **lixe e repita** (é por isso que tem placa reserva).
    A folga é de 0,8 mm justamente para o toner amassado não encostar.

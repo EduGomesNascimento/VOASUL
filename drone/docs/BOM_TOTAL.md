@@ -1,16 +1,16 @@
 # BOM total do drone VoaSul (versão mínima)
 
-Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
+Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). Placa feita em casa por transferência térmica + percloreto (Fase 3 do PLANO_DE_MONTAGEM.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
 
 ## Quanto falta gastar
 
 | | R$ |
 |---|---|
-| Drone + estação terra (comum às duas energias) | R$ 100,60 |
+| Drone + estação terra + fabricar a placa (comum às duas energias) | R$ 142,60 |
 | + Energia A: bateria | R$ 90,91 |
 | + Energia B: cabo do chão | R$ 9,00 |
-| **Total com bateria** | **R$ 191,51** |
-| **Total com cabo** | **R$ 109,60** |
+| **Total com bateria** | **R$ 233,51** |
+| **Total com cabo** | **R$ 151,60** |
 
 Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 sai ~R$ 26 mais caro na MB3.
 
@@ -34,8 +34,18 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 | 2 | Resistor 2 k (so com o sonar) | R13, R14 | opcional |  | — |
 | 1 | Barra femea 1x40 (corta 2 x 19) | U1 | ✅ tem |  | — |
 | 1 | Barra macho 1x40 (J2/J3/J4 opcionais na versao minima) | U3, U4, J2-J4 | ✅ tem |  | — |
-| 1 | Fenolite 15x20 face simples (da 2 discos) (fresada na CNC do amigo) | placa | 🛒 comprar | MB3 | R$ 19,00 |
+| 1 | Fenolite 15x20 face simples (da 2 discos) (placa + reserva) | placa | 🛒 comprar | MB3 | R$ 19,00 |
 | 1 | Fio rigido para os 11 jumpers (de cabo de rede) | jumpers | ✅ tem |  | — |
+
+## Placa: fabricar
+
+| Qtd | Item | Onde vai | Situação | Comprar em | R$ |
+|---|---|---|---|---|---|
+| 2 | Papel transfer amarelo para placa (A4) (~R$ 2-3 a folha; couche/glossy serve com mais paciencia) | transferencia | 🛒 comprar | Mercado Livre | R$ 5,00 |
+| 1 | Percloreto de ferro em po, 250 g (~; rende 500 ml, sobra para varias placas) | corrosao | 🛒 comprar | Mercado Livre | R$ 20,00 |
+| 1 | Caneta permanente para retoque (~; tipo retroprojetor) | trilha falhada | 🛒 comprar | papelaria | R$ 5,00 |
+| 1 | Brocas 0,9 / 1,0 / 1,3 mm (~; so se a escola/robotica nao tiver) | furos | 🛒 comprar | AliExpress | R$ 12,00 |
+| 1 | Micro retifica ou furadeira, ferro de passar, palha de aco, luvas, oculos, pote plastico (escola / casa) |  | ✅ tem |  | — |
 
 ## Drone: voo
 
