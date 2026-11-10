@@ -1,6 +1,6 @@
 # Luva de gestos (versão simples: 1 sensor)
 
-Uma luva com **um MPU-6050** nas costas da mão e um **XIAO ESP32-S3** no pulso. O drone voa para
+Uma luva com **um MPU-6050** nas costas da mão e um **ESP32-C3 Super Mini** no pulso. O drone voa para
 onde a mão inclina. O controle pelo celular continua funcionando: enquanto a luva está ligada, ela
 manda; desligou, o celular volta a mandar.
 
@@ -8,22 +8,24 @@ manda; desligou, o celular volta a mandar.
 
 | Peça | Qtd | Observação |
 |---|---|---|
-| XIAO ESP32-S3 (ou o Sense) | 1 | você já tem |
-| MPU-6050 (GY-521) | 1 | já está no carrinho do Mercado Livre |
+| ESP32-C3 Super Mini | 1 | ~R$ 11 na AliExpress. Serve também o C6 Super Mini ou o XIAO ESP32-S3 |
+| MPU-6050 (GY-521) | 1 | ~R$ 7 na AliExpress (ou o do carrinho do Mercado Livre) |
 | 4 fios de ~20 cm | 4 | jumper fêmea-fêmea serve para testar |
 | Luva fina | 1 | o sensor vai costurado ou com velcro nas costas da mão |
-| Power bank USB-C no bolso **ou** LiPo 1S 250–400 mAh nas ilhas BAT do XIAO | 1 | o power bank é o mais simples |
+| Power bank com cabo USB-C, no bolso | 1 | o C3 Super Mini não carrega bateria; o power bank é o mais simples |
 
-Não precisa de botão: o **BOOT** do próprio XIAO arma e desarma.
+Não precisa de botão: o **BOOT** da própria placa arma e desarma.
 
 ## Ligações
 
-| MPU-6050 | XIAO |
-|---|---|
-| VCC | 3V3 |
-| GND | GND |
-| SDA | D4 |
-| SCL | D5 |
+| MPU-6050 | C3 ou C6 Super Mini | XIAO ESP32-S3 |
+|---|---|---|
+| VCC | 3V3 | 3V3 |
+| GND | GND | GND |
+| SDA | **6** | D4 |
+| SCL | **7** | D5 |
+
+Não use os pinos 8 e 9 do C3 para o sensor: o 8 é o LED e o 9 é o botão BOOT.
 
 **Posição do sensor:** nas costas da mão, componentes para cima, seta **X para os dedos**.
 
@@ -51,9 +53,12 @@ Se a luva desligar ou sair do alcance, o drone fica parado no ar e pousa sozinho
 
 ```bash
 cd luva
-pio run -t upload
+pio run -e c3 -t upload
 pio device monitor
 ```
+
+Para o C6 Super Mini use `-e c6`; para o XIAO, `-e xiao`. Se o upload não começar no C3, segure
+o BOOT, aperte e solte o RESET e solte o BOOT.
 
 1. **Calibração:** ligue com a mão reta e parada. O LED pisca rápido por 2 s.
 2. **Na serial:** mexa a mão e confira que o "roll", o "pitch" e o modo ("andando", "subindo",

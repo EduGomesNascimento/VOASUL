@@ -1,9 +1,11 @@
 // ============================================================================
-//  Luva de gestos VoaSul: XIAO ESP32-S3 + 1 MPU-6050 nas costas da mao.
+//  Luva de gestos VoaSul: ESP32-C3 Super Mini (ou C6 Super Mini, ou XIAO S3) + 1 MPU-6050.
 //
-//  Ligacoes (so 4 fios):  MPU-6050 VCC -> 3V3   GND -> GND   SDA -> D4   SCL -> D5
-//  Botao: o BOOT do proprio XIAO (nao precisa de outro).
-//  Energia: USB-C (power bank no bolso) ou bateria LiPo 1S nas ilhas BAT do XIAO.
+//  Ligacoes (so 4 fios), C3/C6 Super Mini:  VCC -> 3V3  GND -> GND  SDA -> 6  SCL -> 7
+//                        XIAO ESP32-S3:     VCC -> 3V3  GND -> GND  SDA -> D4 SCL -> D5
+//  (os pinos de cada placa estao no platformio.ini)
+//  Botao: o BOOT da propria placa (nao precisa de outro).
+//  Energia: power bank no bolso, pelo USB-C.
 //
 //  Uso:
 //   1. Liga com a mao RETA (palma para baixo) e parada: 2 s de calibracao (LED piscando rapido).
@@ -24,9 +26,22 @@
 #define WIFI_CHANNEL   1        // drone/include/config.h: WIFI_CHANNEL
 #define LUVA_ID        "VS1:"   // drone/include/config.h: LUVA_ID
 
-#define PIN_BOTAO      0        // BOOT do XIAO (aperta = LOW)
-#define PIN_LED        LED_BUILTIN
-#define LED_LIGA       LOW      // o LED do XIAO S3 acende com LOW
+// pinos: vem do platformio.ini (cada placa tem os seus); padrao = C3 Super Mini
+#ifndef PIN_SDA
+  #define PIN_SDA      6
+#endif
+#ifndef PIN_SCL
+  #define PIN_SCL      7
+#endif
+#ifndef PIN_BOTAO
+  #define PIN_BOTAO    9        // BOOT (aperta = LOW)
+#endif
+#ifndef PIN_LED
+  #define PIN_LED      8        // LED azul da placa
+#endif
+#ifndef LED_LIGA
+  #define LED_LIGA     LOW      // acende com LOW
+#endif
 #define MPU_ADDR       0x68     // AD0 solto ou no GND
 #define PERIODO_MS     20       // 50 Hz
 
@@ -108,10 +123,10 @@ void setup() {
   pinMode(PIN_LED, OUTPUT);
   led(false);
 
-  Wire.begin();                     // XIAO ESP32-S3: SDA = D4, SCL = D5
+  Wire.begin(PIN_SDA, PIN_SCL);
   Wire.setClock(400000);
   while (!mpuInicia()) {            // sem sensor: pisca lento e tenta de novo
-    Serial.println("[luva] MPU-6050 nao respondeu: confira SDA=D4, SCL=D5, 3V3 e GND");
+    Serial.printf("[luva] MPU-6050 nao respondeu: confira SDA=%d, SCL=%d, 3V3 e GND\n", PIN_SDA, PIN_SCL);
     led(true); delay(500); led(false); delay(500);
   }
 

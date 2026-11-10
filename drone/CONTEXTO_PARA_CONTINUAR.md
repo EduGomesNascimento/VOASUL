@@ -32,9 +32,11 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 - Motores coreless 1020 com os MOSFETs da placa (nada de ESC/brushless).
 - Energia em aberto: bateria LiPo 1S **ou** cabo do chão, os dois pelo J1.
 - Sensores: só BMI160 + BMP280. Sonar, IR e fluxo óptico ficam de fora (conectores podem ficar vazios).
-- Controle: **luva simples** (`luva/`: XIAO ESP32-S3 + 1 MPU-6050, ESP-NOW no canal 1, prefixo
+- Barato acima de tudo. Sensores do drone: GY-BMI160 (giroscópio) + GY-BMP280-3.3 (barômetro, já tem).
+- Controle: **luva simples** (`luva/`: **ESP32-C3 Super Mini** + 1 MPU-6050; perfis c3/c6/xiao no
+  platformio.ini; SDA 6, SCL 7, BOOT 9; ESP-NOW no canal 1, prefixo
   `VS1:`) e o celular. Enquanto a luva manda, o celular só assiste. Bit 8 do pacote = pousar.
-- Firmwares compilam no PlatformIO: `pio run -e esp32dev` (drone) e `cd luva && pio run` (luva).
+- Firmwares compilam no PlatformIO: `pio run -e esp32dev` (drone) e `cd luva && pio run -e c3` (luva).
 - Placa: fresada na CNC de um amigo (`drone/kicad/usinagem/`, regras 0,5/0,6/0,8/1,8); JLCPCB opcional.
 
 ## Pinagem NOVA (placa de face única)
