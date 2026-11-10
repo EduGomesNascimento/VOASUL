@@ -27,8 +27,10 @@ Conferido por geometria: a fresa nunca entra mais de 0,01 mm em cobre nenhum, s�
 
 - **O cobre fica para CIMA** e os arquivos já saem espelhados. Depois de pronta, olhando o lado do
   cobre, a bateria (J1) fica à **direita** e a área da antena à direita do centro.
-- **X0 Y0 = CENTRO do disco.** Prenda uma placa virgem de pelo menos **100 × 100 mm** (a fenolite
-  15×20 dá 2 discos) e leve a fresa até o centro da área que vai usar antes de zerar X e Y.
+- **X0 Y0 = CENTRO do disco.** Use uma placa virgem de **110 × 110 mm ou maior**. A de 10×10 cabe,
+  mas o corte do contorno chega a Ø99 mm: sobra 0,5 mm de cada lado, sem lugar para prender e sem
+  margem para erro no zero. A fenolite 15×20 dá 2 discos com folga. Leve a fresa até o centro da
+  área que vai usar antes de zerar X e Y.
 - **Z0 = superfície do cobre.** Zere com a sonda (jacaré na fresa e na placa) ou com uma folha de
   papel.
 - **Não mexa em X/Y entre os arquivos.** Em cada troca de ferramenta, zere **só o Z** de novo.

@@ -35,6 +35,8 @@ ainda pede o alinhamento das duas faces. Por isso a face única é mais simples.
 ## Outros detalhes
 
 - **Contorno:** círculo de Ø97 mm na camada Edge.Cuts (fresar por fora da linha).
+- **Placa virgem:** use 110 × 110 mm ou maior. Numa de 100 × 100, o corte do contorno (fresa de 1 mm)
+  passa a 0,5 mm da borda.
 - **Plano de GND:** o cobre que sobra é GND, de propósito: menos cobre para tirar.
 - **Área sem cobre:** um retângulo de ~6,5 × 19 mm embaixo da antena do ESP32 deve ficar sem cobre.
   O isolamento contorna a área; se der, raspe o cobre de dentro.
