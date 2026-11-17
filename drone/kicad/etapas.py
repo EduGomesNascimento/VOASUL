@@ -20,15 +20,13 @@ ROTAS = os.path.join(AQUI, 'rotas.json')
 MM = pcbnew.FromMM
 CX, CY = 100.0, 100.0
 
-# GND em duas etapas: 'GND' liga so o GND dos sensores (embaixo do ESP32) aos GND do ESP32,
-# ANTES do I2C cercar esses pinos; 'GND:adiado' liga o resto no fim (pinos em GND_DEPOIS).
-GND_ANTES = ['U3.3', 'U4.2', 'U4.6', 'U1.14', 'U1.20', 'U1.26']
-ORDEM = (['VBAT', '+3V3', '+5V', 'GND'] +
+# o GND dos sensores ja vem pronto (projeto.TRILHAS_FIXAS)
+ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['M_RR', 'M_FR', 'M_FL'] +
          ['SDA', 'SCL', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2', 'GND:adiado',
+          'SDA2', 'SCL2', 'GND',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
           # por cima dele: se for antes, fecha o GND do ESP32 num bolso. Vai depois (jumper se precisar)
           'M_RL'])
@@ -54,6 +52,14 @@ def anel():
            for i in range(n + 1)]
     w = P.CLASSES['POTENCIA'][0]
     return [dict(rede='VBAT', x1=a[0], y1=a[1], x2=b[0], y2=b[1], w=w) for a, b in zip(pts, pts[1:])]
+
+
+def fixas():
+    """trilhas que nao passam pelo roteador: anel de VBAT + GND dos sensores"""
+    out = anel()
+    for rede, w, pts in getattr(P, 'TRILHAS_FIXAS', []):
+        out += [dict(rede=rede, x1=a[0], y1=a[1], x2=b[0], y2=b[1], w=w) for a, b in zip(pts, pts[1:])]
+    return out
 
 
 def exportar():
@@ -114,7 +120,7 @@ def exportar():
     geo = dict(raio=P.DISCO_D / 2, folga=P.FOLGA, folga_borda=P.FOLGA_BORDA,
                pescoco=P.LARG_PESCOCO, larguras=larg, larg_padrao=P.CLASSES['Default'][0],
                jumper_ilha=P.JUMPER_ILHA, pads=pads, sem_cobre=sem_cobre,
-               sem_jumper=sem_jumper, fixas=anel(), ordem=ordem,
+               sem_jumper=sem_jumper, fixas=fixas(), ordem=ordem,
                # GND por onde passa a corrente dos motores: so cobre da placa
                gnd_potencia=['J1.2', 'C1.2', 'U2.2', 'U1.20'] + [f'Q{n}.2' for n in range(1, 5)] +
                # o motor RL volta pelos jumpers fixos de GND
@@ -124,9 +130,8 @@ def exportar():
                grupos_fios=grupos_fios,
                jumpers_fixos=[dict(rede=rede, x1=a[0], y1=a[1], x2=b_[0], y2=b_[1])
                               for _, rede, a, b_ in P.JUMPERS_FIXOS],
-               # pinos ligados so DEPOIS (rede:adiado): o GND fora dos sensores
-               adiar={'GND': [f"{p['ref']}.{p['num']}" for p in pads
-                              if p['rede'] == 'GND' and f"{p['ref']}.{p['num']}" not in GND_ANTES]},
+               # pinos ligados so DEPOIS (rede:adiado); nenhum na versao minima
+               adiar={},
                # o GND nasce na bateria (de onde a corrente sai de verdade)
                inicio={'GND': 'J1.2'})
     json.dump(geo, open(GEO, 'w'), indent=1)
@@ -170,7 +175,7 @@ def aplicar():
     if len(b.GetTracks()):
         raise SystemExit('rode antes: python3 gerar.py placa (a placa ja tem trilhas)')
     r = json.load(open(ROTAS))
-    for t in anel() + r['trilhas']:
+    for t in fixas() + r['trilhas']:
         trilha(b, t['rede'], t['x1'], t['y1'], t['x2'], t['y2'], t['w'], pcbnew.B_Cu)
     # jumpers em sequencia (um termina onde o outro comeca) dividem o MESMO furo
     furos = []                                   # (rede, x, y)

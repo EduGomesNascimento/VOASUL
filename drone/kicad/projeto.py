@@ -138,6 +138,25 @@ peca('J4', 'FLUXO (PMW3901)', 'CONN2x3', -7.62, -20.04, rot=90,
 # Na versao minima nao precisa: o roteador acha os jumpers sozinho.
 JUMPERS_FIXOS = []
 
+# ---- trilhas fixas de GND dos sensores (embaixo do ESP32), desenhadas a mao.
+# Cada pino sobe reto para o GND do ESP32 na MESMA ordem dos sinais (GND, SCL, SDA | GND),
+# entao nada se cruza. Deixando para o roteador, ele liga no GND mais proximo e atravessa
+# por cima do SCL/SDA. 0,8 mm perto dos pinos de 2,54 mm; 1,5 mm no meio.
+# O U4.2 contorna a area sem cobre da antena (x < -23, y < 9,5) e o pino 21 do ESP32.
+TRILHAS_FIXAS = [
+    # U4.2 (GND do BMP280) -> U1.20 (GND do ESP32)
+    ('GND', 0.8, [(-16.31, -3.0), (-16.31, 0.0)]),
+    ('GND', 1.5, [(-16.31, 0.0), (-16.31, 3.45), (-21.6, 9.65)]),
+    ('GND', 0.8, [(-21.6, 9.65), (-22.85, 10.9), (-22.86, 11.6)]),
+    # U4.6 (SDO do BMP280 = GND) -> U1.26 (GND do ESP32)
+    ('GND', 0.8, [(-6.15, -3.0), (-6.15, 0.0)]),
+    ('GND', 1.5, [(-6.15, 0.0), (-6.15, 8.0), (-7.62, 9.47)]),
+    ('GND', 0.8, [(-7.62, 9.47), (-7.62, 11.6)]),
+    # U3.3 (GND do BMI160) -> trilha de cima
+    ('GND', 0.8, [(4.96, -3.0), (4.96, 0.5)]),
+    ('GND', 1.5, [(4.96, 0.5), (-6.15, 0.5)]),
+]
+
 # ---- 4 canais de motor, na ponta de cada diagonal
 # de fora p/ dentro: anel VBAT | ilhas do motor, C, diodo | MOSFET | resistores
 MOTORES = [('FR', 45, 'M_FR'), ('RR', -45, 'M_RR'), ('RL', -135, 'M_RL'), ('FL', 135, 'M_FL')]
