@@ -1,9 +1,13 @@
 ** Drc report for /home/user/voasul/drone/kicad/drone.kicad_pcb **
-** Created on 2026-11-05 07:15:34 **
+** Created on 2026-11-17 18:36:25 **
 
 ** Found 0 DRC violations **
 
-** Found 0 unconnected pads **
+** Found 1 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; Severity: error
+    @(148.3000 mm, 100.0000 mm): Zone [GND] on B.Cu
+    @(148.3000 mm, 100.0000 mm): Zone [GND] on B.Cu
 
 ** Found 0 Footprint errors **
 

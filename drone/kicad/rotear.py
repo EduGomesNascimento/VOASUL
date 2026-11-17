@@ -23,6 +23,7 @@ import sys
 import time
 
 import numpy as np
+from scipy import ndimage
 
 RES = 0.2
 MARGEM = 0.15          # folga extra por causa da grade
@@ -295,6 +296,20 @@ class Roteador:
                 g.marcar(arvore, dict(f, w=0.0), RES * 0.8)
         faltam = list(range(len(pads)))
         ligados = set()
+        # Cobre fixo da rede (trilhas desenhadas a mao) que ainda NAO encosta no pino de inicio
+        # (a bateria) fica 'pendente': so passa a contar como ligado quando o cobre que nasce na
+        # bateria chegar nele. Senao a fase de potencia ligaria os MOSFETs num pedaco solto e a
+        # corrente dos motores voltaria pelo GND de dentro do ESP32.
+        pendentes = []
+        ini_nome = self.geo.get('inicio', {}).get(rede)
+        k_ini = next((k for k in faltam if nome(pads[k]) == ini_nome), None)
+        if potencia and k_ini is not None and arvore.any():
+            m = np.zeros((g.n, g.n), bool)
+            g.marcar(m, pads[k_ini], 0.0)
+            if not (m & arvore).any():
+                lab, nl = ndimage.label(arvore, structure=np.ones((3, 3), bool))
+                pendentes = [lab == i for i in range(1, nl + 1)]
+                arvore[:] = False
         if so_potencia:
             faltam = [k for k in faltam if nome(pads[k]) in potencia]
         faltam = [k for k in faltam if nome(pads[k]) not in ignorar]   # ficam para 'rede:adiado'
@@ -318,6 +333,25 @@ class Roteador:
             faltam.remove(k0)
             ligados.add(nome(pads[k0]))
         novas, novos_j, falhas = [], [], []
+
+        def absorver():
+            # pedaco pendente que encostou na arvore passa a fazer parte dela (com seus pinos)
+            mudou = True
+            while mudou and pendentes:
+                mudou = False
+                viz = ndimage.binary_dilation(arvore, structure=np.ones((3, 3), bool))
+                for c in list(pendentes):
+                    if (c & viz).any():
+                        arvore[c] = True
+                        pendentes.remove(c)
+                        mudou = True
+                        for kk in list(faltam):
+                            mm = np.zeros((g.n, g.n), bool)
+                            g.marcar(mm, pads[kk], 0.0)
+                            if (mm & c).any():
+                                faltam.remove(kk)
+                                ligados.add(nome(pads[kk]))
+        absorver()
         jl = self.jumper_livre_fn()
         fase_potencia = bool(potencia) and not (ligados & potencia == potencia & {nome(p) for p in pads})
 
@@ -330,6 +364,7 @@ class Roteador:
                             g.marcar(arvore, pads[k], 0.0)
                             faltam.remove(k)
                             ligados.add(nome(pads[k]))
+            absorver()
         if not fase_potencia:
             atalho_grupos()
         atalho_grupos(so_fios=True)
@@ -399,6 +434,7 @@ class Roteador:
                 novos_j.append(jp)
             g.marcar(arvore, p, 0.0)
             ligados.add(nome(p))
+            absorver()
             atalho_grupos(so_fios=fase_potencia)
         return (not falhas), novas, novos_j, falhas
 
