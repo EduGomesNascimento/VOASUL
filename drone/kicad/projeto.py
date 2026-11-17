@@ -18,8 +18,12 @@ RAIO_LARG = 8.0           # raios do frame embaixo da placa (diagonais 45/135)
 # ---------------------------------------------------------------- larguras
 # placa caseira (transferencia termica): trilha grossa e folga grande, para o
 # toner amassado nao encostar e um defeitinho nao cortar a trilha.
-FOLGA = 0.8               # entre cobres de redes diferentes
-FOLGA_BORDA = 0.8
+# 1,0 mm e o maximo entre trilhas: as ilhas vizinhas das barras de 2,54 mm ficam a 0,84 mm
+# uma da outra, e a trilha de 0,8 mm que chega num pino ainda tem de passar entre elas.
+FOLGA = 1.0               # entre trilhas/ilhas de redes diferentes
+FOLGA_GND = 1.5           # do plano de GND para qualquer outra rede
+FOLGA_PINOS = 0.8         # entre ilhas da mesma peca (barra de 2,54 mm: 0,84 mm de vao)
+FOLGA_BORDA = 1.0
 LARG_PESCOCO = 0.8        # trilha so afina encostando em pino apertado (<= 3 mm dele)
 CLASSES = {
     #  nome        largura  redes
@@ -51,16 +55,12 @@ ESP_REDES = {
     'IO23': 'M_RL', 'IO19': 'M_FL', 'IO17': 'M_FR', 'IO4': 'M_RR',
     'IO22': 'SCL', 'IO21': 'SDA',          # I2C 1: BMP280
     'IO18': 'SCL2', 'IO16': 'SDA2',        # I2C 2: BMI160 (barramento proprio = sem cruzamento)
-    'VP': 'IR_E',                # IO36 (so entrada)
-    'VN': 'IR_D',                # IO39 (so entrada)
+    # VP/VN (IO36/39, IR) e IO27/14/12/13 (sonares) ficam SEM ligacao na versao minima:
+    # o firmware tem TEM_IR 0 e TEM_SONAR 0 (include/config.h)
     'IO35': 'VBAT_ADC',          # ADC1 (o ADC2 nao funciona com Wi-Fi)
     # (IO34 fica livre: o J3 esta logo abaixo dele)
     # fluxo optico PMW3901 (opcional, SPI): 4 pinos vizinhos -> J4 sem cruzamento
     'IO32': 'FLOW_MISO', 'IO33': 'FLOW_SCK', 'IO25': 'FLOW_MOSI', 'IO26': 'FLOW_CS',
-    # sonares, dos dois lados do GND do ESP32 (pino 14), que serve o 2k do ECHO da frente.
-    # IO12 e pino de strap (tem de estar em 0 no boot): como ECHO ele fica preso ao
-    # GND pelo 2k do divisor, entao o boot e sempre certo.
-    'IO27': 'ECHO_B', 'IO14': 'TRIG_B', 'IO12': 'ECHO_F', 'IO13': 'TRIG_F',
 }
 GPIO = {  # para o board_esp32.h
     'PIN_MOTOR_FR': 17, 'PIN_MOTOR_RR': 4, 'PIN_MOTOR_RL': 23, 'PIN_MOTOR_FL': 19,
@@ -118,12 +118,8 @@ peca('U2', 'MT3608 5,0V', 'MT3608', 0.0, 31.0,
      nota='IN+ IN- OUT+ OUT- | ajuste 5,0 V ANTES de encaixar o ESP32')
 peca('C2', '470uF 10V', 'CP_D6', 31.5, -9.5, rot=90, pinos={'1': '+5V', '2': 'GND'})
 
-# ---- sensores externos (tras): conectores na ordem dos pinos do ESP32
-# de cima (visto de cima), da esquerda p/ a direita: J3 (IR) | divisor da bateria |
-# J4 (fluxo optico) | sonar (resistores + J2)
-peca('J3', 'IR (FC-51 x2)', 'CONN4', -20.5, -17.0, rot=90,
-     pinos={'1': '+3V3', '2': 'IR_E', '3': 'IR_D', '4': 'GND'},
-     nota='1 VCC(3V3) 2 OUT esq 3 OUT dir 4 GND')
+# ---- tras: divisor da bateria e conector do fluxo optico
+# (versao minima: SEM sonar e SEM IR. Os pinos deles no ESP32 ficam livres.)
 # divisor da bateria (IO34): 10k/10k, em pe
 # (encostado no anel de VBAT: so o sinal fino VBAT_ADC atravessa a placa)
 peca('R9', '10k', 'R_PE', -14.5, -39.3, rot=90, pinos={'1': 'VBAT', '2': 'VBAT_ADC'})
@@ -138,28 +134,9 @@ peca('J4', 'FLUXO (PMW3901)', 'CONN2x3', -7.62, -20.04, rot=90,
      pinos={'1': '+3V3', '2': 'FLOW_MISO', '3': 'GND', '4': 'FLOW_SCK', '5': 'FLOW_CS', '6': 'FLOW_MOSI'},
      nota='cima: MISO SCK MOSI | baixo: 3V3 GND CS | ligue com o drone DESLIGADO')
 
-# sonar. Divisores do ECHO (5 V -> 3,3 V): 1k em serie, 2k para o GND, em pe.
-#  - ECHO baixo: R13 (2k) e R11 (1k) lado a lado, abaixo do J4.
-#  - ECHO frente: R14 (2k) e R12 (1k) em coluna, abaixo do GND do ESP32 (pino 14).
-peca('R13', '2k', 'R_PE', -0.5, -26.0, rot=-90, pinos={'1': 'ECHO_B', '2': 'GND'})
-peca('R11', '1k', 'R_PE', 3.54, -26.0, rot=-90, pinos={'1': 'ECHO_B', '2': 'ECHO_B5'})
-peca('R14', '2k', 'R_PE', 10.16, -23.0, rot=90, pinos={'1': 'ECHO_F', '2': 'GND'})
-peca('R12', '1k', 'R_PE', 10.16, -25.54, rot=-90, pinos={'1': 'ECHO_F', '2': 'ECHO_F5'})
-# ordem dos pinos = ordem das trilhas que chegam (nada cruza)
-peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', -0.5, -36.0, rot=90,
-     pinos={'1': 'GND', '2': 'ECHO_B5', '3': 'TRIG_B', '4': 'ECHO_F5', '5': 'TRIG_F', '6': '+5V'},
-     nota='1 GND 2 ECHO baixo 3 TRIG baixo 4 ECHO frente 5 TRIG frente 6 VCC(5V)')
-
-# ---- jumpers fixos (fio por cima), posicionados a mao: o roteador nao acha sozinho
-# porque precisam pular varias trilhas de uma vez. Conferidos contra corpos e ilhas.
-JUMPERS_FIXOS = [
-    # GND: do pino 14 do ESP32 (GND) para o centro de tras (J4, R13, J2)
-    ('JF1', 'GND', (10.16, -17.0), (-5.5, -25.6)),
-    # GND: do centro de tras para o canto de tras-esquerda (Q3, R7, J3, R10)
-    ('JF2', 'GND', (-6.5, -31.5), (-19.5, -26.5)),
-    # 3V3: de logo abaixo do J3 (trilha curta do pino 3V3 dele) para o J4 (3V3)
-    ('JF3', '+3V3', (-17.7, -20.8), (-8.6, -23.0)),
-]
+# ---- jumpers fixos (fio por cima), posicionados a mao, se o roteador precisar de ajuda.
+# Na versao minima nao precisa: o roteador acha os jumpers sozinho.
+JUMPERS_FIXOS = []
 
 # ---- 4 canais de motor, na ponta de cada diagonal
 # de fora p/ dentro: anel VBAT | ilhas do motor, C, diodo | MOSFET | resistores

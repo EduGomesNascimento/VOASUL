@@ -20,8 +20,10 @@ Projeto KiCad 7 da placa redonda (Ø97 mm) do drone. Abre no KiCad 7, 8 ou 9.
   entre duas vias, e desenhado na folha de montagem).
 - **Trilhas grossas:** 2,5 mm (VBAT, drenos dos motores) · 1,5 mm (GND, 5 V, 3V3) · 1,2 mm (sinais).
   Só afinam para 0,8 mm nos últimos 3 mm antes de um pino de passo 2,54.
-- **Folga de 0,8 mm** entre cobres de redes diferentes, inclusive entre ilhas de pinos (ilhas
-  ovais de 1,7 × 3,0 mm), para o toner amassado não encostar.
+- **Folga de 1,0 mm** entre trilhas/ilhas de redes diferentes e **1,5 mm** do plano de GND para
+  qualquer outra rede, para o toner amassado não encostar. Só as ilhas vizinhas de uma mesma barra
+  de 2,54 mm ficam mais perto (0,84 mm), porque é o passo do conector.
+- **Versão mínima:** sem sonar e sem IR (menos trilhas atravessando a placa = menos jumpers).
 - **Anel de VBAT** de 2,5 mm por dentro da borda, e **plano de GND** no resto.
 - Peças SMD (MOSFET SOT-23, diodo SS34, capacitor 0805) ficam **embaixo, no lado do cobre**,
   fora dos raios do frame (que passam a 2 mm da placa nas diagonais).

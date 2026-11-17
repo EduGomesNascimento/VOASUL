@@ -59,6 +59,15 @@
 #define VBAT_CRITICAL_V    3.35f
 
 // ---------------------------------------------------------------- ULTRASSOM
+// A placa da versao minima NAO tem os conectores do sonar nem do IR: os pinos ficam
+// soltos, e ler pino solto daria altura e obstaculo falsos. 0 = nem liga esses pinos.
+// Se um dia montar uma placa com sonar/IR, troque para 1.
+#ifndef TEM_SONAR
+#define TEM_SONAR             0
+#endif
+#ifndef TEM_IR
+#define TEM_IR                0
+#endif
 #define SONAR_PERIOD_MS       25    // disparos alternados -> 20 Hz por sensor
 #define SONAR_TIMEOUT_US      25000 // ~4 m ida e volta
 #define SONAR_MIN_M           0.03f

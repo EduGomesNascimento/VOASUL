@@ -23,12 +23,8 @@ CX, CY = 100.0, 100.0
 ORDEM = (['VBAT', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
-         # o sinal do motor RR desce pelo lado direito, onde tambem passa o sonar: vai antes
-         ['M_RR'] +
-         # sonar numa ordem em que um nao fecha o caminho do outro
-         ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
-         ['M_FR', 'M_FL'] +
-         ['SDA', 'SCL', 'IR_E', 'IR_D', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+         ['M_RR', 'M_FR', 'M_FL'] +
+         ['SDA', 'SCL', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
           'SDA2', 'SCL2', 'GND',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
           # por cima dele: se for antes, fecha o GND do ESP32 num bolso. Vai depois (jumper se precisar)
@@ -37,7 +33,7 @@ ORDEM = (['VBAT', '+3V3', '+5V'] +
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
 # corpo encostado na placa: jumper nao passa por cima nem fura embaixo
-SEM_JUMPER_TIPOS = ('C', 'R', 'J2', 'J3', 'J4')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
+SEM_JUMPER_TIPOS = ('C', 'R', 'J4')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
 
 
 def loc(v):
@@ -125,9 +121,8 @@ def exportar():
                grupos_fios=grupos_fios,
                jumpers_fixos=[dict(rede=rede, x1=a[0], y1=a[1], x2=b_[0], y2=b_[1])
                               for _, rede, a, b_ in P.JUMPERS_FIXOS],
-               # pinos ligados so DEPOIS (rede:adiado): o 5V do J2 entra depois do sonar
-               # (senao desce em diagonal no corredor dele)
-               adiar={'+5V': ['J2.6']},
+               # pinos ligados so DEPOIS (rede:adiado); nenhum na versao minima
+               adiar={},
                # o GND nasce na bateria (de onde a corrente sai de verdade)
                inicio={'GND': 'J1.2'})
     json.dump(geo, open(GEO, 'w'), indent=1)
@@ -192,7 +187,7 @@ def aplicar():
     z = pcbnew.ZONE(b)
     z.SetLayer(pcbnew.B_Cu)
     z.SetNet(b.FindNet('GND'))
-    z.SetLocalClearance(MM(P.FOLGA))
+    z.SetLocalClearance(MM(P.FOLGA_GND))
     z.SetMinThickness(MM(1.0))
     z.SetThermalReliefGap(MM(P.FOLGA))
     z.SetThermalReliefSpokeWidth(MM(1.2))

@@ -348,7 +348,7 @@ def ajustar_projeto():
     ns['netclass_patterns'] = padroes
     ds = pro.setdefault('board', {}).setdefault('design_settings', {})
     regras = ds.setdefault('rules', {})
-    regras.update(min_clearance=P.FOLGA - 0.05, min_track_width=P.LARG_PESCOCO - 0.05, min_via_diameter=1.6,
+    regras.update(min_clearance=P.FOLGA_PINOS - 0.05, min_track_width=P.LARG_PESCOCO - 0.05, min_via_diameter=1.6,
                   min_via_annular_width=0.3, min_through_hole_diameter=0.7,
                   min_copper_edge_clearance=P.FOLGA_BORDA - 0.05, min_hole_clearance=0.4, min_hole_to_hole=0.5,
                   min_silk_clearance=0.0, min_text_height=0.8, min_text_thickness=0.12)

@@ -113,11 +113,18 @@ static void IRAM_ATTR isrFront() { sFront.onEcho(); }
 static IRSensor irL, irR;
 
 void Rangefinders::begin() {
+#if TEM_SONAR
   sDown.begin(PIN_SONAR_DOWN_TRIG,  PIN_SONAR_DOWN_ECHO,  isrDown);
   sFront.begin(PIN_SONAR_FRONT_TRIG, PIN_SONAR_FRONT_ECHO, isrFront);
+  Serial.println("[RANGE] 2x HC-SR04 prontos");
+#else
+  Serial.println("[RANGE] sem sonar (TEM_SONAR 0): altura so pelo barometro");
+#endif
+#if TEM_IR
   irL.begin(PIN_IR_LEFT);
   irR.begin(PIN_IR_RIGHT);
-  Serial.println("[RANGE] 2x HC-SR04 + 2x IR prontos");
+  Serial.println("[RANGE] 2x IR prontos");
+#endif
 }
 
 void Rangefinders::update(float temperatureC, float tiltCos, float tiltDeg) {
@@ -126,11 +133,16 @@ void Rangefinders::update(float temperatureC, float tiltCos, float tiltDeg) {
   // o suficiente para o alt-hold oscilar entre um voo frio e um quente.
   const float c = 331.3f + 0.606f * temperatureC;
 
+#if TEM_SONAR
   sDown.poll(c);
   sFront.poll(c);
+#endif
+#if TEM_IR
   irL.poll();
   irR.poll();
+#endif
 
+#if TEM_SONAR
   // Disparo alternado: dois HC-SR04 juntos ouvem o eco um do outro.
   const uint32_t now = millis();
   if (now - _lastTrigMs >= SONAR_PERIOD_MS) {
@@ -139,6 +151,9 @@ void Rangefinders::update(float temperatureC, float tiltCos, float tiltDeg) {
     else            sFront.trigger();
     _turn ^= 1;
   }
+#else
+  (void)c;
+#endif
 
   // Sonar de solo: mede a distancia ao longo do eixo do drone, nao a vertical.
   // Inclinado 20 graus, a leitura fica 6% maior que a altura real.

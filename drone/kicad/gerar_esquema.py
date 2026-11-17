@@ -115,7 +115,7 @@ def simbolo_lib(nome, pinos, larg=10.16):
 BLOCOS = [
     ('ALIMENTACAO', ['J1', 'C1', 'U2', 'C2', 'R9', 'R10'], 25, 40),
     ('CONTROLE (ESP32) E SENSORES DE BORDO', ['U1', 'U3', 'U4'], 140, 40),
-    ('SONAR, IR E FLUXO OPTICO', ['J2', 'R11', 'R13', 'R12', 'R14', 'J3', 'J4'], 300, 40),
+    ('FLUXO OPTICO (OPCIONAL)', ['J4'], 300, 40),
     ('MOTOR FR', ['M1', 'C3', 'D1', 'Q1', 'R1', 'R5'], 25, 175),
     ('MOTOR RR', ['M2', 'C4', 'D2', 'Q2', 'R2', 'R6'], 120, 175),
     ('MOTOR RL', ['M3', 'C5', 'D3', 'Q3', 'R3', 'R7'], 215, 175),

@@ -122,7 +122,7 @@ pote plástico com tampa, luvas, régua, furadeira/micro retífica, brocas 0,9 /
    molho na água por 10 a 20 minutos e esfregue com o dedão até sair todo o papel branco.
 5. **Confira com lupa, trilha por trilha.** Falha pequena: retoque com a caneta. Falha grande
    ou trilha borrada encostando em outra: **lixe e repita** (é por isso que tem placa reserva).
-   A folga é de 0,8 mm justamente para o toner amassado não encostar.
+   A folga é de 1,0 mm entre trilhas e 1,5 mm até o plano de GND justamente para o toner amassado não encostar.
 6. **Corroa:** percloreto **morno** (40–50 °C em banho-maria), placa boiando com o cobre para
    baixo, ou mexendo o pote a cada minuto. Leva de 10 a 25 minutos. Tire quando todo o cobre
    fora do toner sumir. Lave bem.
@@ -157,7 +157,7 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 | 5 | **Resistores em pé** | Confira o valor com o multímetro **antes** de soldar. | Medir na placa: 100 Ω, 10k, 1k, 2k nos lugares certos. |
 | 6 | **Capacitores 100 nF** | Sem polaridade. | — |
 | 7 | **Barras fêmea do ESP32** | Solde com o **ESP32 encaixado**, para alinhar. Um pino de cada ponta primeiro, confira se ficou reto e só depois o resto. | ESP32 entra e sai sem forçar. |
-| 8 | **Conectores J2 (sonar), J3 (IR) e J4 (fluxo óptico)** | Solde o J4 mesmo sem ter o módulo: ele é opcional e o drone voa sem. | — |
+| 8 | **Conector J4 (fluxo óptico)** | Solde o J4 mesmo sem ter o módulo: ele é opcional e o drone voa sem. | — |
 | 9 | **Eletrolíticos C1 e C2** | **Polaridade!** Listra = negativo, vai na ilha de GND. Ao contrário, ele estoura. | — |
 | 10 | **MT3608** em 4 pernas de fio rígido (~5 mm de altura) | Confira IN+/IN−/OUT+/OUT− na serigrafia do módulo **e** na placa. | — |
 | 11 | **Rabicho da bateria** (Molex) | **+ (vermelho) na ilha quadrada**, a de fora. | — |
@@ -180,7 +180,7 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 1. Bateria → **fusível** → placa.
 2. Meça VBAT (ilha + da bateria): igual à bateria.
 3. Meça a saída do MT3608 e **gire o trimpot até 5,0 V** (5,0 a 5,1). O multivoltas precisa de muitas voltas: é normal.
-4. Meça os 5 V no pino 5V do soquete do ESP32 e no pino 6 do J2.
+4. Meça os 5 V no pino 5V do soquete do ESP32.
 5. Meça a porta de cada MOSFET: **0 V** (o pull-down de 10k está segurando).
 
 **Para passar de fase:**
@@ -315,8 +315,8 @@ perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. O Serial
 ## Fase 12: extras (sonar da frente, IR, fluxo óptico)
 
 > **Versão mínima (a que vale agora):** na placa, só os motores, a alimentação, o ESP32, o BMI160 e
-> o BMP280. Os conectores do sonar (J2), do IR (J3) e do fluxo óptico (J4) podem ficar soldados e
-> vazios: o firmware funciona sem eles. O controle é o **app no celular através da estação terra**
+> o BMP280. A placa **não tem** sonar nem IR (o firmware está com `TEM_SONAR 0` e `TEM_IR 0`);
+> o conector do fluxo óptico (J4) pode ficar soldado e vazio. O controle é o **app no celular através da estação terra**
 > (ESP32-C3 na capinha, ESP-NOW até o drone: `docs/TERRA.md`). A energia (bateria ou cabo) continua
 > em aberto.
 
