@@ -21,12 +21,14 @@ MM = pcbnew.FromMM
 CX, CY = 100.0, 100.0
 
 # o GND dos sensores ja vem pronto (projeto.TRILHAS_FIXAS)
-ORDEM = (['VBAT', '+3V3', '+5V'] +
+# VBAT_ADC antes do 3V3: sobe reto do divisor ao pino 35; o 3V3 do J4 e que pula por cima dele
+ORDEM = (['VBAT', 'VBAT_ADC', '+3V3', '+5V'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['M_RR', 'M_FR', 'M_FL'] +
-         ['SDA', 'SCL', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2', 'GND',
+         ['SDA', 'SCL', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+          # SCL2 antes do SDA2: o SDA2 (mais a direita) passaria por cima do caminho do SCL2
+          'SCL2', 'SDA2', 'GND',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
           # por cima dele: se for antes, fecha o GND do ESP32 num bolso. Vai depois (jumper se precisar)
           'M_RL'])
