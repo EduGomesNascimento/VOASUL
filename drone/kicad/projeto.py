@@ -162,6 +162,8 @@ for n, (nome, ang, rede_pwm) in enumerate(MOTORES, start=1):
     # sem cruzar a porta.
     x, y = polar(31.0, ang, -1.27)
     peca(f'R{n + 4}', '10k', 'R_PE', x, y, rot=ang + 90, pinos={'1': porta, '2': 'GND'})
-    # resistor de porta do lado da porta, radial: PORTA por fora, sinal do ESP32 por dentro
+    # resistor de porta do lado da porta, radial: PORTA por DENTRO (colado no gate do MOSFET,
+    # ligacao curta) e sinal do ESP32 por FORA. Ao contrario, a trilha da porta teria de
+    # contornar o pino do sinal e o fecharia num bolso (com folga de 1,0 mm nao passa entre eles).
     x, y = polar(37.1, ang, -4.9)
-    peca(f'R{n}', '100', 'R_PE', x, y, rot=ang + 180, pinos={'1': porta, '2': rede_pwm})
+    peca(f'R{n}', '100', 'R_PE', x, y, rot=ang + 180, pinos={'1': rede_pwm, '2': porta})
