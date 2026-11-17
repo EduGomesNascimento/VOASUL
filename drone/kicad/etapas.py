@@ -21,8 +21,9 @@ MM = pcbnew.FromMM
 CX, CY = 100.0, 100.0
 
 # o GND dos sensores ja vem pronto (projeto.TRILHAS_FIXAS)
-# VBAT_ADC antes do 3V3: sobe reto do divisor ao pino 35; o 3V3 do J4 e que pula por cima dele
-ORDEM = (['VBAT', 'VBAT_ADC', '+3V3', '+5V'] +
+# VBAT_ADC antes do 3V3: sobe reto do divisor ao pino 35; o 3V3 do J4 e que pula por cima dele.
+# +5V antes do 3V3: senao o 3V3 do J4 contorna a ponta do ESP32 e cerca o pino 5V (19).
+ORDEM = (['VBAT', 'VBAT_ADC', '+5V', '+3V3'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['M_RR', 'M_FR', 'M_FL'] +
