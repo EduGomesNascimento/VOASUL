@@ -20,12 +20,15 @@ ROTAS = os.path.join(AQUI, 'rotas.json')
 MM = pcbnew.FromMM
 CX, CY = 100.0, 100.0
 
-ORDEM = (['VBAT', '+3V3', '+5V'] +
+# GND em duas etapas: 'GND' liga so o GND dos sensores (embaixo do ESP32) aos GND do ESP32,
+# ANTES do I2C cercar esses pinos; 'GND:adiado' liga o resto no fim (pinos em GND_DEPOIS).
+GND_ANTES = ['U3.3', 'U4.2', 'U4.6', 'U1.14', 'U1.20', 'U1.26']
+ORDEM = (['VBAT', '+3V3', '+5V', 'GND'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['M_RR', 'M_FR', 'M_FL'] +
          ['SDA', 'SCL', 'VBAT_ADC', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
-          'SDA2', 'SCL2', 'GND',
+          'SDA2', 'SCL2', 'GND:adiado',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
           # por cima dele: se for antes, fecha o GND do ESP32 num bolso. Vai depois (jumper se precisar)
           'M_RL'])
@@ -121,8 +124,9 @@ def exportar():
                grupos_fios=grupos_fios,
                jumpers_fixos=[dict(rede=rede, x1=a[0], y1=a[1], x2=b_[0], y2=b_[1])
                               for _, rede, a, b_ in P.JUMPERS_FIXOS],
-               # pinos ligados so DEPOIS (rede:adiado); nenhum na versao minima
-               adiar={},
+               # pinos ligados so DEPOIS (rede:adiado): o GND fora dos sensores
+               adiar={'GND': [f"{p['ref']}.{p['num']}" for p in pads
+                              if p['rede'] == 'GND' and f"{p['ref']}.{p['num']}" not in GND_ANTES]},
                # o GND nasce na bateria (de onde a corrente sai de verdade)
                inicio={'GND': 'J1.2'})
     json.dump(geo, open(GEO, 'w'), indent=1)
