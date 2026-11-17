@@ -15,3 +15,8 @@
 (rule "pulldown_ao_lado_mt3608"
   (constraint courtyard_clearance (min -100mm))
   (condition "A.Reference == 'U2' && B.Reference == 'R*'"))
+# ilhas vizinhas da mesma barra de 2,54 mm ficam a 0,84 mm: entre ILHAS vale 0,8 mm.
+# Trilha continua com 1,0 mm de folga (classe de rede) e o plano de GND com 1,5 mm.
+(rule "ilha_ilha"
+  (constraint clearance (min 0.8mm))
+  (condition "A.Type == 'Pad' && B.Type == 'Pad'"))

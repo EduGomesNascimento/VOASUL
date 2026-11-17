@@ -1,1 +1,1 @@
-33 redes, 126 pinos
+25 redes, 102 pinos

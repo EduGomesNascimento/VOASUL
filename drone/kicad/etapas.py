@@ -517,6 +517,12 @@ def usinagem():
     pcbnew.SaveBoard(destino, b)
     for ext in ('.kicad_pro', '.kicad_dru'):
         shutil.copy(PCB.replace('.kicad_pcb', ext), destino.replace('.kicad_pcb', ext))
+    # ilhas aumentadas para a fresa: entre ilhas vale a folga da CNC, nao os 0,8 da caseira
+    dru = destino.replace('.kicad_pcb', '.kicad_dru')
+    txt = open(dru, encoding='utf-8').read()
+    txt = txt.replace('(rule "ilha_ilha"\n  (constraint clearance (min 0.8mm))',
+                      f'(rule "ilha_ilha"\n  (constraint clearance (min {CNC_FOLGA}mm))')
+    open(dru, 'w', encoding='utf-8').write(txt)
     pro_json = destino.replace('.kicad_pcb', '.kicad_pro')
     with open(pro_json) as f:
         pj = json.load(f)

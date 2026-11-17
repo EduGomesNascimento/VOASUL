@@ -107,7 +107,7 @@
         "max_error": 0.005,
         "min_clearance": 0.75,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.75,
+        "min_copper_edge_clearance": 0.95,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
         "min_microvia_diameter": 0.19999999999999998,
@@ -203,7 +203,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.8,
+        "clearance": 1.0,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -220,7 +220,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.8,
+        "clearance": 1.0,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -237,7 +237,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.8,
+        "clearance": 1.0,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
