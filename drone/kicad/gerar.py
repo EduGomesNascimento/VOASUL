@@ -222,7 +222,9 @@ def pegada(tipo):
     if tipo == 'SMA':
         return fp_lib('Diode_SMD', 'D_SMA')
     if tipo == 'CONN4':
-        return fp_lib('Connector_PinHeader_2.54mm', 'PinHeader_1x04_P2.54mm_Vertical', furo=1.0, oval_perp=True)
+        # ilha redonda de 1,7 (como o J4): o J3 fica entre a fileira do ESP32 e os resistores
+        # do motor RL, e a oval comprida fechava a passagem do 3V3 por baixo dele
+        return fp_lib('Connector_PinHeader_2.54mm', 'PinHeader_1x04_P2.54mm_Vertical', furo=1.0)
     if tipo == 'CONN2x3':
         return fp_lib('Connector_PinHeader_2.54mm', 'PinHeader_2x03_P2.54mm_Vertical', furo=1.0)
     if tipo in ('CONN6', 'CONN6F'):

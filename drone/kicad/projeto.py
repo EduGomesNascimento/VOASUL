@@ -125,8 +125,8 @@ peca('C2', '470uF 10V', 'CP_D6', 31.5, -9.5, rot=90, pinos={'1': '+5V', '2': 'GN
 # ---- sensores externos (tras): conectores na ordem dos pinos do ESP32
 # de cima (visto de cima), da esquerda p/ a direita: J3 (IR) | divisor da bateria |
 # J4 (fluxo optico) | sonar (resistores + J2)
-# (1 mm para a esquerda: abre o corredor do VBAT_ADC entre o J3 e o J4 com folga de 1,0 mm)
-peca('J3', 'IR (FC-51 x2)', 'CONN4', -21.5, -17.0, rot=90,
+# (0,5 mm para a esquerda: abre o corredor do VBAT_ADC entre o J3 e o J4 com folga de 1,0 mm)
+peca('J3', 'IR (FC-51 x2)', 'CONN4', -21.0, -17.0, rot=90,
      pinos={'1': '+3V3', '2': 'IR_E', '3': 'IR_D', '4': 'GND'},
      nota='1 VCC(3V3) 2 OUT esq 3 OUT dir 4 GND')
 # divisor da bateria (IO34): 10k/10k, em pe
