@@ -28,10 +28,13 @@ ORDEM = (['VBAT', 'VBAT_ADC', '+5V', '+3V3'] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          # o sinal do motor RR desce pelo lado direito, onde tambem passa o sonar: vai antes
          ['M_RR'] +
+         # fluxo optico antes do sonar: o CS contorna a fileira de cima do J4 pela direita,
+         # no corredor por onde desce o ECHO do sonar de baixo
+         ['FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS'] +
          # sonar numa ordem em que um nao fecha o caminho do outro
          ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
          ['M_FR', 'M_FL'] +
-         ['SDA', 'SCL', 'IR_E', 'IR_D', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+         ['SDA', 'SCL', 'IR_E', 'IR_D',
           # SCL2 antes do SDA2: o SDA2 (mais a direita) passaria por cima do caminho do SCL2
           'SCL2', 'SDA2', 'GND',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
