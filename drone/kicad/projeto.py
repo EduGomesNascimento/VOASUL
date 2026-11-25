@@ -32,6 +32,8 @@ CLASSES = {
     # sinais com 1,0 mm: tres sinais descendo de pinos vizinhos (2,54) cabem lado a lado com
     # 1,0 mm de folga (com 1,2 mm nao cabem e o roteador da volta na placa)
     'Default':  (1.0, []),
+    # medicao da bateria (sem corrente): fina para passar entre as ilhas dos jumpers fixos
+    'FINO':     (0.8, ['VBAT_ADC']),
 }
 R_ANEL = 45.0             # anel de VBAT por dentro da borda (2,5 mm)
 JUMPER_FURO, JUMPER_ILHA = 0.9, 2.4
@@ -159,10 +161,10 @@ peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', -0.5, -36.0, rot=90,
 
 # ---- jumpers fixos (fio por cima), posicionados a mao, se o roteador precisar de ajuda.
 JUMPERS_FIXOS = [
-    # GND do J3 (IR): o pino 4 fica num bolso (fileira do ESP32 em cima, VBAT_ADC a direita,
-    # 3V3 do J4 embaixo). Trilha curta ate uma ilha logo abaixo e fio por cima do 3V3 ate
-    # o GND do divisor da bateria (R10).
-    ('JF1', 'GND', (-13.38, -20.4), (-13.38, -27.2)),
+    # 3V3 do J4 (fluxo optico): pula o VBAT_ADC logo abaixo do J3/J4. Sem ele o roteador
+    # contorna a ponta do ESP32 pela direita e fecha o caminho do motor RR. Com o 3V3 descendo
+    # pela esquerda do J3, o GND do J3 (pino 4) desce livre ate o GND do divisor (R10).
+    ('JF1', '+3V3', (-16.8, -24.0), (-7.62, -24.6)),
 ]
 
 # ---- trilhas fixas de GND dos sensores (embaixo do ESP32), desenhadas a mao.
@@ -179,8 +181,6 @@ TRILHAS_FIXAS = [
     ('GND', 0.8, [(-6.15, -3.0), (-6.15, 0.0)]),
     ('GND', 1.5, [(-6.15, 0.0), (-6.15, 8.0), (-7.62, 9.47)]),
     ('GND', 0.8, [(-7.62, 9.47), (-7.62, 11.6)]),
-    # J3.4 (GND do IR) -> ilha do jumper fixo JF1, logo abaixo
-    ('GND', 0.8, [(-13.38, -17.0), (-13.38, -20.4)]),
     # U3.3 (GND do BMI160) -> trilha de cima
     ('GND', 0.8, [(4.96, -3.0), (4.96, 0.5)]),
     ('GND', 1.5, [(4.96, 0.5), (-6.15, 0.5)]),
