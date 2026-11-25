@@ -29,7 +29,9 @@ CLASSES = {
     #  nome        largura  redes
     'POTENCIA': (2.5, ['VBAT', 'DRENO_FR', 'DRENO_RR', 'DRENO_RL', 'DRENO_FL']),
     'ALIM':     (1.5, ['GND', '+5V', '+3V3']),
-    'Default':  (1.2, []),
+    # sinais com 1,0 mm: tres sinais descendo de pinos vizinhos (2,54) cabem lado a lado com
+    # 1,0 mm de folga (com 1,2 mm nao cabem e o roteador da volta na placa)
+    'Default':  (1.0, []),
 }
 R_ANEL = 45.0             # anel de VBAT por dentro da borda (2,5 mm)
 JUMPER_FURO, JUMPER_ILHA = 0.9, 2.4
