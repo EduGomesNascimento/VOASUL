@@ -165,6 +165,12 @@ JUMPERS_FIXOS = [
     # contorna a ponta do ESP32 pela direita e fecha o caminho do motor RR. Com o 3V3 descendo
     # pela esquerda do J3, o GND do J3 (pino 4) desce livre ate o GND do divisor (R10).
     ('JF1', '+3V3', (-16.8, -24.0), (-7.62, -24.6)),
+    # GND: a regiao de tras-esquerda (MOSFET e pull-down do motor RL, GND do IR, divisor da
+    # bateria) fica cercada pelas trilhas do motor RL, do 3V3 e do VBAT_ADC. Este fio a liga
+    # ao GND da bateria (lado esquerdo). Leva corrente do motor RL: fio 20-22 AWG.
+    ('JF2', 'GND', (-21.5, -28.0), (-30.5, -11.5)),
+    # GND: regiao do sonar e do fluxo optico (J2, J4, R13) -> regiao do divisor, por cima do VBAT_ADC
+    ('JF3', 'GND', (-18.0, -27.5), (-5.0, -28.5)),
 ]
 
 # ---- trilhas fixas de GND dos sensores (embaixo do ESP32), desenhadas a mao.
