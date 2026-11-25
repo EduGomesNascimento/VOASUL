@@ -29,7 +29,10 @@ ITENS = [
     ('Drone: placa', 'Barra macho 1x40', 1, 'U3, U4, J2-J4', T, '', 0, 0, 'J2/J3/J4 opcionais na versao minima'),
     ('Drone: placa', 'Fenolite 15x20 face simples (da 2 discos)', 1, 'placa', C,
      'MB3', 19.00, 1, 'placa + reserva'),
-    ('Drone: placa', 'Fio rigido para os 11 jumpers', 1, 'jumpers', T, '', 0, 0, 'de cabo de rede'),
+    ('Drone: placa', 'Ultrassom HC-SR04 (baixo + frente)', 2, 'J2', T, '', 0, 0, ''),
+    ('Drone: placa', 'IR de obstaculo FC-51 (esquerdo + direito)', 2, 'J3', C,
+     'Mercado Livre', 5.00, 2, '~; os de domo branco (PIR) nao servem'),
+    ('Drone: placa', 'Fio rigido encapado para os 14 jumpers', 1, 'jumpers', T, '', 0, 0, 'de cabo de rede'),
     ('Placa: fabricar', 'Papel transfer amarelo para placa (A4)', 2, 'transferencia', C,
      'Mercado Livre', 2.50, 2, '~R$ 2-3 a folha; couche/glossy serve com mais paciencia'),
     ('Placa: fabricar', 'Percloreto de ferro em po, 250 g', 1, 'corrosao', C,
@@ -76,7 +79,7 @@ ITENS = [
     ('Bancada', 'Alcool isopropilico', 1, 'limpar o fluxo', O, 'MB3', 9.00, 0, ''),
     # ---------------------------------------------------------------- depois
     ('Depois (opcional)', 'Fluxo optico PMW3901', 1, 'J4', O, 'AliExpress', 31.99, 0, 'segura o drone parado'),
-    ('Depois (opcional)', 'Sonar HC-SR04 / IR FC-51', 2, 'J2 / J3', T, '', 0, 0, 'ja tem; fora da versao minima'),
+
 ]
 
 
@@ -98,7 +101,7 @@ def main():
     def r(v):
         return f'R$ {v:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
     md = ['# BOM total do drone VoaSul (versão mínima)', '',
-          'Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da '
+          'Drone com BMI160 + BMP280, 2 ultrassons e 2 IR (fluxo óptico opcional), pilotado pelo celular através da '
           'estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). Placa feita em casa por transferência térmica + percloreto (Fase 3 do PLANO_DE_MONTAGEM.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 '
           '("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.', '',
           '## Quanto falta gastar', '',

@@ -152,12 +152,12 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 |---|---|---|---|
 | 1 | **MOSFETs Q1–Q4** (SOT-23, lado do cobre) | Fluxo na ilha, prenda um pino, alinhe, solde os outros. Pino 1 = porta. | Sem ponte entre os 3 pinos (bip). |
 | 2 | **Diodos D1–D4** (SS34, lado do cobre) | **Faixa (catodo) para o lado de fora**, no anel de VBAT. | Diodo do multímetro: ~0,2 V num sentido, OL no outro. |
-| 3 | **Jumpers** (fio rígido por cima). Placa caseira ou da CNC: 11 jumpers. **Placa da JLCPCB: não tem, pule.** | Só os que o desenho mostra, retos e encostados na placa. | Bip de ponta a ponta. |
+| 3 | **Jumpers** (fio rígido por cima). Placa caseira ou da CNC: 14 jumpers, **fio encapado** (de cabo de rede): alguns passam perto das pernas dos resistores. **Placa da JLCPCB: não tem, pule.** | Só os que o desenho mostra, retos e encostados na placa. | Bip de ponta a ponta. |
 | 4 | **BMI160 e BMP280**, embaixo do ESP32 | Barra macho com o **plástico na placa**; corte a sobra dos pinos rente. Altura total < 7 mm. | Nada encosta no ESP32 encaixado. |
 | 5 | **Resistores em pé** | Confira o valor com o multímetro **antes** de soldar. | Medir na placa: 100 Ω, 10k, 1k, 2k nos lugares certos. |
 | 6 | **Capacitores 100 nF** | Sem polaridade. | — |
 | 7 | **Barras fêmea do ESP32** | Solde com o **ESP32 encaixado**, para alinhar. Um pino de cada ponta primeiro, confira se ficou reto e só depois o resto. | ESP32 entra e sai sem forçar. |
-| 8 | **Conector J4 (fluxo óptico)** | Solde o J4 mesmo sem ter o módulo: ele é opcional e o drone voa sem. | — |
+| 8 | **Conectores J2 (sonar), J3 (IR) e J4 (fluxo óptico)** | Solde o J4 mesmo sem ter o módulo: ele é opcional e o drone voa sem. | — |
 | 9 | **Eletrolíticos C1 e C2** | **Polaridade!** Listra = negativo, vai na ilha de GND. Ao contrário, ele estoura. | — |
 | 10 | **MT3608** em 4 pernas de fio rígido (~5 mm de altura) | Confira IN+/IN−/OUT+/OUT− na serigrafia do módulo **e** na placa. | — |
 | 11 | **Rabicho da bateria** (Molex) | **+ (vermelho) na ilha quadrada**, a de fora. | — |
@@ -180,7 +180,7 @@ dessoldadora, pinça, alicate de corte, lupa, multímetro, fio rígido (jumper).
 1. Bateria → **fusível** → placa.
 2. Meça VBAT (ilha + da bateria): igual à bateria.
 3. Meça a saída do MT3608 e **gire o trimpot até 5,0 V** (5,0 a 5,1). O multivoltas precisa de muitas voltas: é normal.
-4. Meça os 5 V no pino 5V do soquete do ESP32.
+4. Meça os 5 V no pino 5V do soquete do ESP32 e no pino 6 do J2 (sonar).
 5. Meça a porta de cada MOSFET: **0 V** (o pull-down de 10k está segurando).
 
 **Para passar de fase:**
@@ -314,11 +314,13 @@ perda de pacotes** a cada 10 m, em campo aberto, drone a ~1 m do chão. O Serial
 
 ## Fase 12: extras (sonar da frente, IR, fluxo óptico)
 
-> **Versão mínima (a que vale agora):** na placa, só os motores, a alimentação, o ESP32, o BMI160 e
-> o BMP280. A placa **não tem** sonar nem IR (o firmware está com `TEM_SONAR 0` e `TEM_IR 0`);
-> o conector do fluxo óptico (J4) pode ficar soldado e vazio. O controle é o **app no celular através da estação terra**
-> (ESP32-C3 na capinha, ESP-NOW até o drone: `docs/TERRA.md`). A energia (bateria ou cabo) continua
-> em aberto.
+> **Versão que vale agora:** motores, alimentação, ESP32, BMI160 e BMP280, mais os conectores do
+> sonar (J2, 2x HC-SR04) e do IR (J3, 2x FC-51). Sem algum deles, troque `TEM_SONAR`/`TEM_IR` para 0
+> em `include/config.h`. O fluxo óptico (J4) pode ficar vazio.
+> **IR:** tem de ser o FC-51 (2 LEDs + trimpot, 3 pinos); o PIR de domo branco (HC-SR501) não serve.
+> O controle é o **app no celular através da estação terra** (ESP32-C3 na capinha, ESP-NOW até o
+> drone: `docs/TERRA.md`), com o botão **DESVIO** para o sonar da frente e os IR. A energia
+> (bateria ou cabo) continua em aberto.
 
 Um de cada vez, **cada um com o seu teste antes de voar**:
 

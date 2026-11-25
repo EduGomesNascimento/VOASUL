@@ -171,6 +171,9 @@ JUMPERS_FIXOS = [
     ('JF2', 'GND', (-21.5, -28.0), (-30.5, -11.5)),
     # GND: regiao do sonar e do fluxo optico (J2, J4, R13) -> regiao do divisor, por cima do VBAT_ADC
     ('JF3', 'GND', (-18.0, -27.5), (-5.0, -28.5)),
+    # GND dos sensores (U4.6, U3.3, pino 26 do ESP32) -> GND do U4.2, embaixo do ESP32,
+    # por cima do I2C. Sem ele esse GND so fecha por dentro da placa do ESP32.
+    ('JF4', 'GND', (-20.01, 7.79), (-6.15, 1.25)),
 ]
 
 # ---- trilhas fixas de GND dos sensores (embaixo do ESP32), desenhadas a mao.

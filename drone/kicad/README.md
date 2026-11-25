@@ -23,7 +23,8 @@ Projeto KiCad 7 da placa redonda (Ø97 mm) do drone. Abre no KiCad 7, 8 ou 9.
 - **Folga de 1,0 mm** entre trilhas/ilhas de redes diferentes e **1,5 mm** do plano de GND para
   qualquer outra rede, para o toner amassado não encostar. Só as ilhas vizinhas de uma mesma barra
   de 2,54 mm ficam mais perto (0,84 mm), porque é o passo do conector.
-- **Versão mínima:** sem sonar e sem IR (menos trilhas atravessando a placa = menos jumpers).
+- **Sinais com 1,0 mm** (0,8 mm no VBAT_ADC): três sinais de pinos vizinhos do ESP32 descem lado a lado.
+- **Jumpers fixos** (JF1–JF4, `projeto.py`): 3V3 do J4 e três de GND que o roteador não acha sozinho.
 - **Anel de VBAT** de 2,5 mm por dentro da borda, e **plano de GND** no resto.
 - Peças SMD (MOSFET SOT-23, diodo SS34, capacitor 0805) ficam **embaixo, no lado do cobre**,
   fora dos raios do frame (que passam a 2 mm da placa nas diagonais).

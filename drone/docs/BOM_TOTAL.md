@@ -1,16 +1,16 @@
 # BOM total do drone VoaSul (versão mínima)
 
-Drone com BMI160 + BMP280 (sem sonar, IR e fluxo óptico), pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). Placa feita em casa por transferência térmica + percloreto (Fase 3 do PLANO_DE_MONTAGEM.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
+Drone com BMI160 + BMP280, 2 ultrassons e 2 IR (fluxo óptico opcional), pilotado pelo celular através da estação terra (ESP32-C3 na capinha, ESP-NOW até o drone; ver TERRA.md). Placa feita em casa por transferência térmica + percloreto (Fase 3 do PLANO_DE_MONTAGEM.md). "tem" vem das suas marcações na lista de compras. Preço da AliExpress de 10/11/2026 ("a partir de", sem frete e imposto); "~" é estimativa. Planilha: `BOM_TOTAL.csv`.
 
 ## Quanto falta gastar
 
 | | R$ |
 |---|---|
-| Drone + estação terra + fabricar a placa (comum às duas energias) | R$ 142,60 |
+| Drone + estação terra + fabricar a placa (comum às duas energias) | R$ 152,60 |
 | + Energia A: bateria | R$ 90,91 |
 | + Energia B: cabo do chão | R$ 9,00 |
-| **Total com bateria** | **R$ 233,51** |
-| **Total com cabo** | **R$ 151,60** |
+| **Total com bateria** | **R$ 243,51** |
+| **Total com cabo** | **R$ 161,60** |
 
 Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20 a 45 % a mais sobre a parte da AliExpress. Chega em 2 a 5 semanas. Se não der para esperar, o BMI160 sai ~R$ 26 mais caro na MB3.
 
@@ -35,7 +35,9 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 | 1 | Barra femea 1x40 (corta 2 x 19) | U1 | ✅ tem |  | — |
 | 1 | Barra macho 1x40 (J2/J3/J4 opcionais na versao minima) | U3, U4, J2-J4 | ✅ tem |  | — |
 | 1 | Fenolite 15x20 face simples (da 2 discos) (placa + reserva) | placa | 🛒 comprar | MB3 | R$ 19,00 |
-| 1 | Fio rigido para os 11 jumpers (de cabo de rede) | jumpers | ✅ tem |  | — |
+| 2 | Ultrassom HC-SR04 (baixo + frente) | J2 | ✅ tem |  | — |
+| 2 | IR de obstaculo FC-51 (esquerdo + direito) (~; os de domo branco (PIR) nao servem) | J3 | 🛒 comprar | Mercado Livre | R$ 10,00 |
+| 1 | Fio rigido encapado para os 14 jumpers (de cabo de rede) | jumpers | ✅ tem |  | — |
 
 ## Placa: fabricar
 
@@ -95,4 +97,3 @@ Imposto da AliExpress (compra abaixo de US$ 50): o carrinho mostra; conte uns 20
 | Qtd | Item | Onde vai | Situação | Comprar em | R$ |
 |---|---|---|---|---|---|
 | 1 | Fluxo optico PMW3901 (segura o drone parado) | J4 | opcional | AliExpress | — |
-| 2 | Sonar HC-SR04 / IR FC-51 (ja tem; fora da versao minima) | J2 / J3 | ✅ tem |  | — |

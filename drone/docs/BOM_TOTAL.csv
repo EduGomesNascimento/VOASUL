@@ -15,7 +15,9 @@ Drone: placa,Resistor 2 k,2,"R13, R14",opcional,,0,0,0,so com o sonar
 Drone: placa,Barra femea 1x40 (corta 2 x 19),1,U1,tem,,0,0,0,
 Drone: placa,Barra macho 1x40,1,"U3, U4, J2-J4",tem,,0,0,0,J2/J3/J4 opcionais na versao minima
 Drone: placa,Fenolite 15x20 face simples (da 2 discos),1,placa,comprar,MB3,19.0,1,19.0,placa + reserva
-Drone: placa,Fio rigido para os 11 jumpers,1,jumpers,tem,,0,0,0,de cabo de rede
+Drone: placa,Ultrassom HC-SR04 (baixo + frente),2,J2,tem,,0,0,0,
+Drone: placa,IR de obstaculo FC-51 (esquerdo + direito),2,J3,comprar,Mercado Livre,5.0,2,10.0,~; os de domo branco (PIR) nao servem
+Drone: placa,Fio rigido encapado para os 14 jumpers,1,jumpers,tem,,0,0,0,de cabo de rede
 Placa: fabricar,Papel transfer amarelo para placa (A4),2,transferencia,comprar,Mercado Livre,2.5,2,5.0,~R$ 2-3 a folha; couche/glossy serve com mais paciencia
 Placa: fabricar,"Percloreto de ferro em po, 250 g",1,corrosao,comprar,Mercado Livre,20.0,1,20.0,"~; rende 500 ml, sobra para varias placas"
 Placa: fabricar,Caneta permanente para retoque,1,trilha falhada,comprar,papelaria,5.0,1,5.0,~; tipo retroprojetor
@@ -40,4 +42,3 @@ Bancada,"Multimetro, ferro, estanho, fluxo, malha, pinca, lupa",1,,tem,,0,0,0,ro
 Bancada,Fusivel 4 A + porta-fusivel,1,primeiro liga,tem,,0,0,0,do DAMP
 Bancada,Alcool isopropilico,1,limpar o fluxo,opcional,MB3,9.0,0,0.0,
 Depois (opcional),Fluxo optico PMW3901,1,J4,opcional,AliExpress,31.99,0,0.0,segura o drone parado
-Depois (opcional),Sonar HC-SR04 / IR FC-51,2,J2 / J3,tem,,0,0,0,ja tem; fora da versao minima

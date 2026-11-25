@@ -30,7 +30,8 @@ Lista de compras com marcação (artifact): https://claude.ai/artifact/JfMoUsfyh
 
 - Motores coreless 1020 com os MOSFETs da placa (nada de ESC/brushless).
 - Energia em aberto: bateria LiPo 1S **ou** cabo do chão, os dois pelo J1.
-- Sensores: só BMI160 + BMP280. Sonar, IR e fluxo óptico ficam de fora (conectores podem ficar vazios).
+- Sensores: BMI160 + BMP280 + 2 ultrassons HC-SR04 (J2) + 2 IR FC-51 (J3; falta comprar). Fluxo óptico opcional (J4).
+- Placa caseira: trilhas 2,5/1,5/1,0 mm, folga 1,0 mm (1,5 do plano de GND), 14 jumpers (4 fixos em `projeto.py`), DRC 0.
 - Barato acima de tudo. Sensores do drone: GY-BMI160 (giroscópio) + GY-BMP280-3.3 (barômetro, já tem).
 - Controle: **app no celular através da estação terra** (`docs/TERRA.md`): ESP32-C3 Super Mini na
   capinha, alimentado pelo celular (USB-C OTG), cria a rede VOASUL-TERRA e serve a página; repassa os

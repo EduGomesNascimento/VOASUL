@@ -391,7 +391,12 @@ def profissional():
         pj = json.load(f)
     pj['board']['design_settings']['rules'].update(
         min_via_diameter=0.6, min_via_annular_width=0.13, min_through_hole_diameter=0.3,
-        min_hole_to_hole=0.25, min_hole_clearance=0.25)
+        min_hole_to_hole=0.25, min_hole_clearance=0.25, min_clearance=0.2)
+    # folga de fabrica: os jumpers viram trilhas em cima e um deles (JF2, GND do motor RL)
+    # passa a ~0,3 mm das ilhas do R3/R7 -- normal para a JLCPCB (minimo 0,15 mm). Embaixo
+    # tudo continua com a folga da caseira.
+    for c in pj.get('net_settings', {}).get('classes', []):
+        c['clearance'] = 0.25
     sev = pj['board']['design_settings'].setdefault('rule_severities', {})
     sev.update(silk_over_copper='ignore', silk_overlap='ignore', lib_footprint_issues='ignore',
                lib_footprint_mismatch='ignore')

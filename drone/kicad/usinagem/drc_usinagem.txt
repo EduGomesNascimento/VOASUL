@@ -1,5 +1,5 @@
 ** Drc report for /home/user/voasul/drone/kicad/usinagem/drone_usinagem.kicad_pcb **
-** Created on 2026-11-17 18:49:02 **
+** Created on 2026-11-25 18:03:47 **
 
 ** Found 0 DRC violations **
 

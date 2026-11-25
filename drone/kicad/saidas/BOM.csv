@@ -4,6 +4,8 @@ Qtd,Referencias,Valor,Descricao,Pegada,Montagem,Lado,LCSC,Observacao
 4,C3 C4 C5 C6,100nF 0805,"Capacitor ceramico 100 nF 50 V X7R, 0805",C_0805_2012Metric,SMD,baixo,C49678,face de baixo
 4,D1 D2 D3 D4,SS34,"Diodo Schottky SS34 40 V 3 A, SMA",D_SMA,SMD,baixo,C8678,"face de baixo, faixa para fora"
 1,J1,LiPo 1S,Rabicho Molex 51005 macho com fio 24 AWG,Ilhas_bateria,THT,cima,,+ (vermelho) na ilha quadrada
+1,J2,SONAR (HC-SR04 x2),"Barra de pinos macho 1x6, 2,54 mm",PinHeader_1x06_P2.54mm_Vertical,THT,cima,,conector dos sonares
+1,J3,IR (FC-51 x2),"Barra de pinos macho 1x4, 2,54 mm",PinHeader_1x04_P2.54mm_Vertical,THT,cima,,conector dos IR
 1,J4,FLUXO (PMW3901),"Barra de pinos macho 2x3, 2,54 mm",PinHeader_2x03_P2.54mm_Vertical,THT,cima,,fluxo optico (opcional); ou 2 pedacos de 1x3
 1,M1,motor FR,Ilhas para o motor coreless 1020,Ilhas_motor,THT,cima,,fios do motor; + na ilha quadrada
 1,M2,motor RR,Ilhas para o motor coreless 1020,Ilhas_motor,THT,cima,,fios do motor; + na ilha quadrada
@@ -12,6 +14,8 @@ Qtd,Referencias,Valor,Descricao,Pegada,Montagem,Lado,LCSC,Observacao
 4,Q1 Q2 Q3 Q4,AO3400A,"MOSFET canal N AO3400A 30 V 5,7 A, SOT-23",SOT-23,SMD,baixo,C20917,face de baixo
 4,R1 R2 R3 R4,100,Resistor 100 ohm 1/4 W,R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical,THT,cima,,em pe; 100-220 ohm servem
 6,R5 R6 R7 R8 R9 R10,10k,Resistor 10 kohm 1/4 W,R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical,THT,cima,,em pe
+2,R11 R12,1k,Resistor 1 kohm 1/4 W,R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical,THT,cima,,em pe
+2,R13 R14,2k,Resistor 2 kohm 1/4 W,R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical,THT,cima,,em pe; 1k8 ou 2k2 servem
 1,U1,ESP32 DevKitC 38p,"Placa ESP32 DevKitC V4, 38 pinos, WROOM-32",ESP32_DevKitC_38p,THT,cima,,em 2 barras femea 1x19
 1,U2,"MT3608 5,0V",Modulo step-up MT3608,MT3608_modulo,THT,cima,,"em 4 pernas de fio; ajuste 5,0 V antes do ESP32"
 1,U3,GY-BMI160,Modulo giroscopio/acelerometro GY-BMI160,GY_BMI160,THT,cima,,"barra macho baixa, embaixo do ESP32"

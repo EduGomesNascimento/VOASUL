@@ -273,7 +273,9 @@ def pagina_lista(pdf):
         ('7', 'R1–R4', '100 Ω (porta)', 'em pé; 100–220 Ω servem'),
         ('7', 'R5–R10', '10 kΩ (pull-down e divisor)', 'em pé; R9/R10 = divisor da bateria'),
         ('8', 'U1', 'Barras fêmea 2×19 do ESP32', 'solde com o ESP32 encaixado, para alinhar'),
-        ('9', 'J4', 'Barra macho 2×3', 'fluxo óptico (opcional)'),
+        ('7', 'R11, R12', '1 kΩ (ECHO)', 'em pé'),
+        ('7', 'R13, R14', '2 kΩ (ECHO)', 'em pé; 1k8 ou 2k2 também servem'),
+        ('9', 'J2, J3, J4', 'Barra macho 1×6, 1×4 e 2×3', 'sonar (J2), IR (J3), fluxo óptico (J4, opcional)'),
         ('10', 'C1', '1000 µF 10–16 V', 'POLARIDADE: listra = negativo, + na ilha marcada'),
         ('10', 'C2', '470 µF 10–16 V', 'POLARIDADE'),
         ('11', 'U2', 'MT3608 em 4 pernas de fio', 'confira IN+/IN-/OUT+/OUT-; 5,0 V antes do ESP32'),
@@ -292,7 +294,7 @@ def pagina_lista(pdf):
              color=LARANJA, family='DejaVu Sans')
     extra = [
         f'{NJ} jumpers por cima: sem eles a placa NÃO funciona (pág. 1 e jumpers.txt).',
-        'Fios para fora da placa: bateria (J1) e 4 motores (M1–M4). Versão mínima: sem sonar e sem IR.',
+        'Fios para fora da placa: bateria (J1), 4 motores (M1–M4), cabos do sonar (J2) e do IR (J3).',
         'J4 (fluxo óptico PMW3901) é OPCIONAL: solde a barra mesmo sem o módulo; o drone voa igual.',
         '   Ligue/desligue o módulo só com o drone DESLIGADO. O firmware descobre sozinho no boot.',
         'Todo o GND fecha pelo cobre e pelos jumpers: o teste de continuidade funciona sem o ESP32.',
