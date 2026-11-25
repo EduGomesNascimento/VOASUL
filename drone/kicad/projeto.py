@@ -158,7 +158,12 @@ peca('J2', 'SONAR (HC-SR04 x2)', 'CONN6', -0.5, -36.0, rot=90,
      nota='1 GND 2 ECHO baixo 3 TRIG baixo 4 ECHO frente 5 TRIG frente 6 VCC(5V)')
 
 # ---- jumpers fixos (fio por cima), posicionados a mao, se o roteador precisar de ajuda.
-JUMPERS_FIXOS = []
+JUMPERS_FIXOS = [
+    # GND do J3 (IR): o pino 4 fica num bolso (fileira do ESP32 em cima, VBAT_ADC a direita,
+    # 3V3 do J4 embaixo). Trilha curta ate uma ilha logo abaixo e fio por cima do 3V3 ate
+    # o GND do divisor da bateria (R10).
+    ('JF1', 'GND', (-13.38, -20.4), (-13.38, -27.2)),
+]
 
 # ---- trilhas fixas de GND dos sensores (embaixo do ESP32), desenhadas a mao.
 # Cada pino sobe reto para o GND do ESP32 na MESMA ordem dos sinais (GND, SCL, SDA | GND),
@@ -174,6 +179,8 @@ TRILHAS_FIXAS = [
     ('GND', 0.8, [(-6.15, -3.0), (-6.15, 0.0)]),
     ('GND', 1.5, [(-6.15, 0.0), (-6.15, 8.0), (-7.62, 9.47)]),
     ('GND', 0.8, [(-7.62, 9.47), (-7.62, 11.6)]),
+    # J3.4 (GND do IR) -> ilha do jumper fixo JF1, logo abaixo
+    ('GND', 0.8, [(-13.38, -17.0), (-13.38, -20.4)]),
     # U3.3 (GND do BMI160) -> trilha de cima
     ('GND', 0.8, [(4.96, -3.0), (4.96, 0.5)]),
     ('GND', 1.5, [(4.96, 0.5), (-6.15, 0.5)]),
