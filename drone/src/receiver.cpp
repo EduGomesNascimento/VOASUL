@@ -202,12 +202,14 @@ void Receiver::sendTelemetry(const Telemetry &t) {
   if (gWs.clientCount() == 0 && !terra) return;
 
   // So o que a pagina mostra: cabe com folga num pacote ESP-NOW (250 bytes).
-  char buf[200];
+  // fr = distancia do sonar da frente (m, -1 = nada); ir = bit 1 esquerdo, bit 2 direito
+  char buf[230];
   snprintf(buf, sizeof(buf),
     "{\"r\":%.1f,\"p\":%.1f,\"y\":%.0f,\"alt\":%.2f,\"vz\":%.2f,\"vb\":%.2f,"
-    "\"armed\":%d,\"snr\":%d,\"hz\":%u,\"st\":\"%.48s\"}",
+    "\"armed\":%d,\"snr\":%d,\"fr\":%.2f,\"ir\":%d,\"hz\":%u,\"st\":\"%.48s\"}",
     t.roll, t.pitch, t.yaw, t.altitude, t.verticalSpeed, t.vbat,
-    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.loopHz, t.status);
+    t.armed ? 1 : 0, t.usingSonar ? 1 : 0, t.front, (t.irL ? 1 : 0) | (t.irR ? 2 : 0),
+    t.loopHz, t.status);
 
   if (gWs.clientCount()) gWs.broadcast(buf);
 #if PLATFORM_ESP32

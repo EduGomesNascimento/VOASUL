@@ -26,8 +26,12 @@ CX, CY = 100.0, 100.0
 ORDEM = (['VBAT', 'VBAT_ADC', '+5V', '+3V3'] +
          ['DRENO_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
          ['PORTA_' + m for m in ('FR', 'RR', 'RL', 'FL')] +
-         ['M_RR', 'M_FR', 'M_FL'] +
-         ['SDA', 'SCL', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
+         # o sinal do motor RR desce pelo lado direito, onde tambem passa o sonar: vai antes
+         ['M_RR'] +
+         # sonar numa ordem em que um nao fecha o caminho do outro
+         ['ECHO_F', 'TRIG_B', 'ECHO_B', 'TRIG_F', 'ECHO_B5', 'ECHO_F5', '+5V:adiado'] +
+         ['M_FR', 'M_FL'] +
+         ['SDA', 'SCL', 'IR_E', 'IR_D', 'FLOW_MISO', 'FLOW_SCK', 'FLOW_MOSI', 'FLOW_CS',
           # SCL2 antes do SDA2: o SDA2 (mais a direita) passaria por cima do caminho do SCL2
           'SCL2', 'SDA2', 'GND',
           # o sinal do motor RL sai do pino 21, vizinho do GND do ESP32 (pino 20), e contorna
@@ -37,7 +41,7 @@ ORDEM = (['VBAT', 'VBAT_ADC', '+5V', '+3V3'] +
 TEXTO_Y = 40.0    # texto no cobre, na frente, entre as ilhas do MT3608
 
 # corpo encostado na placa: jumper nao passa por cima nem fura embaixo
-SEM_JUMPER_TIPOS = ('C', 'R', 'J4')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
+SEM_JUMPER_TIPOS = ('C', 'R', 'J2', 'J3', 'J4')   # U3/U4: jumper soldado ANTES do modulo pode passar embaixo
 
 
 def loc(v):
@@ -133,8 +137,9 @@ def exportar():
                grupos_fios=grupos_fios,
                jumpers_fixos=[dict(rede=rede, x1=a[0], y1=a[1], x2=b_[0], y2=b_[1])
                               for _, rede, a, b_ in P.JUMPERS_FIXOS],
-               # pinos ligados so DEPOIS (rede:adiado); nenhum na versao minima
-               adiar={},
+               # pinos ligados so DEPOIS (rede:adiado): o 5V do J2 entra depois do sonar
+               # (senao desce em diagonal no corredor dele)
+               adiar={'+5V': ['J2.6']},
                # o GND nasce na bateria (de onde a corrente sai de verdade)
                inicio={'GND': 'J1.2'})
     json.dump(geo, open(GEO, 'w'), indent=1)

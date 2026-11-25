@@ -38,6 +38,7 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
 <header>
   <span id="link"></span><span id="st">conectando</span>
   <button id="alt" class="on">ALT HOLD</button>
+  <button id="desvio">DESVIO</button>
   <button id="pousar">POUSAR</button>
   <button id="arm">ARMAR</button>
 </header>
@@ -54,12 +55,14 @@ button.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
   <div><b>Altura</b><span id="ta">-</span></div>
   <div><b>Vert</b><span id="tv">-</span></div>
   <div><b>Bateria</b><span id="tb">-</span></div>
+  <div><b>Frente</b><span id="tf">-</span></div>
+  <div><b>IR E/D</b><span id="ti">-</span></div>
   <div><b>Loop</b><span id="tl">-</span></div>
 </div>
 <div id="msg">Arme com o drone no chao e nivelado. ALT HOLD: manche esquerdo no centro = mantem a altura, para cima = sobe. Soltou o direito = fica parado.</div>
 
 <script>
-const S={roll:0,pitch:0,yaw:0,thr:0.5,arm:0,alt:1,land:0,armT:0};
+const S={roll:0,pitch:0,yaw:0,thr:0.5,arm:0,alt:1,av:0,land:0,armT:0};
 let ws,alive=0;
 
 // ---- joysticks ----
@@ -119,6 +122,11 @@ document.getElementById('alt').onclick=function(){
   S.alt=S.alt?0:1; this.classList.toggle('on',!!S.alt);
   if(S.alt) padL.centro(); else padL.minimo();
 };
+// desvio de obstaculos (sonar da frente + 2 IR): comeca DESLIGADO; liga quando quiser
+document.getElementById('desvio').onclick=function(){
+  S.av=S.av?0:1; this.classList.toggle('on',!!S.av);
+  msg(S.av?'DESVIO ligado: recua de parede na frente e foge de obstaculo dos lados.':'DESVIO desligado.');
+};
 document.getElementById('pousar').onclick=function(){
   if(!S.arm) return;
   S.land=1; this.classList.add('on'); msg('Pousando sozinho...');
@@ -148,7 +156,7 @@ connect();
 // 50 Hz de comando: menos que isso e o failsafe de 400 ms comeca a disparar
 setInterval(()=>{
   if(!ws||ws.readyState!==1) return;
-  const f=(S.arm?1:0)|(S.alt?2:0)|(S.land?8:0);
+  const f=(S.arm?1:0)|(S.alt?2:0)|(S.av?4:0)|(S.land?8:0);
   // desarmado e no primeiro segundo depois de armar: throttle em zero (o drone exige para armar)
   const thr=(!S.arm||Date.now()-S.armT<1000)?0:S.thr;
   ws.send('C,'+S.roll.toFixed(3)+','+S.pitch.toFixed(3)+','+S.yaw.toFixed(3)
@@ -175,6 +183,12 @@ function show(t){
   $('tb').textContent=t.vb.toFixed(2)+' V';
   $('tb').className=t.vb<3.35?'bad':t.vb<3.55?'warn':'ok';
   $('tl').textContent=t.hz+' Hz';
+  if('fr' in t){
+    $('tf').textContent=t.fr<0?'livre':t.fr.toFixed(2)+' m';
+    $('tf').className=t.fr>=0&&t.fr<0.9?'warn':'';
+    $('ti').textContent=(t.ir&1?'■':'□')+' '+(t.ir&2?'■':'□');
+    $('ti').className=t.ir?'warn':'';
+  }
   if(t.st) msg(t.st);
   if(!t.armed && S.arm){   // o drone desarmou sozinho (pousou, failsafe, bateria)
     S.arm=0; S.land=0; $('pousar').classList.remove('on');
