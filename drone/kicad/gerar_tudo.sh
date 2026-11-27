@@ -19,5 +19,6 @@ python3 folha_montagem.py              # saidas/folha_montagem.pdf (cima, baixo,
 python3 folha_transferencia.py         # saidas/folha_transferencia_A4.pdf (2 copias 1:1)
 $K folha_serigrafia.py                  # saidas/folha_serigrafia_A4.pdf (lado de cima, espelhada + normal)
 $K bom.py                              # saidas/BOM.csv + pro/montagem_jlc/ (BOM e CPL da JLCPCB)
+python3 lista_componentes.py           # saidas/componentes.pdf (lista com labels + lado de cima e de baixo)
 $K gerar.py usinagem                   # usinagem/: placa nas regras da CNC (Gerber + furos + LEIA-ME)
 $K cnc.py                              # cnc/: G-code para fresar a placa caseira (GRBL)
