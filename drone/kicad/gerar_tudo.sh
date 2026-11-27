@@ -17,6 +17,7 @@ $K gerar.py profissional               # versao para fabrica + gerber
 $K extrair_montagem.py                 # dados da folha de montagem
 python3 folha_montagem.py              # saidas/folha_montagem.pdf (cima, baixo, lista)
 python3 folha_transferencia.py         # saidas/folha_transferencia_A4.pdf (2 copias 1:1)
+$K folha_serigrafia.py                  # saidas/folha_serigrafia_A4.pdf (lado de cima, espelhada + normal)
 $K bom.py                              # saidas/BOM.csv + pro/montagem_jlc/ (BOM e CPL da JLCPCB)
 $K gerar.py usinagem                   # usinagem/: placa nas regras da CNC (Gerber + furos + LEIA-ME)
 $K cnc.py                              # cnc/: G-code para fresar a placa caseira (GRBL)

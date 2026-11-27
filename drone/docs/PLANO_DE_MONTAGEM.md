@@ -130,6 +130,8 @@ pote plástico com tampa, luvas, régua, furadeira/micro retífica, brocas 0,9 /
 8. **Fure** de baixo para cima (lado do cobre), broca reta, devagar:
    **0,9 mm** pinos e resistores; **1,0 mm** motor, MT3608, conectores e eletrolíticos; **1,3 mm** bateria.
 9. **Estanhe** as trilhas com o ferro (opcional, mas evita oxidar).
+10. **Serigrafia (opcional):** `kicad/saidas/folha_serigrafia_A4.pdf`, página 1 (já espelhada), no lado **sem cobre**:
+    alinhe os anéis com os furos contra a luz e passe o ferro 1–2 min. Mostra peças, valores, pinos e jumpers numerados.
 
 **Para passar de fase (antes de soldar qualquer peça):**
 - [ ] **sem curto**: medindo resistência, VBAT↔GND, +5V↔GND e +3V3↔GND dão **circuito aberto** (OL);
